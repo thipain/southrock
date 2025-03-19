@@ -1,0 +1,2 @@
+mkdir -p sistema_login/assets sistema_login/includes sistema_login/pages sistema_login/logout
+touch sistema_login/assets/styles.css sistema_login/assets/script.js sistema_login/includes/db.php sistema_login/pages/index.php sistema_login/pages/login.php sistema_login/pages/dashboard.php sistema_login/pages/requisicao_pedidos.php sistema_login/logout/logout.php sistema_login/README.md
