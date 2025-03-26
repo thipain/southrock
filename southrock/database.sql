@@ -14,10 +14,13 @@ CREATE TABLE tipo_usuario (
 );
 
 CREATE TABLE usuarios (
-    id INT NOT NULL PRIMARY KEY,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     tipo_usuario INT NOT NULL,
+    cnpj VARCHAR(20),
+    responsavel VARCHAR(255),
+    endereco VARCHAR(255),
     FOREIGN KEY (tipo_usuario) REFERENCES tipo_usuario(id)
 );
 
@@ -30,6 +33,6 @@ INSERT INTO tipo_usuario (id, descricao) VALUES
     (1, 'matriz'),
     (2, 'loja');
 
-INSERT INTO usuarios (id, username, password, tipo_usuario) VALUES
-    (1, 'admin', '123456', 1),
-    (2, 'star', 'teste', 2);
+INSERT INTO usuarios (username, password, tipo_usuario, cnpj, responsavel, endereco) VALUES
+    ('admin', '123456', 1, NULL, NULL, NULL),
+    ('star', 'teste', 2, '12.345.678/0001-90', 'João Silva', 'Rua das Flores, 123');
