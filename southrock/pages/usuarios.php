@@ -25,74 +25,108 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Usuários - Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            background-color: #f4f6f9;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
+        .table-hover tbody tr:hover {
+            background-color: rgba(0,0,0,0.075);
         }
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-        th, td {
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .button {
-            padding: 10px 15px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            text-decoration: none;
-        }
-        .button-danger {
-            background-color: #f44336;
-        }
-        .form-container {
-            margin-bottom: 20px;
+        .card-custom {
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
     </style>
 </head>
 <body>
-    <h1>Gerenciar Usuários</h1>
+    <div class="container-fluid px-4 py-4">
+        <div class="row mb-4 align-items-center">
+            <div class="col-12 d-flex justify-content-between align-items-center">
+                <h1 class="h2 text-primary">
+                    <i class="bi bi-people-fill me-2"></i>Gerenciar Usuários
+                </h1>
+                <div>
+                    <a href="cadastro_usuario.php" class="btn btn-success me-2">
+                        <i class="bi bi-plus-circle me-1"></i>Novo Usuário
+                    </a>
+                    <a href="dashboard.php" class="btn btn-primary">
+                        <i class="bi bi-arrow-left me-1"></i>Voltar ao Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
 
-    <div class="form-container">
-        <a href="cadastro_usuario.php" class="button">Novo Usuário</a>
-        <a href="dashboard.php" class="button">Voltar</a>
+        <div class="card card-custom border-0">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Nome de Usuário</th>
+                                <th>CNPJ</th>
+                                <th>Responsável</th>
+                                <th>Endereço</th>
+                                <th>Tipo de Usuário</th>
+                                <th class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php while ($row = $result->fetch_assoc()): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($row['username']); ?></td>
+                                <td><?php echo htmlspecialchars($row['cnpj']); ?></td>
+                                <td><?php echo htmlspecialchars($row['responsavel']); ?></td>
+                                <td><?php echo htmlspecialchars($row['endereco']); ?></td>
+                                <td>
+                                    <?php 
+                                    echo $row['tipo_usuario'] == 1 ? 'Administrador' : 
+                                         ($row['tipo_usuario'] == 2 ? 'Loja' : 'Usuário Padrão'); 
+                                    ?>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group" role="group">
+                                        <a href="editar_usuario.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button onclick="confirmDelete(<?php echo $row['id']; ?>)" class="btn btn-sm btn-outline-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php endwhile; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <h2>Lista de Usuários</h2>
-    <table>
-        <tr>
-            <th>Nome de Usuário</th>
-            <th>CNPJ</th>
-            <th>Responsável</th>
-            <th>Endereço</th>
-            <th>Tipo de Usuário</th>
-            <th>Ações</th>
-        </tr>
-        <?php while ($row = $result->fetch_assoc()): ?>
-        <tr>
-            <td><?php echo $row['username']; ?></td>
-            <td><?php echo $row['cnpj']; ?></td>
-            <td><?php echo $row['responsavel']; ?></td>
-            <td><?php echo $row['endereco']; ?></td>
-            <td><?php echo $row['tipo_usuario']; ?></td>
-            <td>
-                <a href="editar_usuario.php?id=<?php echo $row['id']; ?>" class="button">Editar</a>
-                <a href="?delete=<?php echo $row['id']; ?>" class="button button-danger" onclick="return confirm('Tem certeza que deseja remover este usuário?');">Excluir</a>
-            </td>
-        </tr>
-        <?php endwhile; ?>
-    </table>
+    <!-- Bootstrap JS e Dependências -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert2 para confirmação de exclusão -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function confirmDelete(id) {
+            Swal.fire({
+                title: 'Tem certeza?',
+                text: 'Você não poderá reverter esta ação!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sim, excluir!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '?delete=' + id;
+                }
+            });
+        }
+    </script>
 </body>
 </html>
 

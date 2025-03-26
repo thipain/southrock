@@ -28,16 +28,28 @@ if (isset($_GET['id'])) {
 // Atualizar os dados do usuário
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
-    $tipo_usuario = $_POST['tipo_usuario']; // Agora pegamos o tipo de usuário do formulário
+    $tipo_usuario = $_POST['tipo_usuario'];
+    $cnpj = $_POST['cnpj'];
+    $responsavel = $_POST['responsavel'];
+    $endereco = $_POST['endereco'];
 
-    $sql = "UPDATE usuarios SET username = ?, tipo_usuario = ? WHERE id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sii", $username, $tipo_usuario, $id);
+    // Verificar se a senha foi alterada
+    if (!empty($_POST['password'])) {
+        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+        $sql = "UPDATE usuarios SET username = ?, tipo_usuario = ?, cnpj = ?, responsavel = ?, endereco = ?, password = ? WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("sissssi", $username, $tipo_usuario, $cnpj, $responsavel, $endereco, $password, $id);
+    } else {
+        // Se a senha não foi alterada, mantenha a mesma
+        $sql = "UPDATE usuarios SET username = ?, tipo_usuario = ?, cnpj = ?, responsavel = ?, endereco = ? WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("sisssi", $username, $tipo_usuario, $cnpj, $responsavel, $endereco, $id);
+    }
 
     if ($stmt->execute()) {
         echo "<script>alert('Usuário atualizado com sucesso!'); window.location.href='usuarios.php';</script>";
     } else {
-        echo "<script>alert('Erro ao atualizar usuário.');</script>";
+        echo "<script>alert('Erro ao atualizar usuário: " . $stmt->error . "');</script>";
     }
 }
 ?>
@@ -48,53 +60,70 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Usuário - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            background-color: #f4f6f9;
         }
         .form-container {
-            max-width: 400px;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-        }
-        .form-container input, .form-container select {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        .button {
-            padding: 10px 15px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-        }
-        .button:hover {
-            background-color: #45a049;
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 8px;
         }
     </style>
 </head>
 <body>
-    <h1>Editar Usuário</h1>
+    <div class="container">
+        <div class="form-container">
+            <h2 class="text-center mb-4">Editar Usuário</h2>
+            <form method="POST">
+                <div class="mb-3">
+                    <label class="form-label">Nome de Usuário (Email)</label>
+                    <input type="email" name="username" class="form-control" 
+                           value="<?php echo htmlspecialchars($user['username']); ?>" required>
+                </div>
 
-    <div class="form-container">
-        <form method="POST">
-            <input type="text" name="username" placeholder="Nome de Usuário" value="<?php echo htmlspecialchars($user['username']); ?>" required>
-            <select name="tipo_usuario" required>
-                <option value="1" <?php if ($user['tipo_usuario'] == 1) echo 'selected'; ?>>Matriz</option>
-                <option value="2" <?php if ($user['tipo_usuario'] == 2) echo 'selected'; ?>>Loja</option>
-            </select>
-            <button type="submit" class="button">Atualizar Usuário</button>
-        </form>
+                <div class="mb-3">
+                    <label class="form-label">Tipo de Usuário</label>
+                    <select name="tipo_usuario" class="form-select" required>
+                        <option value="1" <?php echo $user['tipo_usuario'] == 1 ? 'selected' : ''; ?>>Matriz</option>
+                        <option value="2" <?php echo $user['tipo_usuario'] == 2 ? 'selected' : ''; ?>>Loja</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">CNPJ</label>
+                    <input type="text" name="cnpj" class="form-control" 
+                           value="<?php echo htmlspecialchars($user['cnpj']); ?>" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Nome do Responsável</label>
+                    <input type="text" name="responsavel" class="form-control" 
+                           value="<?php echo htmlspecialchars($user['responsavel']); ?>" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Endereço</label>
+                    <input type="text" name="endereco" class="form-control" 
+                           value="<?php echo htmlspecialchars($user['endereco']); ?>" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Nova Senha (opcional)</label>
+                    <input type="password" name="password" class="form-control" 
+                           placeholder="Deixe em branco para manter a senha atual">
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Atualizar Usuário</button>
+            </form>
+        </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 

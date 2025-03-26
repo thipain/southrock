@@ -9,7 +9,11 @@ include '../includes/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
-    $password = $_POST['password']; // Armazenando a senha em texto simples
+    $password = $_POST['password']; 
+    
+    // Hash da senha usando PASSWORD_DEFAULT (bcrypt)
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    
     $tipo_usuario = 2; // Definindo tipo de usuário como loja
     $cnpj = $_POST['cnpj'];
     $responsavel = $_POST['responsavel'];
@@ -18,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Prepare a consulta SQL para inserir o usuário
     $sql = "INSERT INTO usuarios (username, password, tipo_usuario, cnpj, responsavel, endereco) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssiiss", $username, $password, $tipo_usuario, $cnpj, $responsavel, $endereco);
+    $stmt->bind_param("ssiiss", $username, $hashed_password, $tipo_usuario, $cnpj, $responsavel, $endereco);
 
     // Execute a consulta e verifique se foi bem-sucedida
     if ($stmt->execute()) {

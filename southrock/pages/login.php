@@ -2,39 +2,49 @@
 session_start();
 include '../includes/db.php';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $user = $_POST['username'];
-    $pass = $_POST['password'];
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
 
-    // Busque a senha e o tipo de usuário no banco de dados
-    $stmt = $conn->prepare("SELECT password, tipo_usuario FROM usuarios WHERE username = ?");
-    $stmt->bind_param("s", $user);
+    // Preparar a consulta para buscar o usuário
+    $sql = "SELECT * FROM usuarios WHERE username = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $username);
     $stmt->execute();
-    $stmt->store_result();
+    $result = $stmt->get_result();
 
-    if ($stmt->num_rows > 0) {
-        $stmt->bind_result($stored_password, $tipo_usuario);
-        $stmt->fetch();
-
-        // Verifique se a senha fornecida corresponde à senha armazenada
-        if ($pass === $stored_password) {
-            // Senha correta
-            $_SESSION['username'] = $user;
-            if ($tipo_usuario == 1) {
-                header("Location: ../pages/dashboard.php");
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        
+        // Verificar a senha usando password_verify()
+        if (password_verify($password, $user['password'])) {
+            // Senha correta, iniciar sessão
+            $_SESSION['username'] = $username;
+            $_SESSION['tipo_usuario'] = $user['tipo_usuario'];
+            
+            // Redirecionar baseado no tipo de usuário
+            if ($user['tipo_usuario'] == 1) {
+                // Administrador
+                header("Location: dashboard.php");
+                exit();
+            } elseif ($user['tipo_usuario'] == 2) {
+                // Loja
+                header("Location: requisicao_pedidos.php");
+                exit();
             } else {
-                header("Location: ../pages/requisicao_pedidos.php");
+                // Tipo de usuário não reconhecido
+                echo "<script>alert('Tipo de usuário não autorizado.'); window.location.href='index.php';</script>";
             }
-            exit(); // Adicione exit após o redirecionamento
         } else {
-            echo "Usuário ou senha inválidos.";
+            // Senha incorreta
+            echo "<script>alert('Usuário ou senha incorretos!'); window.location.href='index.php';</script>";
         }
     } else {
-        echo "Usuário ou senha inválidos.";
+        // Usuário não encontrado
+        echo "<script>alert('Usuário não encontrado!'); window.location.href='index.php';</script>";
     }
 
     $stmt->close();
 }
-
 $conn->close();
 ?>
