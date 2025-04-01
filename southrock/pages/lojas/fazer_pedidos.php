@@ -11,7 +11,7 @@
     <style>
         body {
             background-color: #f8f9fa;
-            font-family: 'Arial', sans -serif;
+            font-family: 'Arial', sans-serif;
         }
         .header {
             background-color: #6c757d;
@@ -39,6 +39,11 @@
         .button:hover {
             background-color: #0056b3;
         }
+        .icon {
+            color: #007bff;
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -51,6 +56,7 @@
         <div class="row">
             <div class="option-card col">
                 <div class="card-body">
+                    <i class="fas fa-shopping-cart icon"></i>
                     <h5 class="card-title">Fazer Pedido</h5>
                     <p class="card-text">Clique para fazer um novo pedido.</p>
                     <button class="button btn">Fazer Pedido</button>
@@ -59,6 +65,7 @@
 
             <div class="option-card col">
                 <div class="card-body">
+                    <i class="fas fa-gift icon"></i>
                     <h5 class="card-title">Doar Produtos</h5>
                     <p class="card-text">Clique para doar produtos.</p>
                     <button class="button btn">Doar Produtos</button>
@@ -67,6 +74,7 @@
 
             <div class="option-card col">
                 <div class="card-body">
+                    <i class="fas fa-undo icon"></i>
                     <h5 class="card-title">Devolver Produtos</h5>
                     <p class="card-text">Clique para devolver produtos.</p>
                     <button class="button btn">Devolver Produtos</button>
@@ -75,6 +83,7 @@
 
             <div class="option-card col">
                 <div class="card-body">
+                    <i class="fas fa-exchange-alt icon"></i>
                     <h5 class="card-title">Trocar Produtos</h5>
                     <p class="card-text">Clique para trocar produtos.</p>
                     <button class="button btn">Trocar Produtos</button>
@@ -85,7 +94,7 @@
 
     <!-- Botão para voltar ao index.php -->
     <div class="footer text-center">
-        <a href="index.php" class="button btn">Voltar</a>
+        <a href="requisicao_pedidos.php" class="button btn">Voltar</a>
     </div>
 
     <!-- Bootstrap JS and dependencies -->

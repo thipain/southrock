@@ -74,23 +74,23 @@ if (!isset($_SESSION['username'])) {
 
         <div>
             <a href="pedidos.php">
-                <img src="../images/icon_orders.png" alt="Pedidos" class="icon">
+                <img src="../../images/icon_orders.png" alt="Pedidos" class="icon">
                 <span class="text">Pedidos</span>
             </a>
 
             <a href="usuarios.php">
-                <img src="../images/icon_users.png" alt="Usuários" class="icon">
+                <img src="../../images/icon_users.png" alt="Usuários" class="icon">
                 <span class="text">Usuários</span>
             </a>
 
             <a href="produtos.php">
-                <img src="../images/icon_products.png" alt="Produtos" class="icon">
+                <img src="../../images/icon_products.png" alt="Produtos" class="icon">
                 <span class="text">Produtos</span>
             </a>
         </div>
 
-        <a href="../logout/logout.php">
-            <img src="../images/icon_logout.png" alt="Deslogar" class="icon">
+        <a href="../../logout/logout.php">
+            <img src="../../images/icon_logout.png" alt="Deslogar" class="icon">
             <span class="text">Sair</span>
         </a>
     </div>

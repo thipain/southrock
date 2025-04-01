@@ -89,7 +89,7 @@
 
     <!-- Botão para voltar ao index.php na parte inferior -->
     <div class="footer">
-        <a href="index.php" class="button btn">Logout</a>
+        <a href="../index.php" class="button btn">Logout</a>
     </div>
 
     <!-- Bootstrap JS and dependencies -->

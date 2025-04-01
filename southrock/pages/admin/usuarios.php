@@ -5,7 +5,7 @@ if (!isset($_SESSION['username'])) {
     exit();
 }
 
-include '../includes/db.php';
+include '../../includes/db.php';
 
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];

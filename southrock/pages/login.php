@@ -25,11 +25,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Redirecionar baseado no tipo de usuário
             if ($user['tipo_usuario'] == 1) {
                 // Administrador
-                header("Location: dashboard.php");
+                header("Location: admin/dashboard.php");
                 exit();
             } elseif ($user['tipo_usuario'] == 2) {
                 // Loja
-                header("Location: requisicao_pedidos.php");
+                header("Location: lojas/requisicao_pedidos.php");
                 exit();
             } else {
                 // Tipo de usuário não reconhecido
