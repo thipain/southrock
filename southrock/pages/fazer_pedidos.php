@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pedidos - Filiais</title>
+    <title>Fazer Pedido</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome CSS -->
@@ -11,7 +11,7 @@
     <style>
         body {
             background-color: #f8f9fa;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Arial', sans -serif;
         }
         .header {
             background-color: #6c757d;
@@ -20,14 +20,14 @@
             text-align: center;
             margin-bottom: 20px;
         }
-        .card {
+        .option-card {
             margin: 15px;
             border: none;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s;
         }
-        .card:hover {
+        .option-card:hover {
             transform: translateY(-5px);
         }
         .button {
@@ -39,57 +39,53 @@
         .button:hover {
             background-color: #0056b3;
         }
-        .icon {
-            font-size: 50px;
-            color: #007bff;
-        }
-        .footer {
-            margin-top: 20px;
-            text-align: center;
-        }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>Bem-vindo ao Sistema de Pedidos</h1>
-        <p>Filiais podem fazer pedidos para a matriz</p>
+        <h1>Escolha uma Opção</h1>
     </div>
 
     <div class="container text-center">
         <div class="row">
-            <div id="fazer-pedido" class="card col">
+            <div class="option-card col">
                 <div class="card-body">
-                    <i class="fas fa-shopping-cart icon"></i>
                     <h5 class="card-title">Fazer Pedido</h5>
-                    <p class="card-text">Clique no botão abaixo para fazer um novo pedido.</p>
-                    <a href="fazer_pedidos.php" class="button btn">Fazer Pedido</a>
+                    <p class="card-text">Clique para fazer um novo pedido.</p>
+                    <button class="button btn">Fazer Pedido</button>
                 </div>
             </div>
 
-            <div id="historico-pedidos" class="card col">
+            <div class="option-card col">
                 <div class="card-body">
-                    <i class="fas fa-history icon"></i>
-                    <h5 class="card-title">Histórico de Pedidos</h5>
-                    <p class="card-text">Veja o histórico e o status dos pedidos realizados.</p>
-                    <button class="button btn">Ver Histórico</button>
+                    <h5 class="card-title">Doar Produtos</h5>
+                    <p class="card-text">Clique para doar produtos.</p>
+                    <button class="button btn">Doar Produtos</button>
                 </div>
             </div>
 
-            <div id="suporte" class="card col">
+            <div class="option-card col">
                 <div class="card-body">
-                    <i class="fas fa-headset icon"></i>
-                    <h5 class="card-title">Suporte</h5>
-                    <p class="card-text">Precisa de ajuda? Entre em contato com o suporte.</p>
-                    <button class="button btn">Contato</button>
+                    <h5 class="card-title">Devolver Produtos</h5>
+                    <p class="card-text">Clique para devolver produtos.</p>
+                    <button class="button btn">Devolver Produtos</button>
+                </div>
+            </div>
+
+            <div class="option-card col">
+                <div class="card-body">
+                    <h5 class="card-title">Trocar Produtos</h5>
+                    <p class="card-text">Clique para trocar produtos.</p>
+                    <button class="button btn">Trocar Produtos</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Botão para voltar ao index.php na parte inferior -->
-    <div class="footer">
-        <a href="index.php" class="button btn">Logout</a>
+    <!-- Botão para voltar ao index.php -->
+    <div class="footer text-center">
+        <a href="index.php" class="button btn">Voltar</a>
     </div>
 
     <!-- Bootstrap JS and dependencies -->

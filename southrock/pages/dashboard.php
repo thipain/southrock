@@ -50,8 +50,16 @@ if (!isset($_SESSION['username'])) {
         .text {
             display: none; /* Esconde o texto inicialmente */
         }
-        .sidebar:hover .text {
+        .sidebar a:hover .text {
             display: inline; /* Mostra o texto ao passar o mouse */
+        }
+        .sidebar a .text {
+            display: inline; /* Mostra o texto sempre, mas será escondido na largura inicial */
+            opacity: 0; /* Inicialmente invisível */
+            transition: opacity 0.3s; /* Transição suave para a opacidade */
+        }
+        .sidebar:hover a .text {
+            opacity: 1; /* Torna o texto visível ao passar o mouse sobre a sidebar */
         }
         .content {
             flex: 1;
