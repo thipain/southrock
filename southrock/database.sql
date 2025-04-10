@@ -86,5 +86,5 @@ INSERT INTO tipo_usuario (id, descricao) VALUES
     (2, 'loja');
 
 INSERT INTO usuarios (username, password, tipo_usuario, cnpj, responsavel, endereco) VALUES
-    ('admin', '123456', 1, NULL, NULL, NULL),
+    ('admin', '123456', 1,'12.345.678/0001-90', 'João Silva', 'Rua das Flores, 123'),
     ('star', 'teste', 2, '12.345.678/0001-90', 'João Silva', 'Rua das Flores, 123');

@@ -10,8 +10,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
-            background-color: #f8f9fa;
+                
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         .header {
             background-color: #6c757d;
@@ -26,6 +32,7 @@
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s;
+            background-color: rgba(255, 255, 255, 0.9);
         }
         .card:hover {
             transform: translateY(-5px);
@@ -44,8 +51,15 @@
             color: #007bff;
         }
         .footer {
-            margin-top: 20px;
+            margin-top: auto;
             text-align: center;
+            padding: 20px;
+        }
+        .cards-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 </head>
@@ -56,32 +70,34 @@
         <p>Filiais podem fazer pedidos para a matriz</p>
     </div>
 
-    <div class="container text-center">
-        <div class="row">
-            <div id="fazer-pedido" class="card col">
-                <div class="card-body">
-                    <i class="fas fa-shopping-cart icon"></i>
-                    <h5 class="card-title">Fazer Pedido</h5>
-                    <p class="card-text">Clique no botão abaixo para fazer um novo pedido.</p>
-                    <a href="fazer_pedidos.php" class="button btn">Fazer Pedido</a>
+    <div class="cards-container">
+        <div class="container text-center">
+            <div class="row">
+                <div id="fazer-pedido" class="card col">
+                    <div class="card-body">
+                        <i class="fas fa-shopping-cart icon"></i>
+                        <h5 class="card-title">Fazer Pedido</h5>
+                        <p class="card-text">Clique no botão abaixo para fazer um novo pedido.</p>
+                        <a href="fazer_pedidos.php" class="button btn">Fazer Pedido</a>
+                    </div>
                 </div>
-            </div>
 
-            <div id="historico-pedidos" class="card col">
-                <div class="card-body">
-                    <i class="fas fa-history icon"></i>
-                    <h5 class="card-title">Histórico de Pedidos</h5>
-                    <p class="card-text">Veja o histórico e o status dos pedidos realizados.</p>
-                    <button class="button btn">Ver Histórico</button>
+                <div id="historico-pedidos" class="card col">
+                    <div class="card-body">
+                        <i class="fas fa-history icon"></i>
+                        <h5 class="card-title">Histórico de Pedidos</h5>
+                        <p class="card-text">Veja o histórico e o status dos pedidos realizados.</p>
+                        <button class="button btn">Ver Histórico</button>
+                    </div>
                 </div>
-            </div>
 
-            <div id="suporte" class="card col">
-                <div class="card-body">
-                    <i class="fas fa-headset icon"></i>
-                    <h5 class="card-title">Suporte</h5>
-                    <p class="card-text">Precisa de ajuda? Entre em contato com o suporte.</p>
-                    <button class="button btn">Contato</button>
+                <div id="suporte" class="card col">
+                    <div class="card-body">
+                        <i class="fas fa-headset icon"></i>
+                        <h5 class="card-title">Suporte</h5>
+                        <p class="card-text">Precisa de ajuda? Entre em contato com o suporte.</p>
+                        <button class="button btn">Contato</button>
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,6 +1,6 @@
 <?php
 // Coloque este arquivo em um local seguro, preferencialmente fora da pasta web
-include '../includes/db.php';
+include '../../includes/db.php';
 
 // IMPORTANTE: Altere estas credenciais conforme necessário
 $username = 'admin';
