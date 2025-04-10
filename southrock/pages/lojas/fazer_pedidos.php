@@ -59,7 +59,8 @@
                     <i class="fas fa-shopping-cart icon"></i>
                     <h5 class="card-title">Fazer Pedido</h5>
                     <p class="card-text">Clique para fazer um novo pedido.</p>
-                    <button class="button btn">Fazer Pedido</button>
+                    <a href="pedidos_requisicao.php" button class="button btn">Fazer Pedido</button>
+                    <a href="pedidos_requisicao.php"></a>
                 </div>
             </div>
 
@@ -68,7 +69,8 @@
                     <i class="fas fa-gift icon"></i>
                     <h5 class="card-title">Doar Produtos</h5>
                     <p class="card-text">Clique para doar produtos.</p>
-                    <button class="button btn">Doar Produtos</button>
+                    <a href="doar_pedidos.php" class="button btn">Doar Produtos</button>
+                    <a href="doar_pedidos.php"></a>
                 </div>
             </div>
 
@@ -77,7 +79,8 @@
                     <i class="fas fa-undo icon"></i>
                     <h5 class="card-title">Devolver Produtos</h5>
                     <p class="card-text">Clique para devolver produtos.</p>
-                    <button class="button btn">Devolver Produtos</button>
+                    <a href="devolver_pedidos.php" class="button btn">Devolver Produtos</button>
+                    <a href="devolver_pedidos.php"></a>
                 </div>
             </div>
 
@@ -86,7 +89,8 @@
                     <i class="fas fa-exchange-alt icon"></i>
                     <h5 class="card-title">Trocar Produtos</h5>
                     <p class="card-text">Clique para trocar produtos.</p>
-                    <button class="button btn">Trocar Produtos</button>
+                    <a href="trocar_produtos.php" class="button btn">Trocar Produtos</button>
+                    <a href="trocar_produtos.php"></a>
                 </div>
             </div>
         </div>
