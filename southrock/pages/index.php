@@ -15,7 +15,8 @@
             height: 100vh;
             margin: 0;
             font-family: 'Arial', sans-serif;
-            background-image: linear-gradient(135deg, #00704A 0%, #006241 100%);
+            background-image: linear-gradient(45deg, #00bcd4 0%, #007bff 50%, #00bcd4 100%);
+            background-size: cover;
         }
         .container {
             background-color: #ffffff;
