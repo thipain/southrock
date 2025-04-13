@@ -1,14 +1,16 @@
 <?php
-$servername = "localhost"; // ou o endereço do seu servidor
-$username = "root"; // seu usuário do MySQL
-$password = ""; // sua senha do MySQL
-$dbname = "southrock"; // novo nome do banco de dados
+$host = 'localhost';
+$user = 'root';
+$pass = '';
+$dbname = 'southrock';
 
-// Criar conexão
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli($host, $user, $pass, $dbname);
 
-// Verificar conexão
+// Verifica conexão
 if ($conn->connect_error) {
-    die("Conexão falhou: " . $conn->connect_error);
+    die("Falha na conexão: " . $conn->connect_error);
 }
+
+// Define charset para UTF-8
+$conn->set_charset("utf8");
 ?>

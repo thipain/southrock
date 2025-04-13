@@ -8,6 +8,20 @@ CREATE TABLE produtos (
     grupo VARCHAR(255) NOT NULL
 );
 
+CREATE TABLE pedidos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    data DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE pedido_itens (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    pedido_id INT,
+    sku INT,
+    quantidade INT,
+    FOREIGN KEY (pedido_id) REFERENCES pedidos(id),
+    FOREIGN KEY (sku) REFERENCES produtos(sku)
+);
+
 CREATE TABLE tipo_usuario (
     id INT NOT NULL PRIMARY KEY,
     descricao VARCHAR(255) NOT NULL

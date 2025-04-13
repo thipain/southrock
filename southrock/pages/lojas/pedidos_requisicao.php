@@ -1,4 +1,44 @@
 <?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['finalizar'])) {
+    require_once '../../includes/db.php';
+    $dados = json_decode(file_get_contents('php://input'), true);
+    $response = ['success' => false];
+
+    if (!isset($dados['items']) || !is_array($dados['items'])) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Dados inválidos.']);
+        exit;
+    }
+
+    try {
+        $conn->begin_transaction();
+
+        $stmtPedido = $conn->prepare("INSERT INTO pedidos () VALUES ()");
+        $stmtPedido->execute();
+        $pedidoId = $stmtPedido->insert_id;
+        $stmtPedido->close();
+
+        $stmtItem = $conn->prepare("INSERT INTO pedido_itens (pedido_id, sku, quantidade) VALUES (?, ?, ?)");
+        foreach ($dados['items'] as $item) {
+            $stmtItem->bind_param('isi', $pedidoId, $item['sku'], $item['quantidade']);
+            $stmtItem->execute();
+        }
+        $stmtItem->close();
+
+        $conn->commit();
+        $response['success'] = true;
+    } catch (Exception $e) {
+        $conn->rollback();
+        $response['error'] = $e->getMessage();
+    }
+
+    header('Content-Type: application/json');
+    echo json_encode($response);
+    exit;
+}
+?>
+
+<?php
 // Configura exibição de erros para desenvolvimento
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -15,10 +55,11 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
         if (trim($searchTerm) !== '') {
             // Prepara a consulta SQL
             $sql = "SELECT sku, produto, grupo FROM produtos WHERE 
-                    sku LIKE ? OR 
+                    CAST(sku AS CHAR) LIKE ? OR 
                     produto LIKE ? OR 
                     grupo LIKE ? 
-                    ORDER BY sku";
+                    ORDER BY sku
+                    LIMIT 50";
             
             // Prepara a declaração
             $stmt = $conn->prepare($sql);
@@ -445,6 +486,9 @@ try {
             
             // Função para realizar pesquisa em tempo real
             function performSearch(searchTerm) {
+                // Adicionamos um log para depuração
+                console.log("Pesquisando por:", searchTerm);
+                
                 // Mostra o indicador de carregamento
                 searchLoading.style.display = 'block';
                 searchIndicator.innerHTML = '<i class="bi bi-arrow-repeat me-2"></i>Buscando...';
@@ -454,8 +498,14 @@ try {
                 
                 // Faz a requisição AJAX
                 fetch(`?ajax=1&term=${encodeURIComponent(searchTerm)}`)
-                    .then(response => response.json())
+                    .then(response => {
+                        console.log("Status da resposta:", response.status);
+                        return response.json();
+                    })
                     .then(data => {
+                        // Adicionamos um log para ver a resposta
+                        console.log("Resposta da pesquisa:", data);
+                        
                         // Esconde o indicador de carregamento
                         searchLoading.style.display = 'none';
                         
@@ -704,7 +754,7 @@ try {
                 });
             }
             
-            // Finalizar requisição
+            // Finalizar requisição - CORRIGIDO: função duplicada removida
             function checkout() {
                 if (cartItems.length === 0) {
                     Swal.fire({
@@ -714,7 +764,7 @@ try {
                     });
                     return;
                 }
-                
+
                 // Preparar dados para envio
                 const requisicaoData = {
                     items: cartItems.map(item => ({
@@ -722,26 +772,42 @@ try {
                         quantidade: item.quantity
                     }))
                 };
-                
-                // Aqui você pode implementar o código para enviar a requisição ao servidor
-                // Por exemplo, usando fetch API para enviar os dados por AJAX
-                
-                // Simulação de requisição bem-sucedida
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Requisição concluída!',
-                    text: 'Sua requisição foi registrada com sucesso.',
-                    confirmButtonText: 'OK'
-                }).then(() => {
-                    // Limpar carrinho após finalizar
-                    cartItems = [];
-                    updateCart();
-                    closeCart();
+
+                // Enviar dados ao servidor
+                fetch('?finalizar=1', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requisicaoData)
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Requisição concluída!',
+                            text: 'Sua requisição foi registrada com sucesso.',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            cartItems = [];
+                            updateCart();
+                            closeCart();
+                        });
+                    } else {
+                        Swal.fire('Erro', data.error || 'Falha ao registrar o pedido.', 'error');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Erro na finalização:', error);
+                    Swal.fire('Erro', 'Erro de comunicação com o servidor.', 'error');
                 });
             }
             
             // Event Listeners
             document.addEventListener('DOMContentLoaded', function() {
+                console.log('Página carregada, inicializando script...');
+                
                 // Carregar carrinho do localStorage
                 const savedCart = localStorage.getItem('cartItems');
                 if (savedCart) {
