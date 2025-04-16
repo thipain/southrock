@@ -69,7 +69,10 @@ $result = $conn->query($sql);
                                 <th>CNPJ</th>
                                 <th>Responsável</th>
                                 <th>Endereço</th>
-                                <th>Tipo de Usuário</th>
+                                <th>CEP</th>
+                                <th>Bairro</th>
+                                <th>Cidade</th>
+                                <th>UF</th>
                                 <th class="text-center">Ações</th>
                             </tr>
                         </thead>
@@ -80,12 +83,10 @@ $result = $conn->query($sql);
                                 <td><?php echo htmlspecialchars($row['cnpj']); ?></td>
                                 <td><?php echo htmlspecialchars($row['responsavel']); ?></td>
                                 <td><?php echo htmlspecialchars($row['endereco']); ?></td>
-                                <td>
-                                    <?php 
-                                    echo $row['tipo_usuario'] == 1 ? 'Administrador' : 
-                                         ($row['tipo_usuario'] == 2 ? 'Loja' : 'Usuário Padrão'); 
-                                    ?>
-                                </td>
+                                <td><?php echo htmlspecialchars($row['cep']); ?></td>
+                                <td><?php echo htmlspecialchars($row['bairro']); ?></td>
+                                <td><?php echo htmlspecialchars($row['cidade']); ?></td>
+                                <td><?php echo htmlspecialchars($row['uf']); ?></td>
                                 <td class="text-center">
                                     <div class="btn-group" role="group">
                                         <a href="editar_usuario.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-outline-primary">

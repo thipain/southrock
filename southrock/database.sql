@@ -106,7 +106,7 @@ INSERT INTO tipo_usuario (id, descricao) VALUES
 
 
 INSERT INTO usuarios (username, password, tipo_usuario, cnpj, responsavel, endereco, cep, bairro, cidade, uf) VALUES
-    ('admin', '123456', 1,'12.345.678/0001-90', 'João Silva', 'Rua das Flores, 123', '04929220', 'alto do rivieira', 'SP'),
+    ('admin', '123456', 1,'12.345.678/0001-90', 'João Silva', 'Rua das Flores, 123', '04929220', 'alto do rivieira', 'São Paulo', 'SP'),
     ('star01', 'teste', 2, '07.984.267/0001-00', 'Igor Costa', 'Av Paulista, 900 - ANDAR 10 PARTE', '01310-940', 'Bela Vista', 'São Paulo', 'SP'),
     ('star02', 'teste', 2, '07.984.267/0005-33', 'Eduardo Oliveira', 'Av. Roque Petroni Jr., 1.089 - LOJA 234-B/S NIVEL SUPERIOR SHOP.CENTER MORUMBI', '04707-970', 'Vl. Gertrudes', 'São Paulo', 'SP'),
     ('star03', 'teste', 2, '07.984.267/0006-14', 'Juliana Martins', 'Av. Higienópolis, 618 - SHOPPING CENTER PATIO HIGIENOPOLIS, ARCO 324', '01238-000', 'Higienópolis', 'São Paulo', 'SP'),

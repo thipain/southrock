@@ -18,11 +18,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $cnpj = $_POST['cnpj'];
     $responsavel = $_POST['responsavel'];
     $endereco = $_POST['endereco'];
+    $cep = $_POST['cep'];
+    $bairro = $_POST['bairro'];
+    $cidade = $_POST['cidade'];
+    $uf = $_POST['uf'];
 
     // Prepare a consulta SQL para inserir o usuário
-    $sql = "INSERT INTO usuarios (username, password, tipo_usuario, cnpj, responsavel, endereco) VALUES (?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO usuarios (username, password, tipo_usuario, cnpj, responsavel, endereco, cep, bairro, cidade, uf) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssiiss", $username, $hashed_password, $tipo_usuario, $cnpj, $responsavel, $endereco);
+    $stmt->bind_param("ssisssssss", $username, $hashed_password, $tipo_usuario, $cnpj, $responsavel, $endereco, $cep, $bairro, $cidade, $uf);
+
 
     // Execute a consulta e verifique se foi bem-sucedida
     if ($stmt->execute()) {
@@ -84,6 +89,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <input type="text" name="cnpj" placeholder="CNPJ" required>
             <input type="text" name="responsavel" placeholder="Nome do Responsável" required>
             <input type="text" name="endereco" placeholder="Endereço" required>
+            <input type="text" name="cep" placeholder="CEP" required>
+            <input type="text" name="bairro" placeholder="Bairro" required>
+            <input type="text" name="cidade" placeholder="Cidade" required>
+            <input type="text" name="uf" placeholder="UF" required>
             <button type="submit" class="button">Adicionar Usuário</button>
         </form>
     </div>

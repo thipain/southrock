@@ -32,18 +32,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $cnpj = $_POST['cnpj'];
     $responsavel = $_POST['responsavel'];
     $endereco = $_POST['endereco'];
+    $cep = $_POST['cep'];
+    $bairro = $_POST['bairro'];
+    $cidade = $_POST['cidade'];
+    $uf = $_POST['uf'];
 
-    // Verificar se a senha foi alterada
     if (!empty($_POST['password'])) {
         $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-        $sql = "UPDATE usuarios SET username = ?, tipo_usuario = ?, cnpj = ?, responsavel = ?, endereco = ?, password = ? WHERE id = ?";
+        $sql = "UPDATE usuarios SET username = ?, tipo_usuario = ?, cnpj = ?, responsavel = ?, endereco = ?, cep = ?, bairro = ?, cidade = ?, uf = ?, password = ? WHERE id = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sissssi", $username, $tipo_usuario, $cnpj, $responsavel, $endereco, $password, $id);
+        $stmt->bind_param("sissssssssi", $username, $tipo_usuario, $cnpj, $responsavel, $endereco, $cep, $bairro, $cidade, $uf, $password, $id);
     } else {
-        // Se a senha não foi alterada, mantenha a mesma
-        $sql = "UPDATE usuarios SET username = ?, tipo_usuario = ?, cnpj = ?, responsavel = ?, endereco = ? WHERE id = ?";
+        $sql = "UPDATE usuarios SET username = ?, tipo_usuario = ?, cnpj = ?, responsavel = ?, endereco = ?, cep = ?, bairro = ?, cidade = ?, uf = ? WHERE id = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sisssi", $username, $tipo_usuario, $cnpj, $responsavel, $endereco, $id);
+        $stmt->bind_param("sisssssssi", $username, $tipo_usuario, $cnpj, $responsavel, $endereco, $cep, $bairro, $cidade, $uf, $id);
     }
 
     if ($stmt->execute()) {
@@ -110,6 +112,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <label class="form-label">Endereço</label>
                     <input type="text" name="endereco" class="form-control" 
                            value="<?php echo htmlspecialchars($user['endereco']); ?>" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">CEP</label>
+                    <input type="text" name="cep" class="form-control" 
+                           value="<?php echo htmlspecialchars($user['cep']); ?>" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Bairro</label>
+                    <input type="text" name="bairro" class="form-control" 
+                           value="<?php echo htmlspecialchars($user['bairro']); ?>" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Cidade</label>
+                    <input type="text" name="cidade" class="form-control" 
+                           value="<?php echo htmlspecialchars($user['cidade']); ?>" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">UF</label>
+                    <input type="text" name="uf" class="form-control" 
+                           value="<?php echo htmlspecialchars($user['uf']); ?>" required>
                 </div>
 
                 <div class="mb-3">
