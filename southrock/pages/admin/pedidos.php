@@ -38,7 +38,7 @@ require_once '../../includes/db.php';
         <h1 class="mb-4">Pedidos Realizados</h1>
 
         <?php
-        $pedidos = $conn->query("SELECT * FROM pedidos ORDER BY data DESC");
+        $pedidos = $conn->query("SELECT * FROM pedidos ORDER BY data ASC");
         if ($pedidos->num_rows > 0):
             while ($pedido = $pedidos->fetch_assoc()):
                 $pedidoId = $pedido['id'];
