@@ -9,24 +9,27 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
-            background-color: #f8f9fa;
             display: flex;
-            justify-content: center;
+            justify-content: flex-end;
             align-items: center;
             height: 100vh;
             margin: 0;
-            font-family: 'Arial', sans-serif;
-            background-image: linear-gradient(45deg, #007bff 0%, #00bcd4 50%, #007bff 100%);
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            background-image: linear-gradient(to right,rgb(124, 187, 235) 0%,rgb(60, 111, 177) 50%,rgb(0, 37, 78) 100%);
             background-size: cover;
         }
 
         .container {
-            background-color: rgba(255, 255, 255, 0.4);
-            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.062);
+            border-radius: 40px;
             padding: 30px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
             width: 360px;
             max-width: 90%;
+            border-color: aliceblue;
+            border-style: solid;
+            border-width: 7px 7px;
+            margin-right: 380px;
         }
 
         .logo-container {
@@ -42,9 +45,10 @@
         h1 {
             text-align: center;
             /* Alinha o texto ao centro */
-            color: #333;
+            color: #000000;
             margin-bottom: 25px;
             font-weight: 600;
+            font-family: 'Times New Roman', Times, serif;
         }
 
         .form-control {
@@ -64,7 +68,7 @@
         }
 
         .btn-primary {
-            background-color: #00704A;
+            background-color: #023E8A;
             border: none;
             height: 45px;
             font-weight: 500;
@@ -74,18 +78,18 @@
         }
 
         .btn-primary:hover {
-            background-color: #005136;
+            background-color: #246DB2;
         }
 
         .form-footer {
             text-align: center;
             margin-top: 25px;
             font-size: 14px;
-            color: #777;
+            color: #000000;
         }
 
         .form-footer a {
-            color: #00704A;
+            color: #00ffdd;
             text-decoration: none;
         }
 
@@ -114,13 +118,24 @@
             border-radius: 15px;
             width: 100%;
         }
+
+        .img{
+            margin-left: 20%;
+            width: 380px; 
+            margin-bottom: 280px;
+            align-items: center;
+            justify-content: center;
+        }
+        
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <h1>LOGIN</h1> <!-- Agora o "LOGIN" está centralizado -->
 
+      <img class="img" src="../images/icon_lobo.png" alt="logo"> 
+
+    <div class="container">
+        <h1>LOGIN</h1> 
         <form action="login.php" method="POST">
             <div class="input-group">
                 <input type="text" id="username" name="username" class="form-control" placeholder="E-MAIL" required>
