@@ -70,7 +70,7 @@
         .content {
             flex: 1;
             padding: 20px;
-            background-color: #f8f9fa;
+            background-color: #E2EDFA;
         }
 
         .header {
@@ -91,6 +91,7 @@
             border: none;
             transition: background-color 0.3s;
             cursor: pointer;
+            
         }
 
         .button:hover {
@@ -111,6 +112,7 @@
             padding: 10px 15px;
             width: 100%;
             transition: border-color 0.3s;
+            background-color: #F8FAFC;
         }
 
         .search-input:focus {
@@ -124,11 +126,12 @@
             gap: 10px;
             flex-wrap: wrap;
             margin-top: 20px;
+            margin: 2px;
         }
 
         .filter-tag {
-            background-color: #e9ecef;
-            color: #495057;
+            background-color: #0077B6;
+            color: #ffffff;
             border-radius: 25px;
             padding: 8px 15px;
             cursor: pointer;
@@ -139,8 +142,22 @@
             border: 1px solid transparent;
         }
 
+        .filter-tag2{
+            background-color: #0096C7;
+            color: #ffffff;
+            border-radius: 25px;
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            border: 1px solid transparent;
+            
+        }
+
         .filter-tag.active {
-            background-color: #007bff;
+            background-color: #023E8A;
             color: white;
         }
 
@@ -156,3 +173,13 @@
         .filter-tag i {
             margin-right: 8px;
         }
+
+    .search-container{
+        background-color: #F8FAFC;
+    }
+
+    .text-center{
+        background-color: #E2EDFA;
+    }
+
+    
