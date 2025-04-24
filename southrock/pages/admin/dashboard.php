@@ -17,16 +17,18 @@ if (!isset($_SESSION['username'])) {
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
+        *{}
+        
         body {
             display: flex;
             font-family: 'Arial', sans-serif;
             margin: 0;
             height: 100vh;
-            background-color: #f8f9fa;
+            background-color: #fff4e8;
         }
         .sidebar {
             width: 60px;
-            background-color: #6c757d;
+            background-image: linear-gradient(to left,rgb(124, 187, 235) 0%,rgb(60, 111, 177) 50%,rgb(0, 37, 78) 100%);
             transition: width 0.3s;
             overflow: hidden;
             display: flex;
@@ -46,7 +48,7 @@ if (!isset($_SESSION['username'])) {
             transition: background 0.3s;
         }
         .sidebar a:hover {
-            background-color: #5a6268;
+            background-color: #480ca8;
         }
         .sidebar-header {
             color: white;
@@ -81,7 +83,7 @@ if (!isset($_SESSION['username'])) {
             background-color: #f8f9fa;
         }
         .header {
-            background-color: #6c757d;
+            background-image: linear-gradient(to right,rgb(124, 187, 235) 0%,rgb(60, 111, 177) 50%,rgb(0, 37, 78) 100%);
             color: white;
             padding: 20px;
             text-align: center;

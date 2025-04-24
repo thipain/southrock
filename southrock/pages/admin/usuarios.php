@@ -4,21 +4,42 @@ if (!isset($_SESSION['username'])) {
     header("Location: index.php");
     exit();
 }
-
+ 
 include '../../includes/db.php';
-
+ 
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
+ 
+    // Verificar se o usuário logado é admin e se o id que está sendo excluído é de um admin
+    if ($_SESSION['tipo_usuario'] == 1) {
+        // Verificar se o usuário logado está tentando excluir um admin
+        $sql = "SELECT tipo_usuario FROM usuarios WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+ 
+        if ($result->num_rows == 1) {
+            $user = $result->fetch_assoc();
+            if ($user['tipo_usuario'] == 1) {
+                // Impedir a exclusão do admin
+                echo "<script>alert('Não é possível excluir o usuário admin.'); window.location.href='usuarios.php';</script>";
+                exit();
+            }
+        }
+    }
+ 
+    // Caso contrário, excluir o usuário
     $sql = "DELETE FROM usuarios WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $id);
     $stmt->execute();
 }
-
+ 
 $sql = "SELECT * FROM usuarios";
 $result = $conn->query($sql);
 ?>
-
+ 
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -58,7 +79,7 @@ $result = $conn->query($sql);
                 </div>
             </div>
         </div>
-
+ 
         <div class="card card-custom border-0">
             <div class="card-body p-0">
                 <div class="table-responsive">
@@ -92,9 +113,16 @@ $result = $conn->query($sql);
                                         <a href="editar_usuario.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-outline-primary">
                                             <i class="bi bi-pencil"></i>
                                         </a>
-                                        <button onclick="confirmDelete(<?php echo $row['id']; ?>)" class="btn btn-sm btn-outline-danger">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
+                                        <?php if ($row['tipo_usuario'] == 1): ?>
+                                            <!-- Desabilita o botão de excluir para admin -->
+                                            <button class="btn btn-sm btn-outline-danger" disabled>
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        <?php else: ?>
+                                            <button onclick="confirmDelete(<?php echo $row['id']; ?>)" class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        <?php endif; ?>
                                     </div>
                                 </td>
                             </tr>
@@ -105,7 +133,7 @@ $result = $conn->query($sql);
             </div>
         </div>
     </div>
-
+ 
     <!-- Bootstrap JS e Dependências -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- SweetAlert2 para confirmação de exclusão -->
@@ -130,7 +158,9 @@ $result = $conn->query($sql);
     </script>
 </body>
 </html>
-
+ 
 <?php
 $conn->close();
 ?>
+ 
+ 
