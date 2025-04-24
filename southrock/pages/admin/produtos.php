@@ -58,17 +58,8 @@ try {
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <!-- Bootstrap Icons -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-        <style>
-            body {
-                background-color: #f4f6f9;
-            }
-            .table-hover tbody tr:hover {
-                background-color: rgba(0,0,0,0.075);
-            }
-            .card-custom {
-                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            }
-        </style>
+        <link rel="stylesheet" href="../../css/produtos.css">
+
     </head>
     <body>
         <div class="container-fluid px-4 py-4">
@@ -138,26 +129,14 @@ try {
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- SweetAlert2 para confirmação de exclusão -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script>
-            function confirmDelete(sku) {
-                Swal.fire({
-                    title: 'Tem certeza?',
-                    text: 'Você não poderá reverter esta ação!',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Sim, excluir!',
-                    cancelButtonText: 'Cancelar'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = '?delete=' + sku;
-                    }
-                });
-            }
-        </script>
+
+        <script src="../../js/produtos.js"></script>
+        
     </body>
     </html>
+
+
+
     <?php
 
     if ($resultado->num_rows === 0) {

@@ -1,0 +1,14 @@
+.pedido-card {
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.pedido-header {
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}

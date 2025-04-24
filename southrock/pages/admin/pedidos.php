@@ -15,22 +15,7 @@ require_once '../../includes/db.php';
     <meta charset="UTF-8">
     <title>Lista de Pedidos</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .pedido-card {
-            background-color: #fff;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            padding: 20px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .pedido-header {
-            font-weight: bold;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
-        }
-    </style>
+    <link rel="stylesheet" href="../../css/pedidos.css">
 </head>
 
 <body class="bg-light">

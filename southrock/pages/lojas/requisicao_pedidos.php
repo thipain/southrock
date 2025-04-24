@@ -8,60 +8,8 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        body {
-                
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            font-family: 'Arial', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        .header {
-            background-color: #6c757d;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .card {
-            margin: 15px;
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s;
-            background-color: rgba(255, 255, 255, 0.9);
-        }
-        .card:hover {
-            transform: translateY(-5px);
-        }
-        .button {
-            background-color: #007bff;
-            color: white;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-        .button:hover {
-            background-color: #0056b3;
-        }
-        .icon {
-            font-size: 50px;
-            color: #007bff;
-        }
-        .footer {
-            margin-top: auto;
-            text-align: center;
-            padding: 20px;
-        }
-        .cards-container {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-    </style>
+    <link rel="stylesheet" href="../../css/requisicao_pedidos.css">
+
 </head>
 <body>
 

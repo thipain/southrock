@@ -25,11 +25,11 @@
             padding: 40px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
             width: 390px;
-            max-width: 90%;
+            max-width: 100%;
             border-color: aliceblue;
             border-style: solid;
             border-width: 7px 7px;
-            margin-right: 335px;
+            margin-right: 15%;
         }
  
         .logo-container {
@@ -121,7 +121,7 @@
         }
  
         .img{
-            margin-left: 15%;
+            margin-left: 10%;
             width: 380px;
             align-items: center;
             justify-content: center;
