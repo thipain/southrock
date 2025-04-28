@@ -1,185 +1,198 @@
-        body {
-            display: flex;
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            height: 100vh;
-            background-color: #fff4e8;
-        }
+body {
+    display: flex;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    height: 100vh;
+    background-color: #fff4e8;
+}
 
-        .sidebar {
-            width: 60px;
-            background-image: linear-gradient(to left, rgb(124, 187, 235) 0%, rgb(60, 111, 177) 50%, rgb(0, 37, 78) 100%);
-            transition: width 0.3s;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-        }
+.sidebar {
+    width: 60px;
+    background-image: linear-gradient(to left, rgb(124, 187, 235) 0%, rgb(60, 111, 177) 50%, rgb(0, 37, 78) 100%);
+    transition: width 0.3s;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
 
-        .sidebar:hover {
-            width: 200px;
-        }
+.sidebar:hover {
+    width: 200px;
+}
 
-        .sidebar a {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            color: white;
-            text-decoration: none;
-            transition: background 0.3s;
-        }
+.sidebar a {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    color: white;
+    text-decoration: none;
+    transition: background 0.3s;
+}
 
-        .sidebar a:hover {
-            background-color: #480ca8;
-        }
+.sidebar a:hover {
+    background-color: #480ca8;
+}
 
-        .sidebar-header {
-            color: white;
-            text-align: center;
-            padding: 15px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
+.sidebar-header {
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-        .icon {
-            color: white;
-            font-size: 20px;
-            width: 30px;
-            text-align: center;
-            margin-right: 10px;
-        }
+.icon {
+    color: white;
+    font-size: 20px;
+    width: 30px;
+    text-align: center;
+    margin-right: 10px;
+}
 
-        .text {
-            display: none;
-        }
+.text {
+    display: none;
+}
 
-        .sidebar a:hover .text {
-            display: inline;
-        }
+.sidebar a:hover .text {
+    display: inline;
+}
 
-        .sidebar a .text {
-            display: inline;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
+.sidebar a .text {
+    display: inline;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
 
-        .sidebar:hover a .text {
-            opacity: 1;
-        }
+.sidebar:hover a .text {
+    opacity: 1;
+}
 
-        .content {
-            flex: 1;
-            padding: 20px;
-            background-color: #E2EDFA;
-        }
+.content {
+    flex: 1;
+    padding: 20px;
+    background-color: #E2EDFA;
+}
 
-        .header {
-            background-image: linear-gradient(to right, rgb(124, 187, 235) 0%, rgb(60, 111, 177) 50%, rgb(0, 37, 78) 100%);
-            color: white;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
+.header {
+    background-image: linear-gradient(to right, rgb(124, 187, 235) 0%, rgb(60, 111, 177) 50%, rgb(0, 37, 78) 100%);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
 
-        .button {
-            background-color: #007bff;
-            color: white;
-            border-radius: 5px;
-            padding: 8px 16px;
-            border: none;
-            transition: background-color 0.3s;
-            cursor: pointer;
-            
-        }
+.button {
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    padding: 8px 16px;
+    border: none;
+    transition: background-color 0.3s;
+    cursor: pointer;
+}
 
-        .button:hover {
-            background-color: #0056b3;
-        }
+.button:hover {
+    background-color: #0056b3;
+}
 
-        .search-container {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
+.search-container {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+    background-color: #F8FAFC;
+}
 
-        .search-input {
-            border: 1px solid #ced4da;
-            border-radius: 5px;
-            padding: 10px 15px;
-            width: 100%;
-            transition: border-color 0.3s;
-            background-color: #F8FAFC;
-        }
+.search-wrapper {
+    position: relative;
+}
 
-        .search-input:focus {
-            border-color: #007bff;
-            outline: none;
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-        }
+.search-input {
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    padding: 10px 15px;
+    width: 100%;
+    transition: border-color 0.3s;
+    background-color: #F8FAFC;
+    padding-right: 40px; /* espaço para a lupa */
+}
 
-        .filters-container {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 20px;
-            margin: 2px;
-        }
+.search-input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
 
-        .filter-tag {
-            background-color: #0077B6;
-            color: #ffffff;
-            border-radius: 25px;
-            padding: 8px 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            border: 1px solid transparent;
-        }
+.search-icon {
+    position: absolute;
+    right: 25px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    font-size: 18px;
+    pointer-events: none;
+}
 
-        .filter-tag2{
-            background-color: #0096C7;
-            color: #ffffff;
-            border-radius: 25px;
-            padding: 8px 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            border: 1px solid transparent;
-            
-        }
+.search-input:focus + .search-icon {
+    color: #007bff;
+}
 
-        .filter-tag.active {
-            background-color: #023E8A;
-            color: white;
-        }
+.filters-container {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    margin: 2px;
+}
 
-        .filter-tag:hover {
-            background-color: #dee2e6;
-            transform: translateY(-2px);
-        }
+.filter-tag {
+    background-color: #0077B6;
+    color: #ffffff;
+    border-radius: 25px;
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    border: 1px solid transparent;
+}
 
-        .filter-tag.active:hover {
-            background-color: #0069d9;
-        }
+.filter-tag2 {
+    background-color: #0096C7;
+    color: #ffffff;
+    border-radius: 25px;
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    border: 1px solid transparent;
+}
 
-        .filter-tag i {
-            margin-right: 8px;
-        }
+.filter-tag.active {
+    background-color: #023E8A;
+    color: white;
+}
 
-    .search-container{
-        background-color: #F8FAFC;
-    }
+.filter-tag:hover {
+    background-color: #dee2e6;
+    transform: translateY(-2px);
+}
 
-    .text-center{
-        background-color: #E2EDFA;
-    }
+.filter-tag.active:hover {
+    background-color: #0069d9;
+}
 
-    
+.filter-tag i {
+    margin-right: 8px;
+}
+
+.text-center {
+    background-color: #E2EDFA;
+}
