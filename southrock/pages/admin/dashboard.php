@@ -18,6 +18,7 @@ if (!isset($_SESSION['username'])) {
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="../../css/dashboard.css">
 </head>
 
@@ -28,6 +29,15 @@ if (!isset($_SESSION['username'])) {
         </div>
 
         <div>
+            <a href="dashboard.php">
+                <span class="icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" viewBox="0 0 16 16">
+                        <path d="M8 3.293l6 6V15a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-5.707l6-6zM7 13V9h2v4h3V8.707l-4-4-4 4V13h3z" />
+                    </svg>
+                </span>
+                <span class="text">Início</span>
+            </a>
+
             <a href="pedidos.php">
                 <i class="fas fa-shopping-cart icon"></i>
                 <span class="text">Pedidos</span>
@@ -50,11 +60,11 @@ if (!isset($_SESSION['username'])) {
         </a>
     </div>
 
-    <div class="content"> 
+    <div class="content">
         <div class="header">
             <h1>Bem-vindo ao Dashboard</h1>
         </div>
-        
+
         <div class="main-content">
             <div class="dashboard-center">
                 <div class="logo-container">
