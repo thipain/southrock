@@ -1,3 +1,217 @@
+/* Estilos herdados do dashboard.css */
+body {
+    display: flex;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    height: 100vh;
+    background-color: #fff4e8;
+}
+
+.sidebar {
+    width: 60px;
+    background-image: linear-gradient(to left, rgb(124, 187, 235) 0%, rgb(60, 111, 177) 50%, rgb(0, 37, 78) 100%);
+    transition: width 0.3s;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar:hover {
+    width: 200px;
+}
+
+.sidebar a {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    color: white;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.sidebar a:hover {
+    background-color: #480ca8;
+}
+
+.sidebar-header {
+    color: white;
+    text-align: center;
+    padding: 13px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.icon {
+    color: white;
+    font-size: 20px;
+    width: 30px;
+    text-align: center;
+    margin-right: 10px;
+}
+
+.text {
+    display: none;
+}
+
+.sidebar a:hover .text {
+    display: inline;
+}
+
+.sidebar a .text {
+    display: inline;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.sidebar:hover a .text {
+    opacity: 1;
+}
+
+.content {
+    flex: 1;
+    padding: 0;
+    background-color: #E2EDFA;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    background-image: linear-gradient(to right, rgb(124, 187, 235) 0%, rgb(60, 111, 177) 50%, rgb(0, 37, 78) 100%);
+    color: white;
+    height: 50px; /* Altura correspondente ao sidebar-header mais as bordas */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    margin-bottom: 0;
+    border-radius: 0;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.main-content {
+    padding: 20px;
+    flex: 1;
+}
+
+.button {
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    padding: 8px 16px;
+    border: none;
+    transition: background-color 0.3s;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+.search-container {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+    background-color: #F8FAFC;
+}
+
+.search-wrapper {
+    position: relative;
+}
+
+.search-input {
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    padding: 10px 15px;
+    width: 100%;
+    transition: border-color 0.3s;
+    background-color: #F8FAFC;
+    padding-right: 40px; /* espaço para a lupa */
+}
+
+.search-input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.search-icon {
+    position: absolute;
+    right: 25px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    font-size: 18px;
+    pointer-events: none;
+}
+
+.search-input:focus + .search-icon {
+    color: #007bff;
+}
+
+.filters-container {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 15px; /* Espaçamento de 5px como solicitado */
+}
+
+.filter-tag {
+    background-color: #0077B6;
+    color: #ffffff;
+    border-radius: 25px;
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    border: 1px solid transparent;
+}
+
+.filter-tag2 {
+    background-color: #0096C7;
+    color: #ffffff;
+    border-radius: 25px;
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    border: 1px solid transparent;
+}
+
+.filter-tag.active {
+    background-color: #023E8A;
+    color: white;
+}
+
+.filter-tag:hover {
+    background-color: #dee2e6;
+    transform: translateY(-2px);
+}
+
+.filter-tag.active:hover {
+    background-color: #0069d9;
+}
+
+.filter-tag i {
+    margin-right: 8px;
+}
+
+.text-center {
+    background-color: #E2EDFA;
+}
+
+/* Estilos específicos para a página de pedidos */
 .pedido-card {
     background-color: #fff;
     border: 1px solid #dee2e6;
@@ -11,4 +225,28 @@
     font-weight: bold;
     margin-bottom: 10px;
     font-size: 1.1rem;
+    color: #0077B6;
+}
+
+.list-group-item {
+    border-left: none;
+    border-right: none;
+    border-radius: 0 !important;
+}
+
+.list-group-item:first-child {
+    border-top: none;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}
+
+.badge-primary {
+    background-color: #0077B6;
+}
+
+.badge-pill {
+    padding: 0.4em 0.7em;
+    font-size: 0.85em;
 }
