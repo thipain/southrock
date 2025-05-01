@@ -96,6 +96,7 @@ body {
 .main-content {
     padding: 20px;
     flex: 1;
+    overflow-y: auto;
 }
 
 .button {
@@ -189,64 +190,112 @@ body {
     border: 1px solid transparent;
 }
 
-.filter-tag.active {
+.filter-tag.active, .filter-tag2.active {
     background-color: #023E8A;
     color: white;
+    font-weight: bold;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.filter-tag:hover {
-    background-color: #dee2e6;
+.filter-tag:hover, .filter-tag2:hover {
+    background-color: #03045E;
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.filter-tag.active:hover {
-    background-color: #0069d9;
-}
-
-.filter-tag i {
+.filter-tag i, .filter-tag2 i {
     margin-right: 8px;
 }
 
-.text-center {
-    background-color: #E2EDFA;
-}
-
 /* Estilos específicos para a página de pedidos */
-.pedido-card {
-    background-color: #fff;
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    padding: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+.pedidos-list-container {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 }
 
-.pedido-header {
-    font-weight: bold;
-    margin-bottom: 10px;
-    font-size: 1.1rem;
+.pedidos-table {
+    margin-bottom: 0;
+    background-color: white;
+}
+
+.pedidos-table thead {
+    background-color: #f8f9fa;
+}
+
+.pedidos-table th {
+    border-top: none;
+    font-weight: 600;
+    color: #495057;
+}
+
+.pedido-row {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.pedido-row:hover {
+    background-color: #f8f9fa;
+}
+
+.tipo-pedido {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tipo-pedido i {
     color: #0077B6;
 }
 
-.list-group-item {
-    border-left: none;
-    border-right: none;
-    border-radius: 0 !important;
-}
-
-.list-group-item:first-child {
-    border-top: none;
-}
-
-.list-group-item:last-child {
-    border-bottom: none;
+.badge {
+    font-size: 85%;
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+    border-radius: 10px;
 }
 
 .badge-primary {
     background-color: #0077B6;
 }
 
-.badge-pill {
-    padding: 0.4em 0.7em;
-    font-size: 0.85em;
+.badge-warning {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.badge-success {
+    background-color: #28a745;
+}
+
+.btn-info {
+    background-color: #0096C7;
+    border-color: #0096C7;
+}
+
+.btn-info:hover {
+    background-color: #0077B6;
+    border-color: #0077B6;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    .pedidos-table th:nth-child(3), 
+    .pedidos-table td:nth-child(3) {
+        display: none;
+    }
+}
+
+@media (max-width: 576px) {
+    .pedidos-table th:nth-child(4), 
+    .pedidos-table td:nth-child(4) {
+        display: none;
+    }
+    
+    .filter-tag, .filter-tag2 {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
 }

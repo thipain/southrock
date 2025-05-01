@@ -20,7 +20,7 @@ if ($conn->connect_error) {
 }
 
 // Consulta para obter o número de pedidos pendentes
-$sql_pedidos = "SELECT COUNT(*) as total_pedidos FROM pedidos WHERE status = 'pendente'";
+$sql_pedidos = "SELECT COUNT(*) as total_pedidos FROM pedidos WHERE status = 'novo'";
 $result_pedidos = $conn->query($sql_pedidos);
 $total_pedidos = 0;
 if ($result_pedidos && $result_pedidos->num_rows > 0) {
