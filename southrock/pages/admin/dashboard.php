@@ -4,6 +4,54 @@ if (!isset($_SESSION['username'])) {
     header("Location: index.php");
     exit();
 }
+
+// Conexão com o banco de dados
+$servername = "localhost"; // Altere para o seu servidor de banco de dados
+$username = "root"; // Altere para o seu usuário do banco de dados
+$password = ""; // Altere para sua senha do banco de dados
+$dbname = "southrock"; // Altere para o nome do seu banco de dados
+
+// Criar conexão
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Verificar conexão
+if ($conn->connect_error) {
+    die("Falha na conexão: " . $conn->connect_error);
+}
+
+// Consulta para obter o número de pedidos pendentes
+$sql_pedidos = "SELECT COUNT(*) as total_pedidos FROM pedidos WHERE status = 'pendente'";
+$result_pedidos = $conn->query($sql_pedidos);
+$total_pedidos = 0;
+if ($result_pedidos && $result_pedidos->num_rows > 0) {
+    $row = $result_pedidos->fetch_assoc();
+    $total_pedidos = $row["total_pedidos"];
+}
+
+// Consulta para obter o número total de produtos cadastrados
+$sql_produtos = "SELECT COUNT(*) as total_produtos FROM produtos";
+$result_produtos = $conn->query($sql_produtos);
+$total_produtos = 0;
+if ($result_produtos && $result_produtos->num_rows > 0) {
+    $row = $result_produtos->fetch_assoc();
+    $total_produtos = $row["total_produtos"];
+}
+
+// Consulta para obter o número total de usuários (independente do status)
+$sql_usuarios = "SELECT COUNT(*) as total_usuarios FROM usuarios";
+$result_usuarios = $conn->query($sql_usuarios);
+$total_usuarios = 0;
+if ($result_usuarios && $result_usuarios->num_rows > 0) {
+    $row = $result_usuarios->fetch_assoc();
+    $total_usuarios = $row["total_usuarios"];
+}
+
+// Informações do sistema
+$versao_sistema = "1.0.2"; // Versão atual do sistema
+$data_atualizacao = "30/04/2025"; // Data da última atualização
+
+// Fechar conexão
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -13,73 +61,121 @@ if (!isset($_SESSION['username'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Matriz</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
+    <!-- Sidebar -->
     <div class="sidebar">
-        <div class="sidebar-header">
-            <i class="fas fa-bars"></i>
-        </div>
-
         <div>
-            <a href="dashboard.php">
-                <span class="icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" viewBox="0 0 16 16">
-                        <path d="M8 3.293l6 6V15a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-5.707l6-6zM7 13V9h2v4h3V8.707l-4-4-4 4V13h3z" />
-                    </svg>
-                </span>
-                <span class="text">Início</span>
-            </a>
-
-            <a href="pedidos.php">
-                <i class="fas fa-shopping-cart icon"></i>
-                <span class="text">Pedidos</span>
-            </a>
-
-            <a href="usuarios.php">
-                <i class="fas fa-users icon"></i>
-                <span class="text">Usuários</span>
-            </a>
-
-            <a href="produtos.php">
-                <i class="fas fa-box icon"></i>
-                <span class="text">Produtos</span>
-            </a>
+            <div class="sidebar-header">
+                <i class="fas fa-bars icon"></i><span class="text">Menu</span>
+            </div>
+            <a href="dashboard.php" class="active"><i class="fas fa-home icon"></i><span class="text">Início</span></a>
+            <a href="pedidos.php"><i class="fas fa-shopping-cart icon"></i><span class="text">Pedidos</span></a>
+            <a href="produtos.php"><i class="fas fa-box icon"></i><span class="text">Produtos</span></a>
+            <a href="usuarios.php"><i class="fas fa-users icon"></i><span class="text">Usuários</span></a>
         </div>
-
-        <a href="../../logout/logout.php">
-            <i class="fas fa-sign-out-alt icon"></i>
-            <span class="text">Sair</span>
-        </a>
+        <a href="../../logout/logout.php"><i class="fas fa-sign-out-alt icon"></i><span class="text">Sair</span></a>
     </div>
 
+    <!-- Conteúdo principal -->
     <div class="content">
-        <div class="header">
-            <h1>Bem-vindo ao Dashboard</h1>
-        </div>
-
-        <div class="main-content">
-            <div class="dashboard-center">
-                <div class="logo-container">
-                    <img src="../../images/zamp.png" alt="Logo Zamp" class="logo-img">
-                    <p class="instruction-text">Utilize o menu lateral para navegar entre as funcionalidades do sistema</p>
+        <div class="container py-4">
+            <!-- Header com título e informação de usuário -->
+            <div class="dashboard-header mb-4">
+                <h1 class="painel-titulo">Painel de Controle</h1>
+                <div class="user-info">
+                    <span>Bem-vindo, <?php echo $_SESSION['username']; ?></span>
+                    <span class="badge badge-primary ml-2">Administrador</span>
                 </div>
+            </div>
+
+            <!-- Cards de estatísticas -->
+            <div class="row">
+                <!-- Card de Pedidos -->
+                <div class="col-md-3 mb-4">
+                    <div class="card estatistica-card">
+                        <div class="card-body">
+                            <div class="card-header-flex">
+                                <h5 class="card-title">PEDIDOS</h5>
+                                <div class="card-icon bg-primary">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                            </div>
+                            <h2 class="card-value <?php echo ($total_pedidos > 0) ? 'text-primary' : 'text-success'; ?>"><?php echo $total_pedidos; ?></h2>
+                            <p class="card-subtitle">Pedidos Pendentes</p>
+                            <a href="pedidos.php" class="card-link">Ver Detalhes <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card de Produtos -->
+                <div class="col-md-3 mb-4">
+                    <div class="card estatistica-card">
+                        <div class="card-body">
+                            <div class="card-header-flex">
+                                <h5 class="card-title">PRODUTOS</h5>
+                                <div class="card-icon bg-success">
+                                    <i class="fas fa-box"></i>
+                                </div>
+                            </div>
+                            <h2 class="card-value text-success"><?php echo $total_produtos; ?></h2>
+                            <p class="card-subtitle">Produtos Cadastrados</p>
+                            <a href="produtos.php" class="card-link">Ver Detalhes <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card de Usuários -->
+                <div class="col-md-3 mb-4">
+                    <div class="card estatistica-card">
+                        <div class="card-body">
+                            <div class="card-header-flex">
+                                <h5 class="card-title">USUÁRIOS</h5>
+                                <div class="card-icon bg-info">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                            </div>
+                            <h2 class="card-value text-info"><?php echo $total_usuarios; ?></h2>
+                            <p class="card-subtitle">Usuários Cadastrados</p>
+                            <a href="usuarios.php" class="card-link">Ver Detalhes <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card de Sistema -->
+                <div class="col-md-3 mb-4">
+                    <div class="card estatistica-card">
+                        <div class="card-body">
+                            <div class="card-header-flex">
+                                <h5 class="card-title">SISTEMA</h5>
+                                <div class="card-icon bg-warning">
+                                    <i class="fas fa-cog"></i>
+                                </div>
+                            </div>
+                            <h2 class="card-value text-warning"><?php echo $versao_sistema; ?></h2>
+                            <p class="card-subtitle">Versão Atual</p>
+                            <p class="sistema-info">Atualizado: <?php echo $data_atualizacao; ?></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Logo e mensagem de boas-vindas -->
+            <div class="logo-container text-center mt-4 mb-2">
+                <img src="../../images/zamp.png" alt="Logo Zamp" class="logo-img">
+                <p class="instruction-text mt-3">
+                    Bem-vindo ao Sistema Matriz. Utilize o menu lateral para navegar entre as funcionalidades disponíveis.
+                </p>
             </div>
         </div>
     </div>
 
-    <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="../../js/dashboard.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

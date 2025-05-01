@@ -30,6 +30,12 @@ require_once '../../includes/db.php';
         </div>
 
         <div>
+
+            <a href="dashboard.php">
+                <i class="fas fa-home icon"></i>
+                <span class="text">Início</span>
+            </a>
+
             <a href="pedidos.php">
                 <i class="fas fa-shopping-cart icon"></i>
                 <span class="text">Pedidos</span>
