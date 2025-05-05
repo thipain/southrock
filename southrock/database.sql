@@ -120,3 +120,5 @@ INSERT INTO pedido_itens (pedido_id, sku, quantidade, observacao) VALUES
     (2, 34233001, 1, 'Produto com embalagem danificada'),
     (3, 600023065, 10, 'Para evento do dia 15/05'),
     (4, 600028602, 3, 'Produto incorreto enviado');
+
+    -- Criação da tabela de configurações do sistema

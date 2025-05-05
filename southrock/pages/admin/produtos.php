@@ -3,6 +3,13 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+// Inicia a sessão para verificar login
+session_start();
+if (!isset($_SESSION['username'])) {
+    header("Location: index.php");
+    exit();
+}
+
 // Inclui o arquivo de conexão
 require_once '../../includes/db.php';
 
@@ -53,74 +60,123 @@ try {
     <html lang="pt-BR">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Lista de Produtos - SouthRock</title>
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <!-- Bootstrap Icons -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+        <link rel="stylesheet" href="../../css/dashboard.css">
         <link rel="stylesheet" href="../../css/produtos.css">
-
     </head>
     <body>
-        <div class="container-fluid px-4 py-4">
-            <div class="row mb-4 align-items-center">
-                <div class="col-12 d-flex justify-content-between align-items-center">
-                    <h1 class="h2 text-primary">
-                        <i class="bi bi-box-fill me-2"></i>Gerenciar Produtos
-                    </h1>
-                    <div>
-                        <a href="cadastrar_produto.php" class="btn btn-success me-2">
-                            <i class="bi bi-plus-circle me-1"></i>Novo Produto
-                        </a>
-                        <a href="dashboard.php" class="btn btn-primary">
-                            <i class="bi bi-arrow-left me-1"></i>Voltar ao Dashboard
-                        </a>
+        <!-- Layout com sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">SR</div>
+            <a href="dashboard.php">
+                <i class="bi bi-speedometer2 icon"></i>
+                <span class="text">Dashboard</span>
+            </a>
+            <a href="produtos.php" class="active">
+                <i class="bi bi-box-fill icon"></i>
+                <span class="text">Produtos</span>
+            </a>
+            <a href="usuarios.php">
+                <i class="bi bi-people-fill icon"></i>
+                <span class="text">Usuários</span>
+            </a>
+            <a href="relatorios.php">
+                <i class="bi bi-file-earmark-bar-graph-fill icon"></i>
+                <span class="text">Relatórios</span>
+            </a>
+            <div style="margin-top: auto;">
+                <a href="logout.php">
+                    <i class="bi bi-box-arrow-right icon"></i>
+                    <span class="text">Logout</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="container-fluid px-4 py-4">
+                <div class="row mb-4">
+                    <div class="col-12 d-flex justify-content-between align-items-center">
+                        <div class="dashboard-header">
+                            <div class="painel-titulo">
+                                <i class="bi bi-box-fill me-2"></i>Gerenciar Produtos
+                            </div>
+                            <div class="user-info">
+                                Bem-vindo, <?php echo htmlspecialchars($_SESSION['username']); ?>
+                            </div>
+                        </div>
+                        <div>
+                            <a href="cadastrar_produto.php" class="btn btn-success me-2">
+                                <i class="bi bi-plus-circle me-1"></i>Novo Produto
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="card card-custom border-0">
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <form method="POST" action="" class="mb-3">
-                            <div class="input-group">
-                                <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" class="form-control" placeholder="Pesquisar por SKU, Nome ou Categoria">
-                                <button class="btn btn-outline-secondary" type="submit">Pesquisar</button>
-                            </div>
-                        </form>
-                        <table class="table table-hover mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>SKU</th>
-                                    <th>Nome do Produto</th>
-                                    <th>Categoria</th>
-                                    <th class="text-center">Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                // Itera sobre os resultados e exibe cada produto
-                                while ($produto = $resultado->fetch_assoc()) {
-                                    echo "<tr>";
-                                    echo "<td>" . htmlspecialchars($produto['sku']) . "</td>";
-                                    echo "<td>" . htmlspecialchars($produto['produto']) . "</td>";
-                                    echo "<td>" . htmlspecialchars($produto['grupo']) . "</td>";
-                                    echo "<td class='text-center'>
-                                            <div class='btn-group' role='group'>
-                                                <a href='editar_produto.php?sku=" . htmlspecialchars($produto['sku']) . "' class='btn btn-sm btn-outline-primary'>
-                                                    <i class='bi bi-pencil'></i>
-                                                </a>
-                                                <button onclick='confirmDelete(" . htmlspecialchars($produto['sku']) . ")' class='btn btn-sm btn-outline-danger'>
-                                                    <i class='bi bi-trash'></i>
-                                                </button>
-                                            </div>
-                                          </td>";
-                                    echo "</tr>";
-                                }
-                                ?>
-                            </tbody>
-                        </table>
+                <?php if (isset($mensagem)): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?php echo htmlspecialchars($mensagem); ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <?php endif; ?>
+
+                <div class="card estatistica-card">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <form method="POST" action="" class="mb-3 p-3">
+                                <div class="input-group">
+                                    <input type="text" name="search" value="<?php echo htmlspecialchars($searchTerm); ?>" class="form-control" placeholder="Pesquisar por SKU, Nome ou Categoria">
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="bi bi-search me-1"></i>Pesquisar
+                                    </button>
+                                </div>
+                            </form>
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>SKU</th>
+                                        <th>Nome do Produto</th>
+                                        <th>Categoria</th>
+                                        <th class="text-center">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    // Itera sobre os resultados e exibe cada produto
+                                    if ($resultado->num_rows > 0) {
+                                        while ($produto = $resultado->fetch_assoc()) {
+                                            echo "<tr>";
+                                            echo "<td>" . htmlspecialchars($produto['sku']) . "</td>";
+                                            echo "<td>" . htmlspecialchars($produto['produto']) . "</td>";
+                                            echo "<td>" . htmlspecialchars($produto['grupo']) . "</td>";
+                                            echo "<td class='text-center'>
+                                                    <div class='btn-group' role='group'>
+                                                        <a href='editar_produto.php?sku=" . htmlspecialchars($produto['sku']) . "' class='btn btn-sm btn-outline-primary'>
+                                                            <i class='bi bi-pencil'></i>
+                                                        </a>
+                                                        <button onclick='confirmDelete(" . htmlspecialchars($produto['sku']) . ")' class='btn btn-sm btn-outline-danger'>
+                                                            <i class='bi bi-trash'></i>
+                                                        </button>
+                                                    </div>
+                                                </td>";
+                                            echo "</tr>";
+                                        }
+                                    } else {
+                                        echo "<tr><td colspan='4' class='text-center py-3'>Nenhum produto encontrado.</td></tr>";
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
+                </div>
+                
+                <div class="sistema-info text-center mt-3">
+                    Sistema de Gerenciamento SouthRock © <?php echo date('Y'); ?>
                 </div>
             </div>
         </div>
@@ -130,25 +186,33 @@ try {
         <!-- SweetAlert2 para confirmação de exclusão -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-        <script src="../../js/produtos.js"></script>
-        
+        <script>
+            function confirmDelete(sku) {
+                Swal.fire({
+                    title: 'Confirmar exclusão',
+                    text: "Você realmente deseja excluir este produto?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sim, excluir!',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = `produtos.php?delete=${sku}`;
+                    }
+                });
+            }
+        </script>
     </body>
     </html>
-
-
-
     <?php
-
-    if ($resultado->num_rows === 0) {
-        echo "<div class='alert alert-warning'>Nenhum produto encontrado.</div>";
-    }
-
     // Fecha a conexão apenas no final do script
     $stmt->close();
     $conn->close();
 
 } catch (Exception $e) {
     // Tratamento de erro
-    echo "Erro: " . $e->getMessage();
+    echo "<div class='alert alert-danger'>Erro: " . $e->getMessage() . "</div>";
 }
 ?>

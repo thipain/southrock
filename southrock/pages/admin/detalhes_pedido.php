@@ -430,12 +430,3 @@ $itens = $stmt_itens->get_result();
                     </div>
                 </div>
                 
-                <!-- Observações do pedido -->
-                <?php if (!empty($pedido['observacoes'])): ?>
-                <div class="mt-4">
-                    <h5>Observações</h5>
-                    <div class="p-3 bg-light rounded">
-                        <?= nl2br(htmlspecialchars($pedido['observacoes'])) ?>
-                    </div>
-                </div>
-                <?php endif; ?>

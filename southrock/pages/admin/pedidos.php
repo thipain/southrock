@@ -66,28 +66,39 @@ require_once '../../includes/db.php';
             <!-- Barra de pesquisa com ícone -->
             <div class="search-container">
                 <div class="search-wrapper">
-                    <input type="text" id="searchInput" class="search-input" placeholder="Pesquisar por número de pedido, tipo ou CNPJ...">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Pesquisar por número de pedido ou CNPJ...">
                     <i class="fas fa-search search-icon"></i>
+                    <button type="button" id="clearSearch" class="btn btn-sm btn-light" style="position: absolute; right: 40px; top: 50%; transform: translateY(-50%); display: none;">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
 
-                <!-- Filtros de pedidos -->
+                <!-- Filtros de status -->
                 <div class="filters-container">
-                    <div class="filter-tag active" data-status="novo" onclick="filterByStatus(this)">
+                    <div class="filter-tag active" data-status="todos" onclick="filterByStatus(this)">
+                        <i class="fas fa-list"></i>
+                        Todos os Pedidos
+                    </div>
+                    <div class="filter-tag" data-status="novo" onclick="filterByStatus(this)">
                         <i class="fas fa-plus-circle"></i>
                         Novos Pedidos
                     </div>
                     <div class="filter-tag" data-status="processo" onclick="filterByStatus(this)">
                         <i class="fas fa-spinner"></i>
-                        Pedidos em Processo
+                        Em Processo
                     </div>
                     <div class="filter-tag" data-status="finalizado" onclick="filterByStatus(this)">
                         <i class="fas fa-check-circle"></i>
-                        Pedidos Finalizados
+                        Finalizados
                     </div>
                 </div>
 
                 <!-- Filtros de tipos de pedido -->
                 <div class="filters-container mt-2">
+                    <div class="filter-tag2 active" data-tipo="todos" onclick="filterByType(this)">
+                        <i class="fas fa-th-list"></i>
+                        Todos os Tipos
+                    </div>
                     <div class="filter-tag2" data-tipo="requisicao" onclick="filterByType(this)">
                         <i class="fas fa-file-invoice"></i>
                         Requisição
@@ -203,41 +214,74 @@ require_once '../../includes/db.php';
     <script>
         // Filtrar por status
         function filterByStatus(element) {
-            // Remove classe active de todos os elementos
+            // Remove classe active de todos os elementos de status
             document.querySelectorAll('.filter-tag').forEach(el => el.classList.remove('active'));
             // Adiciona classe active ao elemento clicado
             element.classList.add('active');
             
-            const status = element.getAttribute('data-status');
             filterPedidos();
         }
         
         // Filtrar por tipo
         function filterByType(element) {
-            // Toggle classe active no elemento clicado
-            element.classList.toggle('active');
+            // Se clicou em "Todos os Tipos"
+            if (element.getAttribute('data-tipo') === 'todos') {
+                // Desativa todos os outros filtros de tipo
+                document.querySelectorAll('.filter-tag2').forEach(el => {
+                    if (el.getAttribute('data-tipo') !== 'todos') {
+                        el.classList.remove('active');
+                    } else {
+                        el.classList.add('active');
+                    }
+                });
+            } else {
+                // Desativa o filtro "Todos os Tipos"
+                document.querySelector('.filter-tag2[data-tipo="todos"]').classList.remove('active');
+                // Toggle classe active no elemento clicado
+                element.classList.toggle('active');
+                
+                // Se nenhum filtro específico estiver ativo, ativa o "Todos os Tipos"
+                const activeTypes = document.querySelectorAll('.filter-tag2.active:not([data-tipo="todos"])');
+                if (activeTypes.length === 0) {
+                    document.querySelector('.filter-tag2[data-tipo="todos"]').classList.add('active');
+                }
+            }
+            
             filterPedidos();
         }
         
         // Função para filtrar pedidos baseado em status e tipo
         function filterPedidos() {
             const selectedStatus = document.querySelector('.filter-tag.active').getAttribute('data-status');
-            const selectedTypes = Array.from(document.querySelectorAll('.filter-tag2.active')).map(el => el.getAttribute('data-tipo'));
+            const isTodosStatus = selectedStatus === 'todos';
+            
+            // Verifica se "Todos os Tipos" está ativo
+            const isTodosTipos = document.querySelector('.filter-tag2[data-tipo="todos"]').classList.contains('active');
+            
+            // Se não for "Todos os Tipos", pega os tipos selecionados
+            const selectedTypes = isTodosTipos ? [] : 
+                Array.from(document.querySelectorAll('.filter-tag2.active')).map(el => el.getAttribute('data-tipo'));
+            
             const searchText = document.getElementById('searchInput').value.toLowerCase();
             
             document.querySelectorAll('#pedidosList tr.pedido-row').forEach(row => {
                 const rowStatus = row.getAttribute('data-status');
                 const rowType = row.getAttribute('data-tipo');
-                const rowText = row.textContent.toLowerCase();
                 
-                // Verificar se corresponde ao status selecionado
-                const matchStatus = rowStatus === selectedStatus;
+                // Capturar células específicas para pesquisa direcionada
+                const pedidoNumero = row.cells[0].textContent.toLowerCase(); // Nº Pedido
+                const cnpj = row.cells[2].textContent.toLowerCase(); // CNPJ
                 
-                // Verificar se corresponde a algum dos tipos selecionados ou se nenhum tipo está selecionado
-                const matchType = selectedTypes.length === 0 || selectedTypes.includes(rowType);
+                // Verificar se corresponde ao status selecionado (ou se "Todos" está selecionado)
+                const matchStatus = isTodosStatus || rowStatus === selectedStatus;
                 
-                // Verificar se corresponde ao texto de pesquisa
-                const matchSearch = searchText === '' || rowText.includes(searchText);
+                // Verificar se corresponde a algum dos tipos selecionados (ou se "Todos os Tipos" está selecionado)
+                const matchType = isTodosTipos || selectedTypes.includes(rowType);
+                
+                // Verificar se corresponde ao texto de pesquisa (buscando especificamente no número do pedido ou CNPJ)
+                const matchSearch = searchText === '' || 
+                                   pedidoNumero.includes(searchText) || 
+                                   cnpj.includes(searchText);
                 
                 // Mostrar ou esconder a linha baseado nos filtros
                 row.style.display = (matchStatus && matchType && matchSearch) ? '' : 'none';
@@ -245,7 +289,27 @@ require_once '../../includes/db.php';
         }
         
         // Evento de pesquisa
-        document.getElementById('searchInput').addEventListener('keyup', filterPedidos);
+        const searchInput = document.getElementById('searchInput');
+        const clearButton = document.getElementById('clearSearch');
+        
+        searchInput.addEventListener('keyup', function() {
+            filterPedidos();
+            // Mostrar ou esconder botão de limpar
+            clearButton.style.display = searchInput.value.length > 0 ? 'block' : 'none';
+        });
+        
+        // Botão para limpar a pesquisa
+        clearButton.addEventListener('click', function() {
+            searchInput.value = '';
+            clearButton.style.display = 'none';
+            filterPedidos();
+            searchInput.focus();
+        });
+        
+        // Inicializar filtros ao carregar a página
+        window.onload = function() {
+            filterPedidos();
+        };
     </script>
 </body>
 
