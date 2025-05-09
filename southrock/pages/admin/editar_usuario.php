@@ -62,95 +62,144 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Usuário - Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="../../css/editar_usuario.css">
-    <style>
-        body {
-            background-color: #f4f6f9;
-        }
-        .form-container {
-            max-width: 500px;
-            margin: 50px auto;
-            padding: 30px;
-            background-color: white;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            border-radius: 8px;
-        }
-    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="form-container">
-            <h2 class="text-center mb-4">Editar Usuário</h2>
-            <form method="POST">
-                <div class="mb-3">
-                    <label class="form-label">Nome de Usuário (Email)</label>
-                    <input type="email" name="username" class="form-control" 
-                           value="<?php echo htmlspecialchars($user['username']); ?>" required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Tipo de Usuário</label>
-                    <select name="tipo_usuario" class="form-select" required>
-                        <option value="1" <?php echo $user['tipo_usuario'] == 1 ? 'selected' : ''; ?>>Matriz</option>
-                        <option value="2" <?php echo $user['tipo_usuario'] == 2 ? 'selected' : ''; ?>>Loja</option>
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">CNPJ</label>
-                    <input type="text" name="cnpj" class="form-control" 
-                           value="<?php echo htmlspecialchars($user['cnpj']); ?>" required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Nome do Responsável</label>
-                    <input type="text" name="responsavel" class="form-control" 
-                           value="<?php echo htmlspecialchars($user['responsavel']); ?>" required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Endereço</label>
-                    <input type="text" name="endereco" class="form-control" 
-                           value="<?php echo htmlspecialchars($user['endereco']); ?>" required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">CEP</label>
-                    <input type="text" name="cep" class="form-control" 
-                           value="<?php echo htmlspecialchars($user['cep']); ?>" required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Bairro</label>
-                    <input type="text" name="bairro" class="form-control" 
-                           value="<?php echo htmlspecialchars($user['bairro']); ?>" required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Cidade</label>
-                    <input type="text" name="cidade" class="form-control" 
-                           value="<?php echo htmlspecialchars($user['cidade']); ?>" required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">UF</label>
-                    <input type="text" name="uf" class="form-control" 
-                           value="<?php echo htmlspecialchars($user['uf']); ?>" required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Nova Senha (opcional)</label>
-                    <input type="password" name="password" class="form-control" 
-                           placeholder="Deixe em branco para manter a senha atual">
-                </div>
-
-                <button type="submit" class="btn btn-primary w-100">Atualizar Usuário</button>
-            </form>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div>
+            <div class="sidebar-header">
+                <i class="bi bi-shield-lock icon"></i>
+            </div>
+            <a href="dashboard.php">
+                <i class="bi bi-speedometer2 icon"></i>
+                <span class="text">Dashboard</span>
+            </a>
+            <a href="usuarios.php" class="active">
+                <i class="bi bi-people-fill icon"></i>
+                <span class="text">Usuários</span>
+            </a>
+            <a href="pedidos.php">
+                <i class="bi bi-cart-fill icon"></i>
+                <span class="text">Pedidos</span>
+            </a>
+            <a href="produtos.php">
+                <i class="bi bi-box-seam icon"></i>
+                <span class="text">Produtos</span>
+            </a>
+            <a href="relatorios.php">
+                <i class="bi bi-file-earmark-bar-graph icon"></i>
+                <span class="text">Relatórios</span>
+            </a>
+        </div>
+        <div>
+            <a href="configuracoes.php">
+                <i class="bi bi-gear-fill icon"></i>
+                <span class="text">Configurações</span>
+            </a>
+            <a href="logout.php">
+                <i class="bi bi-box-arrow-right icon"></i>
+                <span class="text">Sair</span>
+            </a>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Content -->
+    <div class="content">
+        <div class="header">
+            <h1><i class="bi bi-pencil-square me-2"></i>Editar Usuário</h1>
+        </div>
+        
+        <div class="main-content">
+            <div class="form-container">
+                <h2>Editar Dados do Usuário</h2>
+                <form method="POST">
+                    <div class="form-group">
+                        <label class="form-label">Nome de Usuário (Email)</label>
+                        <input type="email" name="username" class="form-control" 
+                               value="<?php echo htmlspecialchars($user['username']); ?>" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Tipo de Usuário</label>
+                        <select name="tipo_usuario" class="form-select" required>
+                            <option value="1" <?php echo $user['tipo_usuario'] == 1 ? 'selected' : ''; ?>>Matriz</option>
+                            <option value="2" <?php echo $user['tipo_usuario'] == 2 ? 'selected' : ''; ?>>Loja</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">CNPJ</label>
+                        <input type="text" name="cnpj" class="form-control" 
+                               value="<?php echo htmlspecialchars($user['cnpj']); ?>" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Nome do Responsável</label>
+                        <input type="text" name="responsavel" class="form-control" 
+                               value="<?php echo htmlspecialchars($user['responsavel']); ?>" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Endereço</label>
+                        <input type="text" name="endereco" class="form-control" 
+                               value="<?php echo htmlspecialchars($user['endereco']); ?>" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">CEP</label>
+                        <input type="text" name="cep" class="form-control" 
+                               value="<?php echo htmlspecialchars($user['cep']); ?>" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Bairro</label>
+                        <input type="text" name="bairro" class="form-control" 
+                               value="<?php echo htmlspecialchars($user['bairro']); ?>" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Cidade</label>
+                        <input type="text" name="cidade" class="form-control" 
+                               value="<?php echo htmlspecialchars($user['cidade']); ?>" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">UF</label>
+                        <input type="text" name="uf" class="form-control" 
+                               value="<?php echo htmlspecialchars($user['uf']); ?>" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Nova Senha (opcional)</label>
+                        <input type="password" name="password" class="form-control" 
+                               placeholder="Deixe em branco para manter a senha atual">
+                    </div>
+
+                    <button type="submit" class="btn-primary">
+                        <i class="bi bi-check2-circle me-1"></i>Atualizar Usuário
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Script para gerenciar estado ativo do menu
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentLocation = window.location.pathname;
+            const menuItems = document.querySelectorAll('.sidebar a');
+            
+            menuItems.forEach(item => {
+                const itemPath = item.getAttribute('href');
+                if (currentLocation.includes(itemPath) && itemPath !== 'dashboard.php') {
+                    item.classList.add('active');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
 

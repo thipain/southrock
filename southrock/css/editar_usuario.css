@@ -1,0 +1,181 @@
+/* Estilos para editar_usuario.php baseado no usuarios.php */
+body {
+    display: flex;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    height: 100vh;
+    background-color: #fff4e8;
+}
+
+.sidebar {
+    width: 60px;
+    background-image: linear-gradient(to left, rgb(124, 187, 235) 0%, rgb(60, 111, 177) 50%, rgb(0, 37, 78) 100%);
+    transition: width 0.3s;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    height: 100vh;
+    position: fixed;
+    z-index: 1000;
+}
+
+.sidebar:hover {
+    width: 200px;
+}
+
+.sidebar a {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    color: white;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.sidebar a:hover {
+    background-color: #480ca8;
+}
+
+.sidebar-header {
+    color: white;
+    text-align: center;
+    padding: 13px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.icon {
+    color: white;
+    font-size: 20px;
+    width: 30px;
+    text-align: center;
+    margin-right: 10px;
+}
+
+.text {
+    display: none;
+}
+
+.sidebar a:hover .text {
+    display: inline;
+}
+
+.sidebar a .text {
+    display: inline;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.sidebar:hover a .text {
+    opacity: 1;
+}
+
+.content {
+    flex: 1;
+    padding: 0;
+    background-color: #E2EDFA;
+    display: flex;
+    flex-direction: column;
+    margin-left: 60px;
+    transition: margin-left 0.3s;
+    width: 100%;
+}
+
+.header {
+    background-image: linear-gradient(to right, rgb(124, 187, 235) 0%, rgb(60, 111, 177) 50%, rgb(0, 37, 78) 100%);
+    color: white;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    margin-bottom: 0;
+    border-radius: 0;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.main-content {
+    padding: 20px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* Estilos específicos para o formulário */
+.form-container {
+    background-color: #F8FAFC;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 800px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-container h2 {
+    color: #0077B6;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.form-control {
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    padding: 10px 15px;
+    width: 100%;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+.form-control:focus, 
+.form-select:focus {
+    border-color: #0077B6;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(0, 119, 182, 0.25);
+}
+
+.form-select {
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    padding: 10px 15px;
+    width: 100%;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #333;
+}
+
+.btn-primary {
+    background-color: #0077B6;
+    border-color: #0077B6;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #023E8A;
+    border-color: #023E8A;
+}
