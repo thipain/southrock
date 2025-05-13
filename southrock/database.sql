@@ -2,6 +2,9 @@ CREATE DATABASE southrock;
 
 USE southrock;
 
+-- Configurar o timezone para Brasília (UTC-3)
+SET time_zone = '-03:00';
+
 CREATE TABLE produtos (
     sku INT NOT NULL PRIMARY KEY,
     produto VARCHAR(255) NOT NULL,
@@ -27,6 +30,7 @@ CREATE TABLE usuarios (
     cidade VARCHAR(100),
     uf CHAR(2),
     nome VARCHAR(255),
+    data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (tipo_usuario) REFERENCES tipo_usuario(id)
 );
 
@@ -40,7 +44,8 @@ CREATE TABLE filiais (
     bairro VARCHAR(100),
     cidade VARCHAR(100),
     uf CHAR(2),
-    estado CHAR(2)
+    estado CHAR(2),
+    data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE pedidos (
@@ -53,6 +58,7 @@ CREATE TABLE pedidos (
     observacoes TEXT,
     data_processamento DATETIME,
     data_finalizacao DATETIME,
+    data_atualizacao DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (filial_id) REFERENCES filiais(id),
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );
@@ -63,6 +69,7 @@ CREATE TABLE pedido_itens (
     sku INT,
     quantidade INT,
     observacao TEXT,
+    data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (pedido_id) REFERENCES pedidos(id),
     FOREIGN KEY (sku) REFERENCES produtos(sku)
 );
@@ -80,7 +87,7 @@ INSERT INTO tipo_usuario (id, descricao) VALUES
     (1, 'matriz'),
     (2, 'loja');
 
--- Usuários
+-- Usuários - usando agora a data atual de Brasília
 INSERT INTO usuarios (username, password, tipo_usuario, cnpj, responsavel, endereco, cep, bairro, cidade, uf, nome) VALUES
     ('admin', '123456', 1, '12.345.678/0001-90', 'João Silva', 'Rua das Flores, 123', '04929220', 'alto do rivieira', 'São Paulo', 'SP', 'João Silva'),
     ('star01', 'teste', 2, '07.984.267/0001-00', 'Igor Costa', 'Av Paulista, 900 - ANDAR 10 PARTE', '01310-940', 'Bela Vista', 'São Paulo', 'SP', 'Igor Costa'),
@@ -102,16 +109,12 @@ SELECT
 FROM usuarios 
 WHERE tipo_usuario = 2;
 
--- Alguns pedidos de exemplo
-INSERT INTO pedidos (data, tipo_pedido, status, filial_id, usuario_id, observacoes) VALUES
-    (NOW() - INTERVAL 7 DAY, 'requisicao', 'novo', 1, 1, 'Pedido urgente para reposição de estoque'),
-    (NOW() - INTERVAL 5 DAY, 'troca', 'processo', 2, 1, 'Troca por defeito no produto'),
-    (NOW() - INTERVAL 3 DAY, 'doacao', 'finalizado', 3, 1, 'Doação para evento beneficente'),
-    (NOW() - INTERVAL 1 DAY, 'devolucao', 'novo', 1, 1, 'Devolução por erro no pedido');
-
--- Preencher datas de processamento e finalização
-UPDATE pedidos SET data_processamento = NOW() - INTERVAL 4 DAY WHERE status = 'processo';
-UPDATE pedidos SET data_processamento = NOW() - INTERVAL 2 DAY, data_finalizacao = NOW() - INTERVAL 1 DAY WHERE status = 'finalizado';
+-- Pedidos de exemplo com inserção direta completa (usando horário atual de Brasília)
+INSERT INTO pedidos (data, tipo_pedido, status, filial_id, usuario_id, observacoes, data_processamento, data_finalizacao) VALUES
+    (CURRENT_TIMESTAMP(), 'requisicao', 'novo', 1, 1, 'Pedido urgente para reposição de estoque', NULL, NULL),
+    (CURRENT_TIMESTAMP(), 'troca', 'processo', 2, 1, 'Troca por defeito no produto', CURRENT_TIMESTAMP(), NULL),
+    (CURRENT_TIMESTAMP(), 'doacao', 'finalizado', 3, 1, 'Doação para evento beneficente', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (CURRENT_TIMESTAMP(), 'devolucao', 'novo', 1, 1, 'Devolução por erro no pedido', NULL, NULL);
 
 -- Itens dos pedidos de exemplo
 INSERT INTO pedido_itens (pedido_id, sku, quantidade, observacao) VALUES
@@ -121,4 +124,25 @@ INSERT INTO pedido_itens (pedido_id, sku, quantidade, observacao) VALUES
     (3, 600023065, 10, 'Para evento do dia 15/05'),
     (4, 600028602, 3, 'Produto incorreto enviado');
 
-    -- Criação da tabela de configurações do sistema
+-- Adicionar triggers para garantir que as datas sejam sempre atualizadas no fuso horário correto
+DELIMITER //
+
+-- Trigger para atualizar data_processamento quando status = 'processo'
+CREATE TRIGGER tgr_pedido_processo BEFORE UPDATE ON pedidos
+FOR EACH ROW
+BEGIN
+    IF NEW.status = 'processo' AND OLD.status != 'processo' THEN
+        SET NEW.data_processamento = CURRENT_TIMESTAMP();
+    END IF;
+END //
+
+-- Trigger para atualizar data_finalizacao quando status = 'finalizado'
+CREATE TRIGGER tgr_pedido_finalizado BEFORE UPDATE ON pedidos
+FOR EACH ROW
+BEGIN
+    IF NEW.status = 'finalizado' AND OLD.status != 'finalizado' THEN
+        SET NEW.data_finalizacao = CURRENT_TIMESTAMP();
+    END IF;
+END //
+
+DELIMITER ;
