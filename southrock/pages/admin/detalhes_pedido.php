@@ -252,7 +252,7 @@ $tipoPedido = $tipoPedidoInfo[$pedido['tipo_pedido']] ?? ['icon' => 'fa-question
             top: 15px;
             left: 0;
             right: 0;
-            height: 2px;
+            height: 22px;
             background-color: #E0E0E0;
             z-index: 1;
         }
@@ -267,8 +267,8 @@ $tipoPedido = $tipoPedidoInfo[$pedido['tipo_pedido']] ?? ['icon' => 'fa-question
         }
 
         .step-icon {
-            width: 32px;
-            height: 32px;
+            width: 52px;
+            height: 52px;
             border-radius: 50%;
             background-color: white;
             border: 2px solid #E0E0E0;
@@ -280,7 +280,7 @@ $tipoPedido = $tipoPedidoInfo[$pedido['tipo_pedido']] ?? ['icon' => 'fa-question
         }
 
         .step-icon i {
-            font-size: 0.9rem;
+            font-size: 1.5rem;
         }
 
         .step-text {
@@ -654,13 +654,7 @@ $tipoPedido = $tipoPedidoInfo[$pedido['tipo_pedido']] ?? ['icon' => 'fa-question
                                 </tr>
                                 <?php endif; ?>
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="2" class="text-right"><strong>Total de Itens:</strong></td>
-                                    <td><strong><?= $total_itens ?></strong></td>
-                                    <td colspan="2"></td>
-                                </tr>
-                            </tfoot>
+
                         </table>
                     </div>
                 </div>
