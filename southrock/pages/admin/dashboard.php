@@ -47,7 +47,7 @@ if ($result_usuarios && $result_usuarios->num_rows > 0) {
 }
 
 // Informações do sistema
-$versao_sistema = "1.1.8"; // Versão atual do sistema
+$versao_sistema = "1.2.0"; // Versão atual do sistema
 $data_atualizacao = "12/05/2025"; // Data da última atualização
 
 // Fechar conexão
