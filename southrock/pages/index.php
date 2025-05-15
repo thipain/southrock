@@ -15,18 +15,18 @@
             height: 100vh;
             margin: 0;
             font-family: Verdana, Geneva, Tahoma, sans-serif;
-            background-image: linear-gradient(to right,rgb(124, 187, 235) 0%,rgb(60, 111, 177) 50%,rgb(0, 37, 78) 100%);
             background-size: cover;
+            background-color: #e9ecef;
         }
  
         .container {
-            background-color: rgba(255, 255, 255, 0.062);
+            background-color: #0028f1;
             border-radius: 45px;
             padding: 40px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
             width: 390px;
             max-width: 100%;
-            border-color: aliceblue;
+            border-color: #0466c8;
             border-style: solid;
             border-width: 7px 7px;
             margin-right: 15%;
@@ -66,20 +66,23 @@
             border-color: #007bff;
             box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
         }
- 
+
         .btn-primary {
-            background-color: #023E8A;
-            border: none;
+            background-color: #0028f1;
+            border-color: black;
+            border-width: 3px 3px;
+            margin-right: 15%;
             height: 45px;
             font-weight: 500;
             margin-top: 25px;
             transition: background-color 0.3s;
             border-radius: 15px;
             font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            
         }
- 
+
         .btn-primary:hover {
-            background-color: #246DB2;
+            background-color: #fd7f25;
         }
  
         .form-footer {
@@ -132,7 +135,7 @@
  
 <body>
  
-      <img class="img" src="../images/icon_lobo.png" alt="logo">
+      <img class="img" src="../images/zamp.png" alt="logo">
  
     <div class="container">
         <h1>LOGIN</h1>
