@@ -10,13 +10,13 @@ body {
     display: flex;
     font-family: 'Arial', sans-serif;
     height: 100vh;
-    background-color: #f0f2f5;
+    background-color: #242425;
 }
 
 /* SIDEBAR */
 .sidebar {
     width: 60px;
-    background-image: linear-gradient(to bottom, #1a3a8e, #0c2c6f);
+    background-color: #0028f9;
     transition: width 0.3s ease;
     overflow: hidden;
     display: flex;
@@ -78,7 +78,7 @@ body {
 .content {
     flex: 1;
     overflow-y: auto;
-    background-color: #f0f2f5;
+    background-color: #fff9f2;
 }
 
 /* HEADER DO DASHBOARD */
@@ -92,13 +92,14 @@ body {
 
 .painel-titulo {
     font-size: 1.6rem;
-    color: #333;
-    font-weight: 600;
+    color: #000000;
+    font-weight: bold;
 }
 
 .user-info {
     font-size: 0.9rem;
-    color: #555;
+    color: #000000;
+    
 }
 
 /* CARDS DE ESTATÍSTICAS */
@@ -155,6 +156,10 @@ body {
     background-color: #ffc107;
 }
 
+.card-body
+{
+    background-color: #fff9f2;
+}
 .card-value {
     font-size: 1.8rem;
     font-weight: 700;

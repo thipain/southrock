@@ -20,15 +20,13 @@
         }
  
         .container {
-            background-color: #0028f1;
+            background-color: black;
+            filter: blur(20%);
             border-radius: 45px;
             padding: 40px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
             width: 390px;
             max-width: 100%;
-            border-color: #0466c8;
-            border-style: solid;
-            border-width: 7px 7px;
             margin-right: 15%;
         }
  
@@ -45,7 +43,7 @@
         h1 {
             text-align: center;
             /* Alinha o texto ao centro */
-            color: #000000;
+            color: white;
             margin-bottom: 25px;
             font-weight: 600;
             font-family: 'Times New Roman', Times, serif;
@@ -69,8 +67,6 @@
 
         .btn-primary {
             background-color: #0028f1;
-            border-color: black;
-            border-width: 3px 3px;
             margin-right: 15%;
             height: 45px;
             font-weight: 500;
@@ -89,11 +85,11 @@
             text-align: center;
             margin-top: 25px;
             font-size: 14px;
-            color: #000000;
+            color: white;
         }
  
         .form-footer a {
-            color: #00ffdd;
+            color: #0028f1;
             text-decoration: none;
         }
  
@@ -143,6 +139,7 @@
             <div class="input-group">
                 <input type="text" id="username" name="username" class="form-control" placeholder="E-MAIL" required>
                 <i class="fas fa-user input-icon"></i>
+                <img src="" alt="">
             </div>
  
             <div class="input-group">
