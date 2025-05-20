@@ -9,7 +9,7 @@ body {
 
 .sidebar {
     width: 60px;
-    background-image: linear-gradient(to left, rgb(124, 187, 235) 0%, rgb(60, 111, 177) 50%, rgb(0, 37, 78) 100%);
+    background-color: #2045ff;
     transition: width 0.3s;
     overflow: hidden;
     display: flex;
@@ -71,36 +71,36 @@ body {
 .content {
     flex: 1;
     padding: 0;
-    background-color: #E2EDFA;
+    background-color: #fffff3;
     display: flex;
     flex-direction: column;
 }
 
 .header {
-    background-image: linear-gradient(to right, rgb(124, 187, 235) 0%, rgb(60, 111, 177) 50%, rgb(0, 37, 78) 100%);
-    color: white;
-    height: 50px; /* Altura correspondente ao sidebar-header mais as bordas */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    margin-bottom: 0;
-    border-radius: 0;
+    margin-top: 2rem;
+    padding: 20px;
+    background-color: #fffff3;
+    
 }
 
 .header h1 {
     margin: 0;
-    font-size: 1.5rem;
+    background-color: #fffff3;
+    text-align: center;
+    font-size: 1.6rem;
+    color: #000000;
+    font-weight: bold;
 }
 
 .main-content {
     padding: 20px;
     flex: 1;
     overflow-y: auto;
+    background-color: #fffff3;
 }
 
 .button {
-    background-color: #007bff;
+    background-color: #aeff00;
     color: white;
     border-radius: 5px;
     padding: 8px 16px;
@@ -165,7 +165,7 @@ body {
 }
 
 .filter-tag {
-    background-color: #0077B6;
+    background-color: #0226f9;
     color: #ffffff;
     border-radius: 25px;
     padding: 8px 15px;
@@ -178,7 +178,7 @@ body {
 }
 
 .filter-tag2 {
-    background-color: #0096C7;
+    background-color: #042bf9;
     color: #ffffff;
     border-radius: 25px;
     padding: 8px 15px;
@@ -191,7 +191,7 @@ body {
 }
 
 .filter-tag.active, .filter-tag2.active {
-    background-color: #023E8A;
+    background-color: #2b46d2;
     color: white;
     font-weight: bold;
     transform: translateY(-1px);
@@ -199,7 +199,7 @@ body {
 }
 
 .filter-tag:hover, .filter-tag2:hover {
-    background-color: #03045E;
+    background-color: #fc7f25;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
@@ -278,6 +278,10 @@ body {
 .btn-info:hover {
     background-color: #0077B6;
     border-color: #0077B6;
+}
+
+.pedidos-list-container{
+    background-color: #fffff3;
 }
 
 /* Estilos responsivos */
