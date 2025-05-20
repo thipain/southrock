@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['finalizar'])) {
 
         // Obter ID do usuário logado
         $username = $_SESSION['username'];
-        $stmt = $conn->prepare("SELECT id, tipo_usuario FROM usuarios WHERE username = ?");
+        $stmt = $conn->prepare("SELECT id, tipo_usuario, eh_filial FROM usuarios WHERE username = ?");
         $stmt->bind_param("s", $username);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -34,35 +34,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['finalizar'])) {
 
         $usuario_id = $usuario['id'];
         $tipo_usuario = $usuario['tipo_usuario'];
+        $eh_filial = $usuario['eh_filial'];
 
-        // Determinar filial_id baseado no tipo de usuário
-        $filial_id = null;
+        // Determinar filial_usuario_id baseado no tipo de usuário
+        $filial_usuario_id = null;
         if ($tipo_usuario == 2) { // Se o usuário é do tipo loja
-            // Buscar a filial associada ao usuário
-            $stmt = $conn->prepare("SELECT id FROM filiais WHERE cnpj = (SELECT cnpj FROM usuarios WHERE id = ?)");
-            $stmt->bind_param("i", $usuario_id);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $filial = $result->fetch_assoc();
-            $stmt->close();
-            
-            if ($filial) {
-                $filial_id = $filial['id'];
+            if ($eh_filial) {
+                // Se o próprio usuário é uma filial, use o ID do próprio usuário
+                $filial_usuario_id = $usuario_id;
             } else {
-                throw new Exception("Filial não encontrada para este usuário");
+                // Buscar a filial associada ao usuário pelo mesmo CNPJ
+                $stmt = $conn->prepare("SELECT id FROM usuarios WHERE cnpj = (SELECT cnpj FROM usuarios WHERE id = ?) AND eh_filial = TRUE LIMIT 1");
+                $stmt->bind_param("i", $usuario_id);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $filial = $result->fetch_assoc();
+                $stmt->close();
+                
+                if ($filial) {
+                    $filial_usuario_id = $filial['id'];
+                } else {
+                    throw new Exception("Filial não encontrada para este usuário");
+                }
             }
         } else {
-            // Se for usuário tipo matriz, pode ser necessário fornecer a filial
-            // ou usar uma filial padrão, aqui usaremos a filial 1 como exemplo
-            $filial_id = 1;
+            // Para usuário tipo matriz, usamos NULL no campo filial_usuario_id
+            // ou podemos deixar o usuário escolher a filial em um formulário posterior
+            $filial_usuario_id = null;
         }
 
         // Inserir o pedido com tipo 'requisicao' e status 'novo'
         $stmtPedido = $conn->prepare(
-            "INSERT INTO pedidos (tipo_pedido, status, filial_id, usuario_id) 
+            "INSERT INTO pedidos (tipo_pedido, status, filial_usuario_id, usuario_id) 
              VALUES ('requisicao', 'novo', ?, ?)"
         );
-        $stmtPedido->bind_param("ii", $filial_id, $usuario_id);
+        $stmtPedido->bind_param("ii", $filial_usuario_id, $usuario_id);
         $stmtPedido->execute();
         $pedidoId = $stmtPedido->insert_id;
         $stmtPedido->close();

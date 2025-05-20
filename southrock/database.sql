@@ -31,21 +31,10 @@ CREATE TABLE usuarios (
     uf CHAR(2),
     nome VARCHAR(255),
     data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP,
+    eh_filial BOOLEAN DEFAULT FALSE,
+    nome_filial VARCHAR(255) NULL,
+    estado CHAR(2) NULL,
     FOREIGN KEY (tipo_usuario) REFERENCES tipo_usuario(id)
-);
-
-CREATE TABLE filiais (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome_filial VARCHAR(255) NOT NULL,
-    cnpj VARCHAR(20) NOT NULL,
-    responsavel VARCHAR(255),
-    endereco VARCHAR(255),
-    cep VARCHAR(10),
-    bairro VARCHAR(100),
-    cidade VARCHAR(100),
-    uf CHAR(2),
-    estado CHAR(2),
-    data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE pedidos (
@@ -53,13 +42,13 @@ CREATE TABLE pedidos (
     data DATETIME DEFAULT CURRENT_TIMESTAMP,
     tipo_pedido ENUM('requisicao', 'troca', 'doacao', 'devolucao') NOT NULL DEFAULT 'requisicao',
     status ENUM('novo', 'processo', 'finalizado') NOT NULL DEFAULT 'novo',
-    filial_id INT,
+    filial_usuario_id INT,
     usuario_id INT,
     observacoes TEXT,
     data_processamento DATETIME,
     data_finalizacao DATETIME,
     data_atualizacao DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (filial_id) REFERENCES filiais(id),
+    FOREIGN KEY (filial_usuario_id) REFERENCES usuarios(id),
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );
 
@@ -87,34 +76,19 @@ INSERT INTO tipo_usuario (id, descricao) VALUES
     (1, 'matriz'),
     (2, 'loja');
 
--- Usuários - usando agora a data atual de Brasília
-INSERT INTO usuarios (username, password, tipo_usuario, cnpj, responsavel, endereco, cep, bairro, cidade, uf, nome) VALUES
-    ('admin', '123456', 1, '12.345.678/0001-90', 'João Silva', 'Rua das Flores, 123', '04929220', 'alto do rivieira', 'São Paulo', 'SP', 'João Silva'),
-    ('star01', 'teste', 2, '07.984.267/0001-00', 'Igor Costa', 'Av Paulista, 900 - ANDAR 10 PARTE', '01310-940', 'Bela Vista', 'São Paulo', 'SP', 'Igor Costa'),
-    ('star02', 'teste', 2, '07.984.267/0005-33', 'Eduardo Oliveira', 'Av. Roque Petroni Jr., 1.089 - LOJA 234-B/S NIVEL SUPERIOR SHOP.CENTER MORUMBI', '04707-970', 'Vl. Gertrudes', 'São Paulo', 'SP', 'Eduardo Oliveira'),
-    ('star03', 'teste', 2, '07.984.267/0006-14', 'Juliana Martins', 'Av. Higienópolis, 618 - SHOPPING CENTER PATIO HIGIENOPOLIS, ARCO 324', '01238-000', 'Higienópolis', 'São Paulo', 'SP', 'Juliana Martins');
+-- Usuários com dados unificados (incluindo os que eram filiais)
+INSERT INTO usuarios (username, password, tipo_usuario, cnpj, responsavel, endereco, cep, bairro, cidade, uf, nome, eh_filial, nome_filial, estado) VALUES
+    ('admin', '123456', 1, '12.345.678/0001-90', 'João Silva', 'Rua das Flores, 123', '04929220', 'alto do rivieira', 'São Paulo', 'SP', 'João Silva', FALSE, NULL, NULL),
+    ('star01', 'teste', 2, '07.984.267/0001-00', 'Igor Costa', 'Av Paulista, 900 - ANDAR 10 PARTE', '01310-940', 'Bela Vista', 'São Paulo', 'SP', 'Igor Costa', TRUE, 'Filial star01', 'SP'),
+    ('star02', 'teste', 2, '07.984.267/0005-33', 'Eduardo Oliveira', 'Av. Roque Petroni Jr., 1.089 - LOJA 234-B/S NIVEL SUPERIOR SHOP.CENTER MORUMBI', '04707-970', 'Vl. Gertrudes', 'São Paulo', 'SP', 'Eduardo Oliveira', TRUE, 'Filial star02', 'SP'),
+    ('star03', 'teste', 2, '07.984.267/0006-14', 'Juliana Martins', 'Av. Higienópolis, 618 - SHOPPING CENTER PATIO HIGIENOPOLIS, ARCO 324', '01238-000', 'Higienópolis', 'São Paulo', 'SP', 'Juliana Martins', TRUE, 'Filial star03', 'SP');
 
--- Filiais (baseadas nos usuários tipo loja)
-INSERT INTO filiais (nome_filial, cnpj, responsavel, endereco, cep, bairro, cidade, uf, estado) 
-SELECT 
-    CONCAT('Filial ', username), 
-    cnpj, 
-    responsavel, 
-    endereco, 
-    cep, 
-    bairro, 
-    cidade, 
-    uf,
-    uf
-FROM usuarios 
-WHERE tipo_usuario = 2;
-
--- Pedidos de exemplo com inserção direta completa (usando horário atual de Brasília)
-INSERT INTO pedidos (data, tipo_pedido, status, filial_id, usuario_id, observacoes, data_processamento, data_finalizacao) VALUES
-    (CURRENT_TIMESTAMP(), 'requisicao', 'novo', 1, 1, 'Pedido urgente para reposição de estoque', NULL, NULL),
-    (CURRENT_TIMESTAMP(), 'troca', 'processo', 2, 1, 'Troca por defeito no produto', CURRENT_TIMESTAMP(), NULL),
-    (CURRENT_TIMESTAMP(), 'doacao', 'finalizado', 3, 1, 'Doação para evento beneficente', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-    (CURRENT_TIMESTAMP(), 'devolucao', 'novo', 1, 1, 'Devolução por erro no pedido', NULL, NULL);
+-- Pedidos de exemplo com a nova estrutura
+INSERT INTO pedidos (data, tipo_pedido, status, filial_usuario_id, usuario_id, observacoes, data_processamento, data_finalizacao) VALUES
+    (CURRENT_TIMESTAMP(), 'requisicao', 'novo', 2, 1, 'Pedido urgente para reposição de estoque', NULL, NULL),
+    (CURRENT_TIMESTAMP(), 'troca', 'processo', 3, 1, 'Troca por defeito no produto', CURRENT_TIMESTAMP(), NULL),
+    (CURRENT_TIMESTAMP(), 'doacao', 'finalizado', 4, 1, 'Doação para evento beneficente', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (CURRENT_TIMESTAMP(), 'devolucao', 'novo', 2, 1, 'Devolução por erro no pedido', NULL, NULL);
 
 -- Itens dos pedidos de exemplo
 INSERT INTO pedido_itens (pedido_id, sku, quantidade, observacao) VALUES

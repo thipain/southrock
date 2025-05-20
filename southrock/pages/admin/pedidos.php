@@ -133,10 +133,11 @@ require_once '../../includes/db.php';
                     </thead>
                     <tbody id="pedidosList">
                         <?php
-                        // Query modificada para incluir tipo de pedido e CNPJ da filial
-                        $query = "SELECT p.id, p.data, p.tipo_pedido, p.status, f.cnpj, f.nome_filial 
+                        // Query modificada para usar a nova estrutura unificada - agora buscamos na tabela usuarios onde eh_filial = TRUE
+                        $query = "SELECT p.id, p.data, p.tipo_pedido, p.status, u.cnpj, u.nome_filial 
                                   FROM pedidos p 
-                                  JOIN filiais f ON p.filial_id = f.id 
+                                  JOIN usuarios u ON p.filial_usuario_id = u.id 
+                                  WHERE u.eh_filial = TRUE
                                   ORDER BY p.data DESC";
                         
                         $pedidos = $conn->query($query);
@@ -160,8 +161,11 @@ require_once '../../includes/db.php';
                                 $tipoIcon = $tipoIconMap[$pedido['tipo_pedido']] ?? '<i class="fas fa-question-circle"></i>';
                                 $statusBadge = $statusBadgeMap[$pedido['status']] ?? 'badge-secondary';
                                 
-                                // Formatar CNPJ
-                                $cnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $pedido['cnpj']);
+                                // Formatar CNPJ se não estiver formatado
+                                $cnpj = $pedido['cnpj'];
+                                if (strpos($cnpj, '.') === false) {
+                                    $cnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $cnpj);
+                                }
                         ?>
                         <tr class="pedido-row" data-status="<?= $pedido['status'] ?>" data-tipo="<?= $pedido['tipo_pedido'] ?>">
                             <td>#<?= $pedido['id'] ?></td>
