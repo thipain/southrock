@@ -16,9 +16,23 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 $pedido_id = intval($_GET['id']);
 
 // Buscar informações do pedido
-$query = "SELECT p.*, f.nome_filial, f.cnpj, f.endereco, f.cidade, f.estado, u.nome as usuario_nome
+// MODIFICADO: Usando a tabela usuarios em vez de filiais, onde eh_filial = TRUE
+// MODIFICADO: Adicionado JOIN com filial_destino para pedidos do tipo doação
+$query = "SELECT p.*, 
+          u_filial.nome_filial AS nome_filial_origem, 
+          u_filial.cnpj AS cnpj_origem, 
+          u_filial.endereco AS endereco_origem, 
+          u_filial.cidade AS cidade_origem, 
+          u_filial.estado AS estado_origem, 
+          u_destino.nome_filial AS nome_filial_destino,
+          u_destino.cnpj AS cnpj_destino,
+          u_destino.endereco AS endereco_destino,
+          u_destino.cidade AS cidade_destino,
+          u_destino.estado AS estado_destino,
+          u.nome as usuario_nome
           FROM pedidos p 
-          JOIN filiais f ON p.filial_id = f.id
+          JOIN usuarios u_filial ON p.filial_usuario_id = u_filial.id
+          LEFT JOIN usuarios u_destino ON p.filial_destino_id = u_destino.id
           JOIN usuarios u ON p.usuario_id = u.id
           WHERE p.id = ?";
 
@@ -455,6 +469,60 @@ $tipoPedido = $tipoPedidoInfo[$pedido['tipo_pedido']] ?? ['icon' => 'fa-question
             padding: 15px;
         }
 
+        .filial-cards {
+            display: flex;
+            gap: 20px;
+        }
+
+        .filial-card {
+            flex: 1;
+            background-color: #F9FAFC;
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .filial-card.origem {
+            border-left-color: var(--primary-color);
+        }
+
+        .filial-card.destino {
+            border-left-color: var(--success-color);
+        }
+
+        .filial-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #EEEEEE;
+            padding-bottom: 10px;
+        }
+
+        .filial-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: white;
+        }
+
+        .filial-icon.origem {
+            background-color: var(--primary-color);
+        }
+
+        .filial-icon.destino {
+            background-color: var(--success-color);
+        }
+
+        .filial-title {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--dark-text);
+        }
+
         /* Estilos para impressão */
         @media print {
             .sidebar, .header, .order-actions, .btn, .back-button {
@@ -589,34 +657,110 @@ $tipoPedido = $tipoPedidoInfo[$pedido['tipo_pedido']] ?? ['icon' => 'fa-question
                     </div>
                 </div>
 
+                <?php if ($pedido['tipo_pedido'] == 'doacao' && !empty($pedido['filial_destino_id'])): ?>
+                <!-- Informações das filiais para pedidos de doação -->
+                <div class="content-section">
+                    <h3 class="section-title">Informações das Filiais</h3>
+                    
+                    <div class="filial-cards">
+                        <!-- Filial de Origem -->
+                        <div class="filial-card origem">
+                            <div class="filial-header">
+                                <div class="filial-icon origem">
+                                    <i class="fas fa-building"></i>
+                                </div>
+                                <div class="filial-title">Filial de Origem</div>
+                            </div>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <div class="info-label">Nome da Filial</div>
+                                    <div class="info-value"><?= $pedido['nome_filial_origem'] ?></div>
+                                </div>
+                                
+                                <div class="info-item">
+                                    <div class="info-label">CNPJ</div>
+                                    <div class="info-value">
+                                        <?= preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $pedido['cnpj_origem']) ?>
+                                    </div>
+                                </div>
+                                
+                                <div class="info-item">
+                                    <div class="info-label">Endereço</div>
+                                    <div class="info-value"><?= $pedido['endereco_origem'] ?></div>
+                                </div>
+                                
+                                <div class="info-item">
+                                    <div class="info-label">Cidade/Estado</div>
+                                    <div class="info-value"><?= $pedido['cidade_origem'] ?>/<?= $pedido['estado_origem'] ?></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Filial de Destino -->
+                        <div class="filial-card destino">
+                            <div class="filial-header">
+                                <div class="filial-icon destino">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div class="filial-title">Filial de Destino</div>
+                            </div>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <div class="info-label">Nome da Filial</div>
+                                    <div class="info-value"><?= $pedido['nome_filial_destino'] ?></div>
+                                </div>
+                                
+                                <div class="info-item">
+                                    <div class="info-label">CNPJ</div>
+                                    <div class="info-value">
+                                        <?= preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $pedido['cnpj_destino']) ?>
+                                    </div>
+                                </div>
+                                
+                                <div class="info-item">
+                                    <div class="info-label">Endereço</div>
+                                    <div class="info-value"><?= $pedido['endereco_destino'] ?></div>
+                                </div>
+                                
+                                <div class="info-item">
+                                    <div class="info-label">Cidade/Estado</div>
+                                    <div class="info-value"><?= $pedido['cidade_destino'] ?>/<?= $pedido['estado_destino'] ?></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php else: ?>
+                <!-- Informações da filial para outros tipos de pedidos -->
                 <div class="content-section">
                     <h3 class="section-title">Informações da Filial</h3>
                     <div class="address-card">
                         <div class="info-grid">
                             <div class="info-item">
                                 <div class="info-label">Nome da Filial</div>
-                                <div class="info-value"><?= $pedido['nome_filial'] ?></div>
+                                <div class="info-value"><?= $pedido['nome_filial_origem'] ?></div>
                             </div>
                             
                             <div class="info-item">
                                 <div class="info-label">CNPJ</div>
                                 <div class="info-value">
-                                    <?= preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $pedido['cnpj']) ?>
+                                    <?= preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $pedido['cnpj_origem']) ?>
                                 </div>
                             </div>
                             
                             <div class="info-item">
                                 <div class="info-label">Endereço</div>
-                                <div class="info-value"><?= $pedido['endereco'] ?></div>
+                                <div class="info-value"><?= $pedido['endereco_origem'] ?></div>
                             </div>
                             
                             <div class="info-item">
                                 <div class="info-label">Cidade/Estado</div>
-                                <div class="info-value"><?= $pedido['cidade'] ?>/<?= $pedido['estado'] ?></div>
+                                <div class="info-value"><?= $pedido['cidade_origem'] ?>/<?= $pedido['estado_origem'] ?></div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <?php endif; ?>
 
                 <div class="content-section">
                     <h3 class="section-title">Itens do Pedido</h3>

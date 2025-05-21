@@ -1,3 +1,4 @@
+
 CREATE DATABASE southrock;
 
 USE southrock;
@@ -43,12 +44,14 @@ CREATE TABLE pedidos (
     tipo_pedido ENUM('requisicao', 'troca', 'doacao', 'devolucao') NOT NULL DEFAULT 'requisicao',
     status ENUM('novo', 'processo', 'finalizado') NOT NULL DEFAULT 'novo',
     filial_usuario_id INT,
+    filial_destino_id INT,
     usuario_id INT,
     observacoes TEXT,
     data_processamento DATETIME,
     data_finalizacao DATETIME,
     data_atualizacao DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (filial_usuario_id) REFERENCES usuarios(id),
+    FOREIGN KEY (filial_destino_id) REFERENCES usuarios(id),
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );
 
@@ -84,11 +87,11 @@ INSERT INTO usuarios (username, password, tipo_usuario, cnpj, responsavel, ender
     ('star03', 'teste', 2, '07.984.267/0006-14', 'Juliana Martins', 'Av. Higienópolis, 618 - SHOPPING CENTER PATIO HIGIENOPOLIS, ARCO 324', '01238-000', 'Higienópolis', 'São Paulo', 'SP', 'Juliana Martins', TRUE, 'Filial star03', 'SP');
 
 -- Pedidos de exemplo com a nova estrutura
-INSERT INTO pedidos (data, tipo_pedido, status, filial_usuario_id, usuario_id, observacoes, data_processamento, data_finalizacao) VALUES
-    (CURRENT_TIMESTAMP(), 'requisicao', 'novo', 2, 1, 'Pedido urgente para reposição de estoque', NULL, NULL),
-    (CURRENT_TIMESTAMP(), 'troca', 'processo', 3, 1, 'Troca por defeito no produto', CURRENT_TIMESTAMP(), NULL),
-    (CURRENT_TIMESTAMP(), 'doacao', 'finalizado', 4, 1, 'Doação para evento beneficente', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
-    (CURRENT_TIMESTAMP(), 'devolucao', 'novo', 2, 1, 'Devolução por erro no pedido', NULL, NULL);
+INSERT INTO pedidos (data, tipo_pedido, status, filial_usuario_id, filial_destino_id, usuario_id, observacoes, data_processamento, data_finalizacao) VALUES
+    (CURRENT_TIMESTAMP(), 'requisicao', 'novo', 2, NULL, 1, 'Pedido urgente para reposição de estoque', NULL, NULL),
+    (CURRENT_TIMESTAMP(), 'troca', 'processo', 3, NULL, 1, 'Troca por defeito no produto', CURRENT_TIMESTAMP(), NULL),
+    (CURRENT_TIMESTAMP(), 'doacao', 'finalizado', 4, 3, 1, 'Doação para evento beneficente', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+    (CURRENT_TIMESTAMP(), 'devolucao', 'novo', 2, NULL, 1, 'Devolução por erro no pedido', NULL, NULL);
 
 -- Itens dos pedidos de exemplo
 INSERT INTO pedido_itens (pedido_id, sku, quantidade, observacao) VALUES
