@@ -139,6 +139,40 @@ function confirmDelete(id, type = 'item') {
   });
 }
 
+// Arquivo: ../../js/dashboard.js
+
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebar = document.querySelector('.sidebar');
+    const content = document.querySelector('.content');
+
+    function adjustLayout() {
+        if (sidebar && content) {
+            const sidebarWidth = sidebar.offsetWidth;
+            content.style.marginLeft = sidebarWidth + 'px';
+            content.style.width = `calc(100% - ${sidebarWidth}px)`;
+            // Se você tiver um cabeçalho fixo ou outros elementos que precisem de ajuste, adicione aqui
+            // Exemplo: document.querySelector('.main-header').style.marginLeft = sidebarWidth + 'px';
+        }
+    }
+
+    // Ajusta o layout ao carregar a página
+    // Um pequeno delay para garantir que o CSS foi completamente renderizado antes do cálculo
+    setTimeout(adjustLayout, 50); 
+
+    // Ajusta o layout ao redimensionar a janela
+    window.addEventListener('resize', adjustLayout);
+
+    // Opcional: Adicionar funcionalidade de toggle (expandir/recolher) para a sidebar
+    const sidebarToggle = document.querySelector('.sidebar-header i.fa-bars'); // Seletor para o ícone de toggle
+    if (sidebarToggle && sidebar) {
+        sidebarToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('collapsed'); // Adicione uma classe CSS para o estado recolhido
+            // Adicione CSS para .sidebar.collapsed { width: Xpx; } no dashboard.css
+            setTimeout(adjustLayout, 300); // Pequeno delay para a transição CSS da sidebar
+        });
+    }
+});
+
 // Charts initialization function - Only runs if charts exist on the page
 function initializeCharts() {
   // Check if Chart.js is loaded and canvas elements exist

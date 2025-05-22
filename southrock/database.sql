@@ -1,3 +1,5 @@
+-- Excluir o banco de dados se ele já existir para um recomeço limpo
+DROP DATABASE IF EXISTS southrock;
 
 CREATE DATABASE southrock;
 
