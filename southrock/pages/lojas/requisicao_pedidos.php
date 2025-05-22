@@ -1,12 +1,21 @@
+<?php
+session_start(); // **ADICIONADO: Inicia a sessão para manter as variáveis de sessão**
+
+// Opcional, mas recomendado: Verificação de segurança para garantir que o usuário está logado
+// e é do tipo 2 (Loja) antes de exibir o conteúdo.
+// Ajuste o redirecionamento (../index.php) para a sua página de login, se for diferente.
+if (!isset($_SESSION['user_id']) || $_SESSION['tipo_usuario'] != 2) {
+    header('Location: ../index.php'); // Redireciona para a página de login se não estiver logado ou não for tipo 2
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pedidos - Filiais</title>
-    <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="../../css/requisicao_pedidos.css">
 
@@ -51,12 +60,10 @@
         </div>
     </div>
 
-    <!-- Botão para voltar ao index.php na parte inferior -->
     <div class="footer">
         <a href="../index.php" class="button btn">Logout</a>
     </div>
 
-    <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

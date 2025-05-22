@@ -9,26 +9,24 @@ session_start();
 // Inclui o arquivo de conexão para a página principal
 require_once '../../includes/db.php';
 
-// Mock do ID do usuário logado e da filial de origem (substitua pela lógica de sessão real)
-// ATENÇÃO: Em um ambiente real, você obteria esses valores de forma segura da sessão após o login.
-$loggedInUserId = 1; // Ex: $_SESSION['user_id']
-$loggedInUserBranchId = 2; // Ex: $_SESSION['branch_id'] (ID da filial associada ao usuário logado, se aplicável)
+// OBTENDO OS VALORES DA SESSÃO REAL
+// Pega o ID do usuário logado da sessão, ou null se não estiver definido
+$loggedInUserId = $_SESSION['user_id'] ?? null;
+// Pega o ID da filial do usuário logado da sessão, ou null se não estiver definido
+$loggedInUserBranchId = $_SESSION['branch_id'] ?? null;
 
-// Se o usuário logado for de uma filial (tipo_usuario = 2 e eh_filial = TRUE),
-// a filial de origem será a própria filial do usuário.
-// Se for um usuário 'matriz' (tipo_usuario = 1), a filial de origem pode ser a matriz ou nula/selecionável dependendo da regra de negócio.
-// Para uma doação "fixa" da origem, vamos assumir que o usuário logado é de uma filial e essa é a origem.
-// Ajuste esta lógica conforme a sua necessidade de negócio.
-$originBranchIdForDonation = null;
-if (isset($loggedInUserBranchId)) {
-    $originBranchIdForDonation = $loggedInUserBranchId;
-} else {
-    // Caso o usuário logado não tenha uma filial associada (ex: um admin da matriz),
-    // você pode definir uma filial padrão para doações, ou exigir que seja selecionada.
-    // Por simplicidade, vamos usar o ID 1 para a matriz como origem padrão se não houver filial.
-    // CONSIDERE IMPLEMENTAR UMA LÓGICA DE SELEÇÃO OU ERRO SE ISSO NÃO DEVE ACONTECER.
-    $originBranchIdForDonation = 1; // ID da matriz, por exemplo
+// Lógica de verificação e redirecionamento para garantir que o usuário está logado
+// e que as variáveis de sessão cruciais estão definidas.
+if ($loggedInUserId === null || $loggedInUserBranchId === null) {
+    // Se não há ID de usuário ou ID da filial na sessão, redirecione para o login
+    // É crucial que esses valores sejam definidos em seu login.php
+    header('Location: /login.php'); // Ajuste este caminho para sua página de login real
+    exit();
 }
+
+// A filial de origem para a doação é a filial do usuário logado.
+// Este valor será usado como filial_usuario_id na tabela 'pedidos'
+$originBranchIdForDonation = $loggedInUserBranchId;
 
 
 // Verifica se é uma requisição AJAX para pesquisa de produtos
@@ -149,7 +147,7 @@ if (isset($_POST['save_donation'])) {
         $destinatario_id = $_POST['destinatario_id'];
         $observacoes = $_POST['observacoes'];
         // A filial de origem é o ID da filial do usuário logado (já definido acima)
-        $filial_origem_id = $originBranchIdForDonation;
+        $filial_origem_id = $originBranchIdForDonation; // Utiliza a variável já definida
         $items = json_decode($_POST['items'], true);
 
         if (empty($items)) {
@@ -168,6 +166,7 @@ if (isset($_POST['save_donation'])) {
         $sql = "INSERT INTO pedidos (tipo_pedido, status, filial_usuario_id, filial_destino_id, usuario_id, observacoes)
                  VALUES ('doacao', 'novo', ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
+        // Garante que $loggedInUserId e $filial_origem_id (que é $loggedInUserBranchId) são usados aqui
         $stmt->bind_param('iiis', $filial_origem_id, $destinatario_id, $loggedInUserId, $observacoes);
 
         if (!$stmt->execute()) {
@@ -208,7 +207,7 @@ if (isset($_POST['save_donation'])) {
     exit;
 }
 
-// ... (Restante do seu HTML e JavaScript)
+// ... (Restante do seu HTML e JavaScript - sem alterações aqui)
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -680,6 +679,7 @@ if (isset($_POST['save_donation'])) {
             let selectedRecipientName = null;
 
             // Variáveis do PHP (para o ID da filial de origem)
+            // Certifique-se de que originBranchIdForDonation está sendo definido corretamente no PHP
             const originBranchId = <?php echo json_encode($originBranchIdForDonation); ?>;
 
 
@@ -984,6 +984,8 @@ if (isset($_POST['save_donation'])) {
                     Swal.fire('Erro', 'Por favor, selecione um destinatário.', 'warning');
                     return;
                 }
+                // JavaScript também precisa saber o ID da filial de origem para esta validação
+                // Por isso, passamos $originBranchIdForDonation para o JS como `originBranchId`
                 if (selectedRecipientId == originBranchId) {
                     Swal.fire('Erro', 'A filial de destino não pode ser a mesma que a filial de origem.', 'error');
                     return;
