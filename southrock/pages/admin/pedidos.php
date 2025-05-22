@@ -24,42 +24,23 @@ require_once '../../includes/db.php';
 </head>
 
 <body>
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <i class="fas fa-bars"></i>
-        </div>
-
+     <div class="sidebar">
         <div>
-            <a href="dashboard.php">
-                <i class="fas fa-home icon"></i>
-                <span class="text">Início</span>
-            </a>
-
-            <a href="pedidos.php">
-                <i class="fas fa-shopping-cart icon"></i>
-                <span class="text">Pedidos</span>
-            </a>
-
-            <a href="usuarios.php">
-                <i class="fas fa-users icon"></i>
-                <span class="text">Usuários</span>
-            </a>
-
-            <a href="produtos.php">
-                <i class="fas fa-box icon"></i>
-                <span class="text">Produtos</span>
-            </a>
+            <div class="sidebar-header">
+                <i class="fas fa-bars icon"></i><span class="text">Menu</span>
+            </div>
+            <a href="dashboard.php"><i class="fas fa-home icon"></i><span class="text">Início</span></a>
+            <a href="pedidos.php" class="active"><i class="fas fa-shopping-cart icon"></i><span class="text">Pedidos</span></a>
+            <a href="produtos.php"><i class="fas fa-box icon"></i><span class="text">Produtos</span></a>
+            <a href="usuarios.php"><i class="fas fa-users icon"></i><span class="text">Usuários</span></a>
         </div>
-
-        <a href="../../logout/logout.php">
-            <i class="fas fa-sign-out-alt icon"></i>
-            <span class="text">Sair</span>
-        </a>
+        <a href="../../logout/logout.php"><i class="fas fa-sign-out-alt icon"></i><span class="text">Sair</span></a>
     </div>
 
     <div class="content">
         <div class="header">
             <h1>Pedidos Realizados</h1>
+            <hr class="barrinha">
         </div>
 
         <div class="main-content">

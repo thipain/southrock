@@ -7,15 +7,17 @@ body {
     background-color: #fff4e8;
 }
 
+/* sidebar */
 .sidebar {
     width: 60px;
     background-color: #2045ff;
-    transition: width 0.3s;
+    transition: width 0.3s ease;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 100;
 }
 
 .sidebar:hover {
@@ -31,15 +33,20 @@ body {
     transition: background 0.3s;
 }
 
-.sidebar a:hover {
-    background-color: #480ca8;
+.sidebar a:hover, .sidebar a.active {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .sidebar-header {
     color: white;
     text-align: center;
-    padding: 13px 0;
+    padding: 15px 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-weight: bold;
+}
+
+.sidebar a.active {
+    border-left: 4px solid #ffffff;
 }
 
 .icon {
@@ -51,11 +58,14 @@ body {
 }
 
 .text {
-    display: none;
+    display: inline;
+    opacity: 0;
+    transition: opacity 0.3s;
+    white-space: nowrap;
 }
 
-.sidebar a:hover .text {
-    display: inline;
+.sidebar:hover .text {
+    opacity: 1;
 }
 
 .sidebar a .text {
@@ -65,7 +75,7 @@ body {
 }
 
 .sidebar:hover a .text {
-    opacity: 1;
+     opacity: 1;
 }
 
 .content {
@@ -86,11 +96,17 @@ body {
 .header h1 {
     margin: 0;
     background-color: #fffff3;
-    text-align: center;
+    text-align: left;
     font-size: 1.6rem;
     color: #000000;
     font-weight: bold;
 }
+
+
+.barrinha{
+  background-color: #212529;
+}
+
 
 .main-content {
     padding: 20px;

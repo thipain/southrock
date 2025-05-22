@@ -4,12 +4,12 @@ if (!isset($_SESSION['username'])) {
     header("Location: index.php");
     exit();
 }
- 
+
 include '../../includes/db.php';
- 
+
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
- 
+
     // Verificar se o usuário logado é admin e se o id que está sendo excluído é de um admin
     if ($_SESSION['tipo_usuario'] == 1) {
         // Verificar se o usuário logado está tentando excluir um admin
@@ -18,7 +18,7 @@ if (isset($_GET['delete'])) {
         $stmt->bind_param("i", $id);
         $stmt->execute();
         $result = $stmt->get_result();
- 
+
         if ($result->num_rows == 1) {
             $user = $result->fetch_assoc();
             if ($user['tipo_usuario'] == 1) {
@@ -28,20 +28,21 @@ if (isset($_GET['delete'])) {
             }
         }
     }
- 
+
     // Caso contrário, excluir o usuário
     $sql = "DELETE FROM usuarios WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $id);
     $stmt->execute();
 }
- 
+
 $sql = "SELECT * FROM usuarios";
 $result = $conn->query($sql);
 ?>
- 
+
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -63,16 +64,22 @@ $result = $conn->query($sql);
 
         .sidebar {
             width: 60px;
-            background-image: linear-gradient(to left, rgb(124, 187, 235) 0%, rgb(60, 111, 177) 50%, rgb(0, 37, 78) 100%);
-            transition: width 0.3s;
+            background-color: #2045ff;
+            transition: width 0.3s ease;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-            height: 100vh;
-            position: fixed;
-            z-index: 1000;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: bold;
         }
 
         .sidebar:hover {
@@ -89,14 +96,12 @@ $result = $conn->query($sql);
         }
 
         .sidebar a:hover {
-            background-color: #480ca8;
+            border-left: 4px solid #ffffff;
         }
 
-        .sidebar-header {
-            color: white;
-            text-align: center;
-            padding: 13px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        .sidebar a:hover,
+        .sidebar a.active {
+            background-color: rgba(255, 255, 255, 0.1);
         }
 
         .icon {
@@ -108,21 +113,20 @@ $result = $conn->query($sql);
         }
 
         .text {
-            display: none;
+            display: inline;
+            opacity: 0;
+            transition: opacity 0.3s;
+            white-space: nowrap;
         }
 
         .sidebar a:hover .text {
-            display: inline;
+            opacity: 1;
         }
 
         .sidebar a .text {
             display: inline;
             opacity: 0;
             transition: opacity 0.3s;
-        }
-
-        .sidebar:hover a .text {
-            opacity: 1;
         }
 
         .content {
@@ -137,15 +141,12 @@ $result = $conn->query($sql);
         }
 
         .header {
-            background-image: linear-gradient(to right, rgb(124, 187, 235) 0%, rgb(60, 111, 177) 50%, rgb(0, 37, 78) 100%);
-            color: white;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            margin-bottom: 0;
-            border-radius: 0;
+            margin: 0;
+            background-color: #fffff3;
+            text-align: left;
+            font-size: 1.6rem;
+            color: #000000;
+            font-weight: bold;
         }
 
         .header h1 {
@@ -212,6 +213,7 @@ $result = $conn->query($sql);
         }
     </style>
 </head>
+
 <body>
     <!-- Sidebar -->
     <div class="sidebar">
@@ -257,7 +259,7 @@ $result = $conn->query($sql);
         <div class="header">
             <h1><i class="bi bi-people-fill me-2"></i>Gerenciamento de Usuários</h1>
         </div>
-        
+
         <div class="main-content">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="text-primary h3">Lista de Usuários</h2>
@@ -265,13 +267,14 @@ $result = $conn->query($sql);
                     <i class="bi bi-plus-circle me-1"></i>Novo Usuário
                 </a>
             </div>
-            
+
             <!-- Search Box -->
             <div class="search-container mb-4">
                 <div class="row">
                     <div class="col-md-8 mb-3 mb-md-0">
                         <div class="search-wrapper">
-                            <input type="text" id="searchUsuario" class="search-input" placeholder="Buscar por nome, CNPJ ou responsável...">
+                            <input type="text" id="searchUsuario" class="search-input"
+                                placeholder="Buscar por nome, CNPJ ou responsável...">
                             <i class="bi bi-search search-icon"></i>
                         </div>
                     </div>
@@ -305,33 +308,35 @@ $result = $conn->query($sql);
                             </thead>
                             <tbody>
                                 <?php while ($row = $result->fetch_assoc()): ?>
-                                <tr>
-                                    <td><?php echo htmlspecialchars($row['username']); ?></td>
-                                    <td><?php echo htmlspecialchars($row['cnpj']); ?></td>
-                                    <td><?php echo htmlspecialchars($row['responsavel']); ?></td>
-                                    <td><?php echo htmlspecialchars($row['endereco']); ?></td>
-                                    <td><?php echo htmlspecialchars($row['cep']); ?></td>
-                                    <td><?php echo htmlspecialchars($row['bairro']); ?></td>
-                                    <td><?php echo htmlspecialchars($row['cidade']); ?></td>
-                                    <td><?php echo htmlspecialchars($row['uf']); ?></td>
-                                    <td class="text-center">
-                                        <div class="btn-group" role="group">
-                                            <a href="editar_usuario.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-outline-primary">
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
-                                            <?php if ($row['tipo_usuario'] == 1): ?>
-                                                <!-- Desabilita o botão de excluir para admin -->
-                                                <button class="btn btn-sm btn-outline-danger" disabled>
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                            <?php else: ?>
-                                                <button onclick="confirmDelete(<?php echo $row['id']; ?>)" class="btn btn-sm btn-outline-danger">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                            <?php endif; ?>
-                                        </div>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($row['username']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['cnpj']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['responsavel']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['endereco']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['cep']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['bairro']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['cidade']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['uf']); ?></td>
+                                        <td class="text-center">
+                                            <div class="btn-group" role="group">
+                                                <a href="editar_usuario.php?id=<?php echo $row['id']; ?>"
+                                                    class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                                <?php if ($row['tipo_usuario'] == 1): ?>
+                                                    <!-- Desabilita o botão de excluir para admin -->
+                                                    <button class="btn btn-sm btn-outline-danger" disabled>
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                <?php else: ?>
+                                                    <button onclick="confirmDelete(<?php echo $row['id']; ?>)"
+                                                        class="btn btn-sm btn-outline-danger">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                <?php endif; ?>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 <?php endwhile; ?>
                             </tbody>
                         </table>
@@ -340,7 +345,7 @@ $result = $conn->query($sql);
             </div>
         </div>
     </div>
- 
+
     <!-- Bootstrap JS e Dependências -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- SweetAlert2 para confirmação de exclusão -->
@@ -365,7 +370,7 @@ $result = $conn->query($sql);
         }
 
         // Script para pesquisa dinâmica
-        document.getElementById('searchUsuario').addEventListener('keyup', function() {
+        document.getElementById('searchUsuario').addEventListener('keyup', function () {
             var input, filter, table, tr, td, i, txtValue;
             input = document.getElementById('searchUsuario');
             filter = input.value.toUpperCase();
@@ -393,7 +398,7 @@ $result = $conn->query($sql);
         });
 
         // Script para filtragem por tipo de usuário
-        document.getElementById('filterUsuario').addEventListener('change', function() {
+        document.getElementById('filterUsuario').addEventListener('change', function () {
             var filter = this.value;
             var table = document.querySelector('.table');
             var tr = table.getElementsByTagName('tr');
@@ -414,8 +419,9 @@ $result = $conn->query($sql);
         });
     </script>
 </body>
+
 </html>
- 
+
 <?php
 $conn->close();
 ?>
