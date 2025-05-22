@@ -34,10 +34,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Ajustar bind_param para filial_destino_id que pode ser NULL
         if ($filial_destino_id === NULL) {
-            // "s" para string (tipo_pedido, status, observacoes), "i" para int (filial_usuario_id, pedido_id), "i" para filial_destino_id (mesmo se NULL, mysqli o trata corretamente)
             $stmt_update_pedido->bind_param("ssiisi", $tipo_pedido, $status, $filial_usuario_id, $filial_destino_id, $observacoes, $pedido_id);
         } else {
-            // Usar "i" para filial_destino_id se não for NULL
             $stmt_update_pedido->bind_param("ssiiis", $tipo_pedido, $status, $filial_usuario_id, $filial_destino_id, $observacoes, $pedido_id);
         }
         
@@ -57,25 +55,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         for ($i = 0; $i < count($item_sku); $i++) {
             $sku = intval($item_sku[$i]);
-            $quantidade = floatval($item_quantidade[$i]); // Pode ser decimal (step="0.01")
+            $quantidade = floatval($item_quantidade[$i]); 
             $observacao_item = !empty($item_observacao[$i]) ? $item_observacao[$i] : NULL;
 
-            // Validar SKU e quantidade antes de inserir
             if ($sku > 0 && $quantidade > 0) {
-                // 'd' para double/float, 's' para string (observacao que pode ser NULL)
                 $stmt_insert_item->bind_param("iids", $pedido_id, $sku, $quantidade, $observacao_item);
                 $stmt_insert_item->execute();
             }
         }
         $stmt_insert_item->close();
 
-        $conn->commit(); // Confirma a transação
+        $conn->commit(); 
         $_SESSION['success_message'] = "Pedido atualizado com sucesso!";
         header("Location: detalhes_pedido.php?id=" . $pedido_id);
         exit();
 
     } catch (Exception $e) {
-        $conn->rollback(); // Reverte a transação em caso de erro
+        $conn->rollback(); 
         $_SESSION['error_message'] = "Erro ao atualizar o pedido: " . $e->getMessage();
         header("Location: detalhes_pedido.php?id=" . $pedido_id);
         exit();
@@ -90,8 +86,6 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 
 $pedido_id = intval($_GET['id']);
 
-// Buscar informações do pedido
-// JOIN com usuarios para filial_usuario_id e filial_destino_id
 $query = "SELECT p.*,
           u_origem.nome_filial AS nome_filial_origem,
           u_destino.nome_filial AS nome_filial_destino,
@@ -114,14 +108,12 @@ if ($resultado->num_rows === 0) {
 
 $pedido = $resultado->fetch_assoc();
 
-// Verificar se o pedido já foi finalizado, rejeitado ou cancelado para impedir edição
 if ($pedido['status'] === 'finalizado' || $pedido['status'] === 'rejeitado' || $pedido['status'] === 'cancelado') {
     $_SESSION['error_message'] = "Não é possível editar um pedido com status '" . $pedido['status'] . "'.";
     header("Location: detalhes_pedido.php?id=" . $pedido_id);
     exit();
 }
 
-// Buscar itens do pedido
 $query_itens = "SELECT pi.sku, pi.quantidade, pi.observacao, prod.produto, prod.unidade_medida
                 FROM pedido_itens pi
                 JOIN produtos prod ON pi.sku = prod.sku
@@ -131,12 +123,10 @@ $stmt_itens->bind_param("i", $pedido_id);
 $stmt_itens->execute();
 $itens_pedido = $stmt_itens->get_result()->fetch_all(MYSQLI_ASSOC);
 
-// Buscar todas as filiais (usuarios com eh_filial = TRUE)
 $query_filiais = "SELECT id, nome_filial, cnpj FROM usuarios WHERE eh_filial = TRUE ORDER BY nome_filial";
 $result_filiais = $conn->query($query_filiais);
 $filiais = $result_filiais->fetch_all(MYSQLI_ASSOC);
 
-// Buscar todos os produtos para o dropdown de itens
 $query_produtos = "SELECT sku, produto, unidade_medida FROM produtos ORDER BY produto";
 $result_produtos = $conn->query($query_produtos);
 $produtos = $result_produtos->fetch_all(MYSQLI_ASSOC);
@@ -154,7 +144,7 @@ $conn->close();
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <link rel="stylesheet" href="../../css/dashboard.css">
+    <link rel="stylesheet" href="../../css/dashboard.css"> 
     <style>
         /* Estilos específicos para este formulário, se necessário */
         .card-header-flex {
@@ -373,12 +363,7 @@ $conn->close();
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="../../js/dashboard.js"></script>
     <script>
-        // Não é mais necessário duplicar adjustLayout aqui, pois dashboard.js já o faz.
-        // A função de ajuste de layout é centralizada no dashboard.js
-        // e é chamada no DOMContentLoaded e no resize.
-
         // Lógica para mostrar/esconder filial_destino_id com base no tipo_pedido
         $('#tipo_pedido').change(function() {
             const tipo = $(this).val();

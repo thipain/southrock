@@ -1,52 +1,145 @@
+/* Estilo geral do corpo da página */
 body {
-                
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    font-family: 'Arial', sans-serif;
-    min-height: 100vh;
+    background-color: #f8f9fa; /* Um cinza muito claro e suave para o fundo */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fonte moderna e de fácil leitura */
+    color: #212529; /* Cor de texto escura padrão para bom contraste */
+    min-height: 100vh; /* Garante que o corpo ocupe pelo menos toda a altura da tela */
+    display: flex;
+    flex-direction: column; /* Organiza o conteúdo principal e o rodapé verticalmente */
+    line-height: 1.6; /* Espaçamento entre linhas confortável para leitura */
+    margin: 0; /* Remove margens padrão do navegador */
+}
+
+/* Cabeçalho da página */
+.header {
+    background-color: #ffffff; /* Cabeçalho branco para um visual limpo */
+    color: #007bff; /* Texto do título principal em azul */
+    padding: 40px 20px; /* Espaçamento interno generoso */
+    text-align: center;
+    border-bottom: 1px solid #dee2e6; /* Linha divisória sutil */
+    margin-bottom: 40px; /* Espaço abaixo do cabeçalho */
+}
+
+.header h1 {
+    font-weight: 300; /* Peso de fonte mais leve para o título principal */
+    font-size: 2.5em; /* Tamanho grande para destaque */
+    margin-bottom: 8px;
+}
+
+.header p {
+    font-size: 1.1em; /* Tamanho ligeiramente maior para o subtítulo */
+    color: #495057; /* Cor de texto mais suave para o subtítulo */
+    margin-bottom: 0;
+}
+
+/* Contêiner para os cards de ação */
+.cards-container {
+    flex: 1; /* Permite que este contêiner cresça e ocupe o espaço disponível, empurrando o rodapé para baixo */
+    display: flex;
+    align-items: center; /* Centraliza os cards verticalmente se houver espaço (útil em telas maiores) */
+    justify-content: center; /* Centraliza os cards horizontalmente */
+    padding: 20px 10px; /* Espaçamento interno */
+}
+
+/* Limita a largura máxima do contêiner dos cards em telas grandes */
+.cards-container .container {
+    max-width: 1140px;
+}
+
+/* Garante que os cards (colunas Bootstrap) sejam centralizados na linha */
+.cards-container .container .row {
+    justify-content: center;
+}
+
+/* Estilo dos cards */
+.card {
+    background-color: #ffffff; /* Fundo branco para os cards */
+    border: 1px solid #e0e0e0; /* Borda clara e sutil */
+    border-radius: 12px; /* Cantos mais arredondados para um visual moderno */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Sombra bem suave para profundidade */
+    transition: transform 0.25s ease-in-out, box-shadow 0.25s ease-in-out;
+    margin: 15px; /* Espaçamento entre os cards */
+    display: flex; /* Habilita flexbox para o conteúdo interno do card */
+    flex-direction: column; /* Empilha o conteúdo do card verticalmente */
+    height: 100%; /* Faz com que todos os cards na mesma linha tenham a mesma altura */
+}
+
+.card:hover {
+    transform: translateY(-6px); /* Efeito de elevação sutil ao passar o mouse */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Sombra um pouco mais pronunciada no hover */
+}
+
+.card-body {
+    padding: 30px; /* Espaçamento interno generoso para o corpo do card */
+    text-align: center; /* Centraliza o texto e ícones dentro do card */
     display: flex;
     flex-direction: column;
+    flex-grow: 1; /* Permite que o corpo do card cresça para preencher o espaço */
 }
-.header {
-    background-color: #6c757d;
-    color: white;
-    padding: 20px;
-    text-align: center;
-    margin-bottom: 20px;
-}
-.card {
-    margin: 15px;
-    border: none;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s;
-    background-color: rgba(255, 255, 255, 0.9);
-}
-.card:hover {
-    transform: translateY(-5px);
-}
-.button {
-    background-color: #007bff;
-    color: white;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-}
-.button:hover {
-    background-color: #0056b3;
-}
+
+/* Estilo dos ícones dentro dos cards */
 .icon {
-    font-size: 50px;
-    color: #007bff;
+    font-size: 48px; /* Tamanho bom para destaque visual */
+    margin-bottom: 25px; /* Espaço abaixo do ícone */
 }
+
+/* Cores distintas para cada ícone para facilitar a identificação da ação */
+#fazer-pedido .icon { color: #007bff; }        /* Azul para "Fazer Pedido" */
+#historico-pedidos .icon { color: #6f42c1; }  /* Roxo para "Histórico" */
+#suporte .icon { color: #28a745; }            /* Verde para "Suporte" */
+
+.card-title {
+    font-size: 1.6em; /* Tamanho maior para o título do card */
+    font-weight: 600; /* Fonte um pouco mais pesada */
+    margin-bottom: 12px;
+    color: #343a40; /* Cor escura para o título */
+}
+
+.card-text {
+    color: #55595c; /* Cor de texto para a descrição */
+    font-size: 0.95em;
+    margin-bottom: 30px; /* Espaço antes do botão */
+    flex-grow: 1; /* Ajuda a empurrar o botão para o final do card se o texto for curto */
+}
+
+/* Estilo para todos os botões com a classe .button */
+.button.btn, a.button.btn {
+    background-color: #007bff; /* Cor de fundo azul padrão */
+    color: white;
+    border: none; /* Remove bordas padrão */
+    border-radius: 8px; /* Cantos arredondados suaves */
+    padding: 12px 28px; /* Espaçamento interno confortável */
+    font-size: 1em;
+    font-weight: 500; /* Peso da fonte */
+    text-decoration: none; /* Remove sublinhado de links */
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+    display: inline-block; /* Garante que o padding seja aplicado corretamente */
+    margin-top: auto; /* Empurra o botão para o final do .card-body (requer .card-body com display:flex e flex-direction:column) */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil para o botão */
+}
+
+.button.btn:hover, a.button.btn:hover {
+    background-color: #0056b3; /* Cor de fundo mais escura no hover */
+    color: white;
+    transform: scale(1.03); /* Leve aumento de tamanho no hover */
+}
+
+/* Rodapé da página */
 .footer {
-    margin-top: auto;
+    margin-top: auto; /* Garante que o rodapé fique no final da página */
     text-align: center;
-    padding: 20px;
+    padding: 25px 20px;
+    background-color: #e9ecef; /* Fundo cinza claro para o rodapé */
+    border-top: 1px solid #ced4da; /* Linha divisória sutil */
 }
-.cards-container {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+
+/* Estilo específico para o botão de Logout no rodapé */
+.footer .button.btn {
+    background-color: #6c757d; /* Cinza para o botão de logout, indicando ação secundária */
+    box-shadow: none; /* Sem sombra para o botão de logout */
+}
+
+.footer .button.btn:hover {
+    background-color: #5a6268; /* Cinza mais escuro no hover */
+    transform: scale(1.03);
 }

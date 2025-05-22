@@ -10,23 +10,20 @@ body {
     display: flex;
     font-family: 'Arial', sans-serif;
     height: 100vh;
-    background-color: #242425;
+    background-color: #fffff3; /* Mantém para evitar a "borda" por frestas */
 }
 
 /* SIDEBAR */
-/* SIDEBAR */
 .sidebar {
     width: 60px;
-    background-color: #2045ff; /* */
-    transition: width 0.3s ease; /* */
-    overflow: hidden; /* */
-    display: flex; /* */
-    flex-direction: column; /* */
-    justify-content: space-between; /* */
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.03); /* Opacidade ainda menor */
-    /* OU */
-    /* box-shadow: 2px 0 5px rgba(255, 255, 255, 0.1); */ /* Exemplo com sombra clara, se desejado */
-    z-index: 100; /* */
+    background-color: #2045ff;
+    transition: width 0.3s ease;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: none; /* Mantém sem sombra */
+    z-index: 100;
 }
 
 .sidebar:hover {
@@ -82,17 +79,39 @@ body {
     flex: 1;
     overflow-y: auto;
     background-color: #fffff3;
-
+    /* O .content em si não precisa de padding lateral se o .container dentro dele for usado.
+       Se o .container não for usado em alguma seção, você pode adicionar padding aqui. */
 }
 
-/* HEADER DO DASHBOARD */
+/* Ajuste para o container padrão do Bootstrap dentro do .content */
+.content .container {
+    /* Bootstrap por padrão já define:
+       padding-right: 15px;
+       padding-left: 15px;
+       margin-right: auto;
+       margin-left: auto;
+       max-width: (varia com o breakpoint);
+       Estas são boas configurações para centralização.
+       Se você quiser um padding lateral ligeiramente menor que o padrão (15px),
+       ajuste AMBOS para manter a simetria e a centralização efetiva.
+       Por exemplo, 10px: */
+    padding-left: 15px;  /* Pode ajustar para 10px se 15px for muito */
+    padding-right: 15px; /* Pode ajustar para 10px se 15px for muito */
+    /* As margens automáticas e max-width devem ser deixadas para o Bootstrap
+       ou definidas explicitamente se você tiver um motivo forte. */
+}
+
+/* HEADER DO DASHBOARD (Mantido do dashboard.css, pode ser específico para outras páginas) */
 .dashboard-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
     border-bottom: 1px solid #aaaaaa;
-
+    /* Note que o .dashboard-header, se estiver DENTRO do .container,
+       herdará os paddings do .container. Se estiver FORA (direto no .content),
+       ocupará a largura total do .content. */
 }
 
 .painel-titulo {
@@ -104,10 +123,49 @@ body {
 .user-info {
     font-size: 0.9rem;
     color: #000000;
-    
 }
 
-/* CARDS DE ESTATÍSTICAS */
+/* ESTILOS ESPECÍFICOS PARA editar_pedido.php (Importados do <style> da página) */
+.card-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.item-row {
+    border: 1px solid #e0e0e0;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    background-color: #fcfcfc;
+    position: relative;
+}
+
+.remove-item {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: none;
+    border: none;
+    color: #dc3545;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 5px;
+    line-height: 1;
+    transition: color 0.2s ease-in-out;
+}
+
+.remove-item:hover {
+    color: #c82333;
+}
+
+.form-section label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+}
+
+/* Outros estilos que eram do dashboard.css */
 .estatistica-card {
     border-radius: 10px;
     border: none;
@@ -119,13 +177,6 @@ body {
 .estatistica-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
-
-.card-header-flex {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
 }
 
 .card-title {
@@ -161,7 +212,7 @@ body {
     background-color: #ffc107;
 }
 
-.card-body
+.card-body /* Do dashboard.css */
 {
     background-color: #fffcf9;
     border: 1px solid rgb(220, 220, 220);
@@ -198,7 +249,6 @@ body {
     margin-top: 10px;
 }
 
-/* LOGO CENTRALIZADA */
 .logo-container {
     margin-top: 2rem;
     padding: 20px;
@@ -217,7 +267,8 @@ body {
     margin-top: 15px;
 }
 
-/* RESPONSIVIDADE */
+
+/* RESPONSIVIDADE (Mantida do dashboard.css) */
 @media screen and (max-width: 768px) {
     .sidebar {
         position: fixed;
@@ -226,15 +277,12 @@ body {
     }
 
     .content {
-        margin-left: 60px;
+        margin-left: 60px; /* Importante para não sobrepor o sidebar fixo */
     }
     
-    .row {
-        flex-direction: column;
-    }
-    
-    .col-md-3 {
-        width: 100%;
+    .content .container {
+        padding-left: 10px;  /* Padding menor para telas mobile */
+        padding-right: 10px; /* Padding menor para telas mobile */
     }
 }
 
