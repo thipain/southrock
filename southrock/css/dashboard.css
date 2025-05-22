@@ -58,6 +58,7 @@ body {
     border-left: 4px solid #ffffff;
 }
 
+
 .icon {
     color: white;
     font-size: 20px;
@@ -150,15 +151,15 @@ body {
 }
 
 .bg-success {
-    background-color: #28a745;
+    background-color: #fd7f25;
 }
 
 .bg-info {
-    background-color: #17a2b8;
+    background-color: #ff373f;
 }
 
 .bg-warning {
-    background-color: #ffc107;
+    background-color: #072efc;
 }
 
 .card-body

@@ -64,38 +64,27 @@ try {
         <title>Lista de Produtos - SouthRock</title>
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
         <!-- Bootstrap Icons -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
         <link rel="stylesheet" href="../../css/dashboard.css">
         <link rel="stylesheet" href="../../css/produtos.css">
     </head>
     <body>
-        <!-- Layout com sidebar -->
-        <div class="sidebar">
-            <div class="sidebar-header">SR</div>
-            <a href="dashboard.php">
-                <i class="bi bi-speedometer2 icon"></i>
-                <span class="text">Dashboard</span>
-            </a>
-            <a href="produtos.php" class="active">
-                <i class="bi bi-box-fill icon"></i>
-                <span class="text">Produtos</span>
-            </a>
-            <a href="usuarios.php">
-                <i class="bi bi-people-fill icon"></i>
-                <span class="text">Usuários</span>
-            </a>
-            <a href="relatorios.php">
-                <i class="bi bi-file-earmark-bar-graph-fill icon"></i>
-                <span class="text">Relatórios</span>
-            </a>
-            <div style="margin-top: auto;">
-                <a href="logout.php">
-                    <i class="bi bi-box-arrow-right icon"></i>
-                    <span class="text">Logout</span>
-                </a>
+       <div class="sidebar">
+        <div>
+            <div class="sidebar-header">
+                <i class="fas fa-bars icon"></i><span class="text">Menu</span>
             </div>
+            <a href="dashboard.php"><i class="fas fa-home icon"></i><span class="text">Início</span></a>
+            <a href="pedidos.php"><i class="fas fa-shopping-cart icon"></i><span class="text">Pedidos</span></a>
+            <a href="produtos.php"class="active"><i class="fas fa-box icon"></i><span class="text">Produtos</span></a>
+            <a href="usuarios.php"><i class="fas fa-users icon"></i><span class="text">Usuários</span></a>
         </div>
+        <a href="../../logout/logout.php"><i class="fas fa-sign-out-alt icon"></i><span class="text">Sair</span></a>
+    </div>
 
         <div class="content">
             <div class="container-fluid px-4 py-4">
@@ -105,11 +94,8 @@ try {
                             <div class="painel-titulo">
                                 <i class="bi bi-box-fill me-2"></i>Gerenciar Produtos
                             </div>
-                            <div class="user-info">
-                                Bem-vindo, <?php echo htmlspecialchars($_SESSION['username']); ?>
-                            </div>
                         </div>
-                        <div>
+                        <div class="button-novo">
                             <a href="cadastrar_produto.php" class="btn btn-success me-2">
                                 <i class="bi bi-plus-circle me-1"></i>Novo Produto
                             </a>

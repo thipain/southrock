@@ -7,3 +7,13 @@ body {
 .card-custom {
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
+
+.table-responsive{
+    border: 1px solid rgb(220, 220, 220);
+}
+
+.button-novo {
+    color: #fff;
+    background-color: #072efc;
+    border-color: #072efc;
+}
