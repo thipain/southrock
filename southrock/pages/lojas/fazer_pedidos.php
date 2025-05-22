@@ -49,15 +49,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['tipo_usuario'] != 2) {
 
             <div class="option-card col">
                 <div class="card-body">
-                    <i class="fas fa-undo icon"></i>
-                    <h5 class="card-title">Devolver Produtos</h5>
-                    <p class="card-text">Clique para devolver produtos.</p>
-                    <a href="devolver_pedidos.php" class="button btn">Devolver Produtos</a>
-                </div>
-            </div>
-
-            <div class="option-card col">
-                <div class="card-body">
                     <i class="fas fa-exchange-alt icon"></i>
                     <h5 class="card-title">Trocar Produtos</h5>
                     <p class="card-text">Clique para trocar produtos.</p>

@@ -44,7 +44,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['tipo_usuario'] != 2) {
                         <i class="fas fa-history icon"></i>
                         <h5 class="card-title">Histórico de Pedidos</h5>
                         <p class="card-text">Veja o histórico e o status dos pedidos realizados.</p>
-                        <button class="button btn">Ver Histórico</button>
+
+                        <a href="historico.php"button class="button btn">Ver Histórico</a>
                     </div>
                 </div>
 
