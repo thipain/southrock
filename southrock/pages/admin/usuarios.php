@@ -51,6 +51,7 @@ $result = $conn->query($sql);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="../../css/usuarios.css">
     <style>
         /* Estilos herdados do pedidos.css */
@@ -59,8 +60,10 @@ $result = $conn->query($sql);
             font-family: 'Arial', sans-serif;
             margin: 0;
             height: 100vh;
-            background-color: #fff4e8;
+            background-color:#fffff3;
         }
+
+        /* SIDEBAR */
 
         .sidebar {
             width: 60px;
@@ -119,14 +122,12 @@ $result = $conn->query($sql);
             white-space: nowrap;
         }
 
-        .sidebar a:hover .text {
+        .sidebar:hover .text {
             opacity: 1;
         }
 
-        .sidebar a .text {
-            display: inline;
-            opacity: 0;
-            transition: opacity 0.3s;
+        .sidebar a.active {
+            border-left: 4px solid #ffffff;
         }
 
         .content {
@@ -158,6 +159,7 @@ $result = $conn->query($sql);
             padding: 20px;
             flex: 1;
             overflow-y: auto;
+            background-color:#fffff3;
         }
 
         .btn-primary {
@@ -219,45 +221,25 @@ $result = $conn->query($sql);
     <div class="sidebar">
         <div>
             <div class="sidebar-header">
-                <i class="bi bi-shield-lock icon"></i>
+                <i class="fas fa-bars icon"></i><span class="text">Menu</span>
             </div>
-            <a href="dashboard.php">
-                <i class="bi bi-speedometer2 icon"></i>
-                <span class="text">Dashboard</span>
-            </a>
-            <a href="usuarios.php" class="active">
-                <i class="bi bi-people-fill icon"></i>
-                <span class="text">Usuários</span>
-            </a>
-            <a href="pedidos.php">
-                <i class="bi bi-cart-fill icon"></i>
-                <span class="text">Pedidos</span>
-            </a>
-            <a href="produtos.php">
-                <i class="bi bi-box-seam icon"></i>
-                <span class="text">Produtos</span>
-            </a>
-            <a href="relatorios.php">
-                <i class="bi bi-file-earmark-bar-graph icon"></i>
-                <span class="text">Relatórios</span>
-            </a>
+            <a href="dashboard.php"><i class="fas fa-home icon"></i><span class="text">Início</span></a>
+            <a href="pedidos.php"><i class="fas fa-shopping-cart icon"></i><span class="text">Pedidos</span></a>
+            <a href="produtos.php"><i class="fas fa-box icon"></i><span class="text">Produtos</span></a>
+            <a href="usuarios.php" class="active"><i class="fas fa-users icon"></i><span
+                    class="text">Usuários</span></a>
         </div>
-        <div>
-            <a href="configuracoes.php">
-                <i class="bi bi-gear-fill icon"></i>
-                <span class="text">Configurações</span>
-            </a>
-            <a href="logout.php">
-                <i class="bi bi-box-arrow-right icon"></i>
-                <span class="text">Sair</span>
-            </a>
-        </div>
+
+        <a href="../../logout/logout.php"><i class="fas fa-sign-out-alt icon"></i><span class="text">Sair</span></a>
+
+    </div>
     </div>
 
     <!-- Content -->
     <div class="content">
         <div class="header">
             <h1><i class="bi bi-people-fill me-2"></i>Gerenciamento de Usuários</h1>
+            <hr>
         </div>
 
         <div class="main-content">

@@ -14,19 +14,17 @@ body {
 }
 
 /* SIDEBAR */
-/* SIDEBAR */
+
 .sidebar {
     width: 60px;
-    background-color: #2045ff; /* */
-    transition: width 0.3s ease; /* */
-    overflow: hidden; /* */
-    display: flex; /* */
-    flex-direction: column; /* */
-    justify-content: space-between; /* */
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.03); /* Opacidade ainda menor */
-    /* OU */
-    /* box-shadow: 2px 0 5px rgba(255, 255, 255, 0.1); */ /* Exemplo com sombra clara, se desejado */
-    z-index: 100; /* */
+    background-color: #2045ff; 
+    transition: width 0.3s ease; 
+    overflow: hidden; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: space-between; 
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.03);
+    z-index: 100; 
 }
 
 .sidebar:hover {
