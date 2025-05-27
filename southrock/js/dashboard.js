@@ -1,15 +1,11 @@
-// Dashboard Navigation and UI Controls
 document.addEventListener('DOMContentLoaded', function() {
-  // Toggle sidebar
   const toggleSidebarBtn = document.getElementById('toggle-sidebar');
   const sidebar = document.querySelector('.sidebar');
   const body = document.body;
   const mobileOverlay = document.querySelector('.mobile-overlay');
   
-  // Function to check if we're on mobile
   const isMobile = () => window.innerWidth <= 576;
   
-  // Toggle sidebar function
   function toggleSidebar() {
       if (isMobile()) {
           sidebar.classList.toggle('mobile-open');
@@ -22,12 +18,10 @@ document.addEventListener('DOMContentLoaded', function() {
       }
   }
   
-  // Add click event to sidebar toggle button
   if (toggleSidebarBtn) {
       toggleSidebarBtn.addEventListener('click', toggleSidebar);
   }
   
-  // Close sidebar when clicking on overlay (mobile only)
   if (mobileOverlay) {
       mobileOverlay.addEventListener('click', function() {
           sidebar.classList.remove('mobile-open');
@@ -35,7 +29,6 @@ document.addEventListener('DOMContentLoaded', function() {
       });
   }
   
-  // Set active navigation item based on current page
   const currentPath = window.location.pathname;
   const navLinks = document.querySelectorAll('.sidebar a');
   
@@ -46,29 +39,23 @@ document.addEventListener('DOMContentLoaded', function() {
       }
   });
   
-  // Filter tag functionality
   const filterTags = document.querySelectorAll('.filter-tag');
   
   filterTags.forEach(tag => {
       tag.addEventListener('click', function() {
           if (this.classList.contains('active')) {
-              // If already active, don't do anything (optional)
               return;
           }
           
-          // Remove active class from all tags
           filterTags.forEach(t => t.classList.remove('active'));
           
-          // Add active class to clicked tag
           this.classList.add('active');
           
-          // You could add filter functionality here
           const filterValue = this.getAttribute('data-filter');
           filterItems(filterValue);
       });
   });
   
-  // Search functionality
   const searchInput = document.querySelector('.search-input');
   if (searchInput) {
       searchInput.addEventListener('input', function() {
@@ -77,15 +64,12 @@ document.addEventListener('DOMContentLoaded', function() {
       });
   }
 
-  // Initialize charts if they exist on the page
   if (typeof initializeCharts === 'function') {
       initializeCharts();
   }
 });
 
-// Filter items function (customize based on what you're filtering)
 function filterItems(filterValue) {
-  // Example for filtering pedidos
   const pedidoCards = document.querySelectorAll('.pedido-card');
   
   if (pedidoCards.length === 0) return;
@@ -94,16 +78,13 @@ function filterItems(filterValue) {
       if (filterValue === 'all') {
           card.style.display = 'block';
       } else {
-          // Replace with your actual status attribute
           const status = card.getAttribute('data-status');
           card.style.display = status === filterValue ? 'block' : 'none';
       }
   });
 }
 
-// Search items function (customize based on what you're searching)
 function searchItems(searchTerm) {
-  // Example for searching through pedidos, produtos or usuarios
   const searchableItems = document.querySelectorAll('.searchable-item');
   
   if (searchableItems.length === 0) return;
@@ -114,7 +95,6 @@ function searchItems(searchTerm) {
   });
 }
 
-// Function to confirm delete actions
 function confirmDelete(id, type = 'item') {
   Swal.fire({
       title: `Confirmar exclusão?`,
@@ -127,7 +107,6 @@ function confirmDelete(id, type = 'item') {
       cancelButtonText: 'Cancelar'
   }).then((result) => {
       if (result.isConfirmed) {
-          // Determine which delete action to take based on type
           if (type === 'produto') {
               window.location.href = `produtos.php?delete=${id}`;
           } else if (type === 'usuario') {
@@ -139,8 +118,6 @@ function confirmDelete(id, type = 'item') {
   });
 }
 
-// Arquivo: ../../js/dashboard.js
-
 document.addEventListener('DOMContentLoaded', function() {
     const sidebar = document.querySelector('.sidebar');
     const content = document.querySelector('.content');
@@ -150,35 +127,25 @@ document.addEventListener('DOMContentLoaded', function() {
             const sidebarWidth = sidebar.offsetWidth;
             content.style.marginLeft = sidebarWidth + 'px';
             content.style.width = `calc(100% - ${sidebarWidth}px)`;
-            // Se você tiver um cabeçalho fixo ou outros elementos que precisem de ajuste, adicione aqui
-            // Exemplo: document.querySelector('.main-header').style.marginLeft = sidebarWidth + 'px';
         }
     }
 
-    // Ajusta o layout ao carregar a página
-    // Um pequeno delay para garantir que o CSS foi completamente renderizado antes do cálculo
     setTimeout(adjustLayout, 50); 
 
-    // Ajusta o layout ao redimensionar a janela
     window.addEventListener('resize', adjustLayout);
 
-    // Opcional: Adicionar funcionalidade de toggle (expandir/recolher) para a sidebar
-    const sidebarToggle = document.querySelector('.sidebar-header i.fa-bars'); // Seletor para o ícone de toggle
+    const sidebarToggle = document.querySelector('.sidebar-header i.fa-bars'); 
     if (sidebarToggle && sidebar) {
         sidebarToggle.addEventListener('click', function() {
-            sidebar.classList.toggle('collapsed'); // Adicione uma classe CSS para o estado recolhido
-            // Adicione CSS para .sidebar.collapsed { width: Xpx; } no dashboard.css
-            setTimeout(adjustLayout, 300); // Pequeno delay para a transição CSS da sidebar
+            sidebar.classList.toggle('collapsed'); 
+            setTimeout(adjustLayout, 300); 
         });
     }
 });
 
-// Charts initialization function - Only runs if charts exist on the page
 function initializeCharts() {
-  // Check if Chart.js is loaded and canvas elements exist
   if (typeof Chart === 'undefined') return;
   
-  // Pedidos por status chart
   const statusChartEl = document.getElementById('statusChart');
   if (statusChartEl) {
       const statusChart = new Chart(statusChartEl, {
@@ -207,7 +174,6 @@ function initializeCharts() {
       });
   }
   
-  // Pedidos por mês chart
   const pedidosChartEl = document.getElementById('pedidosChart');
   if (pedidosChartEl) {
       const pedidosChart = new Chart(pedidosChartEl, {
@@ -235,7 +201,6 @@ function initializeCharts() {
       });
   }
   
-  // Produtos por categoria chart
   const produtosChartEl = document.getElementById('produtosChart');
   if (produtosChartEl) {
       const produtosChart = new Chart(produtosChartEl, {

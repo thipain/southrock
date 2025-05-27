@@ -10,7 +10,6 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Estilos do botão do carrinho */
 .cart-button {
     position: fixed;
     bottom: 20px;
@@ -53,7 +52,6 @@ body {
     align-items: center;
 }
 
-/* Estilos do carrinho lateral */
 .cart-sidebar {
     position: fixed;
     top: 0;
@@ -206,7 +204,6 @@ body {
     z-index: 997;
 }
 
-/* Adicionar ao carrinho botão na tabela */
 .add-to-cart-btn {
     padding: 0.5rem 0.75rem;
     background-color: #3498db;
@@ -222,7 +219,6 @@ body {
     background-color: #2980b9;
 }
 
-/* Estilo para o indicador de carregamento */
 .search-loading {
     display: none;
     width: 20px;
@@ -244,7 +240,6 @@ body {
     }
 }
 
-/* Melhorias visuais para indicação de busca */
 .search-indicator {
     display: flex;
     align-items: center;

@@ -7,7 +7,6 @@ if (!isset($_SESSION['username'])) {
 
 require_once '../../includes/db.php';
 
-// Obter detalhes do usuário logado
 $loggedInUserId = null;
 $loggedInUserType = null;
 
@@ -21,7 +20,6 @@ if ($currentUserData = $resultUser->fetch_assoc()) {
 }
 $stmtUser->close();
 
-// tipo_usuario 2 são lojas/filiais conforme seu DB. Admin (tipo 1) poderia ter outra página de detalhes.
 if ($loggedInUserId === null || $loggedInUserType != 2) {
     echo "Acesso não autorizado ou tipo de usuário inválido para esta visualização de detalhes de filial.";
     exit();
@@ -33,8 +31,6 @@ if (!isset($_GET['id']) || !filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
 }
 $pedido_id_param = (int)$_GET['id'];
 
-// Buscar detalhes do pedido original
-// A filial logada DEVE ser ou a origem (filial_usuario_id) OU o destino (filial_destino_id)
 $sqlOrder = "SELECT p.id, p.data, p.tipo_pedido, p.status,
                     p.filial_usuario_id, 
                     p.filial_destino_id,
@@ -48,7 +44,6 @@ $sqlOrder = "SELECT p.id, p.data, p.tipo_pedido, p.status,
              WHERE p.id = ? AND (p.filial_usuario_id = ? OR p.filial_destino_id = ?)";
 
 $stmtOrder = $conn->prepare($sqlOrder);
-// O ID do pedido e o ID do usuário logado duas vezes para as condições OR
 $stmtOrder->bind_param("iii", $pedido_id_param, $loggedInUserId, $loggedInUserId);
 $stmtOrder->execute();
 $resultOrder = $stmtOrder->get_result();
@@ -56,12 +51,10 @@ $pedidoOriginal = $resultOrder->fetch_assoc();
 $stmtOrder->close();
 
 if (!$pedidoOriginal) {
-    // Esta mensagem agora significa que o pedido não existe OU a filial logada não está envolvida.
     echo "Pedido não encontrado ou sua filial não está envolvida neste pedido.";
     exit();
 }
 
-// Buscar itens do pedido original usando SKU e nome 'produto'
 $sqlItems = "SELECT pi.id as item_id, pi.sku, pi.quantidade, pr.produto AS nome_produto
              FROM pedido_itens pi
              JOIN produtos pr ON pi.sku = pr.sku
@@ -76,7 +69,6 @@ while ($row = $resultItems->fetch_assoc()) {
 }
 $stmtItems->close();
 
-// Preparar nomes e CNPJs para exibição (similar ao historico.php)
 $nome_origem_display_formatted = htmlspecialchars($pedidoOriginal['nome_origem_display'] ?? 'N/A');
 if ($pedidoOriginal['cnpj_origem']) {
     $cnpj_origem_s_f = preg_replace('/[^0-9]/', '', $pedidoOriginal['cnpj_origem']);
@@ -103,19 +95,14 @@ if ($pedidoOriginal['filial_destino_id'] === null && $pedidoOriginal['tipo_pedid
     $nome_destino_display_formatted = "Matriz/Admin";
 }
 
-
-// Determinar se as opções de devolução devem ser mostradas
-// A filial logada DEVE ser a destinatária do pedido e o pedido deve estar finalizado.
 $podeDevolver = (
     $loggedInUserId == $pedidoOriginal['filial_destino_id'] &&
     $pedidoOriginal['status'] === 'finalizado' &&
     !empty($items) &&
-    $loggedInUserType == 2 // Redundante pois já verificado no início, mas seguro incluir
+    $loggedInUserType == 2 
 );
 
-// ID do remetente original, necessário para o formulário de devolução se $podeDevolver for true
 $return_destination_id_for_form = $pedidoOriginal['filial_usuario_id'];
-
 
 ?>
 
@@ -258,17 +245,16 @@ $return_destination_id_for_form = $pedidoOriginal['filial_usuario_id'];
                 <div class="btn-container">
                      <a href="historico.php" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Voltar para Histórico</a>
                 </div>
-            <?php endif; // Fim do if ($podeDevolver) ?>
-        <?php endif; // Fim do if (!empty($items)) ?>
+            <?php endif; ?>
+        <?php endif; ?>
     </div>
 
-    <?php if ($podeDevolver && !empty($items)): // Incluir o script apenas se o formulário de devolução for exibido ?>
+    <?php if ($podeDevolver && !empty($items)): ?>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
     $(document).ready(function() {
-        // Habilita/desabilita input de quantidade baseado no checkbox
         $('.item-checkbox').change(function() {
             const $row = $(this).closest('.item-row');
             const $qtyInput = $row.find('.item-quantity-return');
@@ -297,7 +283,7 @@ $return_destination_id_for_form = $pedidoOriginal['filial_usuario_id'];
             });
         });
 
-        $('form[action="processar_devolucao.php"]').submit(function(e) { // Seletor mais específico para o form de devolução
+        $('form[action="processar_devolucao.php"]').submit(function(e) { 
             let oneItemSelected = false;
             let validQuantities = true;
             $('.item-checkbox:checked').each(function() {
@@ -329,6 +315,6 @@ $return_destination_id_for_form = $pedidoOriginal['filial_usuario_id'];
         });
     });
     </script>
-    <?php endif; // Fim do if ($podeDevolver && !empty($items)) para incluir scripts JS ?>
+    <?php endif; ?>
 </body>
 </html>

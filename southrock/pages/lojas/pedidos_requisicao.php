@@ -19,7 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['finalizar'])) {
     try {
         $conn->begin_transaction();
 
-        // Obter ID do usuário logado
         $username = $_SESSION['username'];
         $stmt = $conn->prepare("SELECT id, tipo_usuario, eh_filial FROM usuarios WHERE username = ?");
         $stmt->bind_param("s", $username);
@@ -36,14 +35,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['finalizar'])) {
         $tipo_usuario = $usuario['tipo_usuario'];
         $eh_filial = $usuario['eh_filial'];
 
-        // Determinar filial_usuario_id baseado no tipo de usuário
         $filial_usuario_id = null;
-        if ($tipo_usuario == 2) { // Se o usuário é do tipo loja
+        if ($tipo_usuario == 2) { 
             if ($eh_filial) {
-                // Se o próprio usuário é uma filial, use o ID do próprio usuário
                 $filial_usuario_id = $usuario_id;
             } else {
-                // Buscar a filial associada ao usuário pelo mesmo CNPJ
                 $stmt = $conn->prepare("SELECT id FROM usuarios WHERE cnpj = (SELECT cnpj FROM usuarios WHERE id = ?) AND eh_filial = TRUE LIMIT 1");
                 $stmt->bind_param("i", $usuario_id);
                 $stmt->execute();
@@ -58,12 +54,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['finalizar'])) {
                 }
             }
         } else {
-            // Para usuário tipo matriz, usamos NULL no campo filial_usuario_id
-            // ou podemos deixar o usuário escolher a filial em um formulário posterior
             $filial_usuario_id = null;
         }
 
-        // Inserir o pedido com tipo 'requisicao' e status 'novo'
         $stmtPedido = $conn->prepare(
             "INSERT INTO pedidos (tipo_pedido, status, filial_usuario_id, usuario_id) 
              VALUES ('requisicao', 'novo', ?, ?)"
@@ -95,13 +88,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['finalizar'])) {
 ?>
 
 <?php
-// Configura exibição de erros para desenvolvimento
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Verifica se é uma requisição AJAX
 if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
-    // Inclui o arquivo de conexão
     require_once '../../includes/db.php';
     
     $searchTerm = isset($_GET['term']) ? $_GET['term'] : '';
@@ -109,7 +99,6 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
     
     try {
         if (trim($searchTerm) !== '') {
-            // Prepara a consulta SQL
             $sql = "SELECT sku, produto, grupo FROM produtos WHERE 
                     CAST(sku AS CHAR) LIKE ? OR 
                     produto LIKE ? OR 
@@ -117,18 +106,14 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
                     ORDER BY sku
                     LIMIT 50";
             
-            // Prepara a declaração
             $stmt = $conn->prepare($sql);
             
-            // Adiciona os parâmetros de pesquisa
             $likeTerm = '%' . $searchTerm . '%';
             $stmt->bind_param('sss', $likeTerm, $likeTerm, $likeTerm);
             
-            // Executa a consulta
             $stmt->execute();
             $resultado = $stmt->get_result();
             
-            // Converte os resultados para um array
             $products = array();
             while ($produto = $resultado->fetch_assoc()) {
                 $products[] = $produto;
@@ -140,7 +125,6 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
             $stmt->close();
         }
         
-        // Retorna os resultados como JSON
         header('Content-Type: application/json');
         echo json_encode($response);
         
@@ -154,7 +138,6 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
     }
 }
 
-// Inclui o arquivo de conexão para a página principal
 require_once '../../includes/db.php';
 
 try {
@@ -164,9 +147,7 @@ try {
     <head>
         <meta charset="UTF-8">
         <title>Lista de Produtos - SouthRock</title>
-        <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-        <!-- Bootstrap Icons -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
         <link rel="stylesheet" href="../../css/pedidos_requisicao.css">
     </head>
@@ -219,7 +200,6 @@ try {
                                         </tr>
                                     </thead>
                                     <tbody id="products-table-body">
-                                        <!-- Os resultados da pesquisa serão inseridos aqui via JavaScript -->
                                     </tbody>
                                 </table>
                             </div>
@@ -234,16 +214,13 @@ try {
             </div>
         </div>
 
-        <!-- Botão do carrinho -->
         <div class="cart-button" id="cart-btn">
             <div class="cart-icon"><i class="bi bi-cart"></i></div>
             <div class="cart-count" id="cart-count">0</div>
         </div>
         
-        <!-- Overlay para fechar o carrinho ao clicar fora -->
         <div class="overlay" id="overlay"></div>
         
-        <!-- Carrinho lateral -->
         <div class="cart-sidebar" id="cart-sidebar">
             <div class="cart-header">
                 <div class="cart-title">Seu carrinho</div>
@@ -251,7 +228,6 @@ try {
             </div>
             
             <div class="cart-items" id="cart-items">
-                <!-- Os itens do carrinho serão inseridos dinamicamente via JavaScript -->
                 <div class="empty-cart-message" id="empty-cart-message">
                     Seu carrinho está vazio
                 </div>
@@ -262,17 +238,13 @@ try {
             </div>
         </div>
 
-        <!-- Bootstrap JS e Dependências -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- SweetAlert2 para notificações -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
-            // Variáveis globais para o carrinho
             let cartItems = [];
             let cartCount = 0;
             let searchTimeout = null;
             
-            // Elementos DOM
             const cartBtn = document.getElementById('cart-btn');
             const cartSidebar = document.getElementById('cart-sidebar');
             const closeCartBtn = document.getElementById('close-cart');
@@ -282,7 +254,6 @@ try {
             const cartCountElement = document.getElementById('cart-count');
             const checkoutBtn = document.getElementById('checkout-btn');
             
-            // Elementos de pesquisa
             const searchInput = document.getElementById('search-input');
             const searchLoading = document.getElementById('search-loading');
             const initialMessage = document.getElementById('initial-message');
@@ -292,45 +263,34 @@ try {
             const searchTermDisplay = document.getElementById('search-term-display');
             const searchIndicator = document.getElementById('search-indicator');
             
-            // Função para realizar pesquisa em tempo real
             function performSearch(searchTerm) {
-                // Adicionamos um log para depuração
                 console.log("Pesquisando por:", searchTerm);
                 
-                // Mostra o indicador de carregamento
                 searchLoading.style.display = 'block';
                 searchIndicator.innerHTML = '<i class="bi bi-arrow-repeat me-2"></i>Buscando...';
                 
-                // Atualiza o texto de exibição do termo pesquisado
                 searchTermDisplay.textContent = searchTerm;
                 
-                // Faz a requisição AJAX
                 fetch(`?ajax=1&term=${encodeURIComponent(searchTerm)}`)
                     .then(response => {
                         console.log("Status da resposta:", response.status);
                         return response.json();
                     })
                     .then(data => {
-                        // Adicionamos um log para ver a resposta
                         console.log("Resposta da pesquisa:", data);
                         
-                        // Esconde o indicador de carregamento
                         searchLoading.style.display = 'none';
                         
-                        // Processa os resultados
                         if (data.success) {
-                            // Atualiza o indicador de pesquisa
                             if (data.products.length > 0) {
                                 searchIndicator.innerHTML = `<i class="bi bi-check-circle me-2"></i>${data.products.length} produto(s) encontrado(s)`;
                             } else {
                                 searchIndicator.innerHTML = '<i class="bi bi-exclamation-circle me-2"></i>Nenhum produto encontrado';
                             }
                             
-                            // Limpa a tabela de resultados
                             productsTableBody.innerHTML = '';
                             
                             if (data.products.length > 0) {
-                                // Preenche a tabela com os resultados
                                 data.products.forEach(product => {
                                     const row = document.createElement('tr');
                                     row.innerHTML = `
@@ -348,47 +308,39 @@ try {
                                     productsTableBody.appendChild(row);
                                 });
                                 
-                                // Mostra a tabela e esconde outros elementos
                                 initialMessage.style.display = 'none';
                                 productsTableContainer.style.display = 'block';
                                 noResults.style.display = 'none';
                                 
-                                // Adiciona event listeners aos botões de adicionar ao carrinho
                                 document.querySelectorAll('.add-to-cart-btn').forEach(button => {
                                     button.addEventListener('click', function() {
                                         addToCart(this);
                                     });
                                 });
                             } else {
-                                // Não há resultados
                                 initialMessage.style.display = 'none';
                                 productsTableContainer.style.display = 'none';
                                 noResults.style.display = 'block';
                             }
                         } else {
-                            // Erro na pesquisa
                             searchIndicator.innerHTML = '<i class="bi bi-exclamation-triangle me-2"></i>Erro ao realizar a pesquisa';
                             console.error('Erro na pesquisa:', data.error);
                         }
                     })
                     .catch(error => {
-                        // Esconde o indicador de carregamento
                         searchLoading.style.display = 'none';
                         searchIndicator.innerHTML = '<i class="bi bi-exclamation-triangle me-2"></i>Erro ao conectar com o servidor';
                         console.error('Erro na requisição:', error);
                     });
             }
             
-            // Event listener para o campo de pesquisa (com debounce)
             searchInput.addEventListener('input', function() {
                 const searchTerm = this.value.trim();
                 
-                // Limpa o timeout anterior
                 if (searchTimeout) {
                     clearTimeout(searchTimeout);
                 }
                 
-                // Atualiza o indicador de pesquisa
                 if (searchTerm === '') {
                     searchIndicator.innerHTML = '<i class="bi bi-info-circle me-2"></i>Digite para começar a pesquisar';
                     initialMessage.style.display = 'block';
@@ -403,42 +355,32 @@ try {
                     searchIndicator.innerHTML = '<i class="bi bi-keyboard me-2"></i>Digitando...';
                 }
                 
-                // Define um novo timeout (300ms de delay para evitar muitas requisições)
                 searchTimeout = setTimeout(() => {
                     performSearch(searchTerm);
                 }, 300);
             });
             
-            // Funções para manipular o carrinho
-            
-            // Abrir o carrinho
             function openCart() {
                 cartSidebar.classList.add('open');
                 overlay.style.display = 'block';
-                document.body.style.overflow = 'hidden'; // Impedir rolagem da página
+                document.body.style.overflow = 'hidden'; 
             }
             
-            // Fechar o carrinho
             function closeCart() {
                 cartSidebar.classList.remove('open');
                 overlay.style.display = 'none';
-                document.body.style.overflow = 'auto'; // Permitir rolagem da página
+                document.body.style.overflow = 'auto'; 
             }
             
-            // Adicionar item ao carrinho
             function addToCart(button) {
-                // Obter dados do botão usando data attributes
                 const id = button.getAttribute('data-id');
                 const title = button.getAttribute('data-title');
                 
-                // Verificar se o item já está no carrinho
                 const existingItemIndex = cartItems.findIndex(item => item.id === id);
                 
                 if (existingItemIndex !== -1) {
-                    // Aumentar quantidade
                     cartItems[existingItemIndex].quantity += 1;
                 } else {
-                    // Adicionar novo item
                     cartItems.push({
                         id: id,
                         title: title,
@@ -448,7 +390,6 @@ try {
                 
                 updateCart();
                 
-                // Feedback visual
                 Swal.fire({
                     position: 'top-end',
                     icon: 'success',
@@ -458,13 +399,11 @@ try {
                 });
             }
             
-            // Remover item do carrinho
             function removeItem(id) {
                 cartItems = cartItems.filter(item => item.id !== id);
                 updateCart();
             }
             
-            // Atualizar quantidade de um item
             function updateQuantity(id, newQuantity) {
                 if (newQuantity < 1) return;
                 
@@ -475,22 +414,16 @@ try {
                 }
             }
             
-            // Atualizar o carrinho na interface
             function updateCart() {
-                // Atualizar contador do carrinho
                 cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
                 cartCountElement.textContent = cartCount;
                 
-                // Atualizar itens no carrinho
                 renderCartItems();
                 
-                // Salvar no localStorage para persistência
                 localStorage.setItem('cartItems', JSON.stringify(cartItems));
             }
             
-            // Renderizar itens do carrinho
             function renderCartItems() {
-                // Limpar container exceto a mensagem de carrinho vazio
                 const children = [...cartItemsContainer.children];
                 children.forEach(child => {
                     if (child !== emptyCartMessage) {
@@ -498,7 +431,6 @@ try {
                     }
                 });
                 
-                // Mostrar mensagem se o carrinho estiver vazio
                 if (cartItems.length === 0) {
                     emptyCartMessage.style.display = 'block';
                     return;
@@ -506,7 +438,6 @@ try {
                     emptyCartMessage.style.display = 'none';
                 }
                 
-                // Adicionar cada item ao container
                 cartItems.forEach(item => {
                     const cartItemElement = document.createElement('div');
                     cartItemElement.className = 'cart-item';
@@ -529,7 +460,6 @@ try {
                     cartItemsContainer.insertBefore(cartItemElement, emptyCartMessage);
                 });
                 
-                // Adicionar event listeners aos botões de quantidade e remoção
                 document.querySelectorAll('.minus-btn').forEach(btn => {
                     btn.addEventListener('click', function() {
                         const id = this.getAttribute('data-id');
@@ -562,7 +492,6 @@ try {
                 });
             }
             
-            // Finalizar requisição
             function checkout() {
                 if (cartItems.length === 0) {
                     Swal.fire({
@@ -573,7 +502,6 @@ try {
                     return;
                 }
 
-                // Preparar dados para envio
                 const requisicaoData = {
                     items: cartItems.map(item => ({
                         sku: item.id,
@@ -581,7 +509,6 @@ try {
                     }))
                 };
 
-                // Enviar dados ao servidor
                 fetch('?finalizar=1', {
                     method: 'POST',
                     headers: {
@@ -600,14 +527,12 @@ try {
                             showCancelButton: true,
                             cancelButtonText: 'Continuar comprando'
                         }).then((result) => {
-                            // Limpar carrinho em ambos os casos
                             cartItems = [];
                             localStorage.removeItem('cartItems');
                             updateCart();
                             closeCart();
                             
                             if (result.isConfirmed) {
-                                // Redirecionar para a lista de pedidos
                                 window.location.href = 'pedidos.php';
                             }
                         });
@@ -621,11 +546,9 @@ try {
                 });
             }
             
-            // Event Listeners
             document.addEventListener('DOMContentLoaded', function() {
                 console.log('Página carregada, inicializando script...');
                 
-                // Carregar carrinho do localStorage
                 const savedCart = localStorage.getItem('cartItems');
                 if (savedCart) {
                     try {
@@ -637,17 +560,13 @@ try {
                     }
                 }
                 
-                // Focar no campo de pesquisa ao carregar a página
                 searchInput.focus();
                 
-                // Abrir carrinho
                 cartBtn.addEventListener('click', openCart);
                 
-                // Fechar carrinho
                 closeCartBtn.addEventListener('click', closeCart);
                 overlay.addEventListener('click', closeCart);
                 
-                // Finalizar compra
                 checkoutBtn.addEventListener('click', checkout);
             });
         </script>
@@ -658,7 +577,6 @@ try {
     $conn->close();
 
 } catch (Exception $e) {
-    // Tratamento de erro
     echo "Erro: " . $e->getMessage();
 }
 ?>

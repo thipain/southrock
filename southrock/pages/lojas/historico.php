@@ -7,9 +7,9 @@ if (!isset($_SESSION['username'])) {
 
 require_once '../../includes/db.php';
 
-// Buscar ID e tipo do usuário logado
+
 $loggedInUserId = null;
-$loggedInUserType = null; // 1 para admin/matriz, 2 para loja/filial
+$loggedInUserType = null; 
 
 if (isset($_SESSION['username'])) {
     $stmtUser = $conn->prepare("SELECT id, tipo_usuario FROM usuarios WHERE username = ?");
@@ -42,18 +42,18 @@ if ($loggedInUserId === null) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../../css/pedidos.css">
     <style>
-        /* Estilos para ajustar o layout sem a sidebar e filtros (conforme seu arquivo original) */
+       
         body {
             display: flex;
-            flex-direction: column; /* Organiza o conteúdo verticalmente */
+            flex-direction: column; 
         }
         .content {
-            margin-left: 0; /* Remove a margem que era para a sidebar */
+            margin-left: 0;
             padding: 20px;
-            width: 100%; /* Ocupa a largura total */
+            width: 100%; 
         }
-        .top-bar { /* Nova classe para a barra superior */
-            background-color: #343a40; /* Cor de exemplo, ajuste conforme seu design */
+        .top-bar { 
+            background-color: #343a40; 
             color: white;
             padding: 10px 20px;
             display: flex;
@@ -69,11 +69,11 @@ if ($loggedInUserId === null) {
         .top-bar a:hover {
             color: #f8f9fa;
         }
-        .top-bar .site-title { /* Estilo para o título do site/logo se desejar */
+        .top-bar .site-title { 
             font-size: 1.5rem;
             font-weight: bold;
         }
-        .actions-cell .btn { /* Para espaçar os botões na célula de ações */
+        .actions-cell .btn { 
             margin-right: 5px;
         }
         .actions-cell .btn:last-child {
@@ -87,13 +87,13 @@ if ($loggedInUserId === null) {
         <div class="site-title">SouthRock Pedidos</div> 
         <div>
             <?php
-                // Links de navegação que estavam na sidebar podem ir aqui, se necessário
+                
                 if ($loggedInUserType == 1) { // Admin/Matriz
                     echo '<a href="dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard Admin</a> ';
                     echo '<a href="produtos.php"><i class="fas fa-box"></i> Produtos</a> ';
                     echo '<a href="usuarios.php"><i class="fas fa-users"></i> Usuários</a> ';
-                    echo '<a href="pedidos.php"><i class="fas fa-shopping-cart"></i> Todos Pedidos (Admin)</a> '; // Link para admin ver todos os pedidos
-                } else { // Filial (tipo_usuario == 2)
+                    echo '<a href="pedidos.php"><i class="fas fa-shopping-cart"></i> Todos Pedidos (Admin)</a> '; 
+                } else { 
                      echo '<a href="fazer_pedidos.php"><i class="fas fa-plus-circle"></i> Novo Pedido/Ação</a> ';
                 }
             ?>
@@ -107,8 +107,8 @@ if ($loggedInUserId === null) {
                 <?php
                 if ($loggedInUserType == 2) {
                     echo "Meus Pedidos Envolvidos";
-                } else { // Admin
-                    echo "Histórico Geral de Pedidos"; // Título para admin, se ele acessar esta página
+                } else {
+                    echo "Histórico Geral de Pedidos"; 
                 }
                 ?>
             </h1>
@@ -141,14 +141,13 @@ if ($loggedInUserId === null) {
                     </thead>
                     <tbody id="pedidosList">
                         <?php
-                        // Query ajustada para buscar os nomes corretos da tabela usuarios
-                        // e considerar o CNPJ formatado
+                       
                         $sql = "SELECT p.id, p.data, p.tipo_pedido, p.status,
                                        p.filial_usuario_id, p.filial_destino_id,
                                        u_origem.cnpj AS cnpj_origem,
-                                       COALESCE(u_origem.nome_filial, u_origem.nome) AS nome_origem, /* Nome da filial ou nome do usuário/matriz */
+                                       COALESCE(u_origem.nome_filial, u_origem.nome) AS nome_origem,
                                        u_destino.cnpj AS cnpj_destino,
-                                       COALESCE(u_destino.nome_filial, u_destino.nome) AS nome_destino /* Nome da filial ou nome do usuário/matriz */
+                                       COALESCE(u_destino.nome_filial, u_destino.nome) AS nome_destino
                                 FROM pedidos p
                                 LEFT JOIN usuarios u_origem ON p.filial_usuario_id = u_origem.id
                                 LEFT JOIN usuarios u_destino ON p.filial_destino_id = u_destino.id";
@@ -156,15 +155,13 @@ if ($loggedInUserId === null) {
                         $params = [];
                         $types = "";
 
-                        if ($loggedInUserType == 2) { // Se for filial (tipo_usuario = 2)
+                        if ($loggedInUserType == 2) { 
                             $sql .= " WHERE (p.filial_usuario_id = ? OR p.filial_destino_id = ?)";
                             $params[] = $loggedInUserId;
                             $params[] = $loggedInUserId;
                             $types .= "ii";
                         }
-                        // Para admin (tipo_usuario == 1), mostra todos os pedidos sem filtro WHERE adicional por ID de usuário,
-                        // a menos que haja um filtro de pesquisa.
-
+                       
                         $sql .= " ORDER BY p.data DESC";
 
                         $stmt = $conn->prepare($sql);
@@ -191,7 +188,7 @@ if ($loggedInUserId === null) {
                                 $tipoIcon = $tipoIconMap[$pedido['tipo_pedido']] ?? '<i class="fas fa-question-circle"></i>';
                                 $statusBadge = $statusBadgeMap[$pedido['status']] ?? 'badge-secondary';
 
-                                // Formatação do nome e CNPJ da Origem
+                               
                                 $nome_origem_display = htmlspecialchars($pedido['nome_origem'] ?? 'N/A');
                                 if ($pedido['cnpj_origem']) {
                                     $cnpj_origem_sem_formatacao = preg_replace('/[^0-9]/', '', $pedido['cnpj_origem']);
@@ -203,20 +200,18 @@ if ($loggedInUserId === null) {
                                     }
                                 }
 
-                                // Formatação do nome e CNPJ do Destino
+                               
                                 $nome_destino_display = htmlspecialchars($pedido['nome_destino'] ?? 'N/A');
-                                // Se filial_destino_id for NULL, pode ser interpretado como Matriz (se aplicável à sua lógica)
+                                
                                 if ($pedido['filial_destino_id'] === null) {
-                                    // Se o destino é NULL, assumimos que é a Matriz (ou o admin que não é uma filial específica)
-                                    // O COALESCE(u_destino.nome_filial, u_destino.nome) já deve tratar isso se o admin/matriz tiver um 'nome' em usuarios
-                                    // Caso especial, se o tipo for requisição E destino for null, explicitamente "Matriz"
+                                    
                                      if ($pedido['tipo_pedido'] === 'requisicao'){
-                                          $nome_destino_display = "Matriz"; // Conforme seu código original
-                                     } else if ($pedido['nome_destino']) { // Se há um nome de usuário para o destino (ex: admin)
+                                          $nome_destino_display = "Matriz";
+                                     } else if ($pedido['nome_destino']) { 
                                         $nome_destino_display = htmlspecialchars($pedido['nome_destino']);
                                         if($pedido['cnpj_destino']) $nome_destino_display .= ' (' . htmlspecialchars($pedido['cnpj_destino']) . ')';
                                      } else {
-                                        $nome_destino_display = "Matriz/Admin"; // Fallback genérico
+                                        $nome_destino_display = "Matriz/Admin"; 
                                      }
                                 } else if ($pedido['cnpj_destino']) {
                                     $cnpj_destino_sem_formatacao = preg_replace('/[^0-9]/', '', $pedido['cnpj_destino']);
@@ -251,21 +246,15 @@ if ($loggedInUserId === null) {
                             </td>
                             <td class="actions-cell">
                                 <?php
-                                // Para o Admin (tipo 1), o link de detalhes pode ir para uma página de detalhes de admin
-                                // Para a Filial (tipo 2), o link de detalhes vai para 'detalhes_pedido_loja.php'
+                                
                                 $details_page = ($loggedInUserType == 1) ? "detalhes_pedido_admin.php" : "detalhes_pedido_loja.php";
-                                // Se 'detalhes_pedido_admin.php' não existir, admin também usa 'detalhes_pedido_loja.php' ou outra página.
-                                // Por simplicidade, vamos assumir que ambos podem usar detalhes_pedido_loja.php para ver,
-                                // mas a lógica de devolução só é ativada lá se for filial.
+                               
                                 ?>
                                 <a href="detalhes_pedido_loja.php?id=<?= $pedido['id'] ?>" class="btn btn-sm btn-info" title="Ver Detalhes do Pedido">
                                     <i class="fas fa-eye"></i> Detalhes
                                 </a>
                                 <?php
-                                // Condição para mostrar o botão "Devolver":
-                                // 1. O usuário logado deve ser uma filial (tipo_usuario == 2).
-                                // 2. A filial logada deve ser a destinatária do pedido em questão.
-                                // 3. O pedido original deve estar 'finalizado' para permitir devolução.
+                               
                                 if ($loggedInUserType == 2 && $loggedInUserId == $pedido['filial_destino_id'] && $pedido['status'] == 'finalizado') :
                                 ?>
                                     <a href="detalhes_pedido_loja.php?id=<?= $pedido['id'] ?>" class="btn btn-sm btn-warning" title="Iniciar Devolução deste Pedido">
@@ -308,7 +297,7 @@ if ($loggedInUserId === null) {
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     
     <script>
-    // Função simplificada para filtrar pedidos baseado apenas na pesquisa
+    
     function filterPedidos() {
         const searchText = document.getElementById('searchInput').value.toLowerCase().trim();
         let foundOne = false;
@@ -335,18 +324,13 @@ if ($loggedInUserId === null) {
             }
         });
 
-        // Mostrar/ocultar mensagem de "nenhum pedido encontrado"
-        const noOrdersRow = document.querySelector('#pedidosList tr:not(.pedido-row)'); // O <tr> com o colspan
-        if(noOrdersRow){ // Verifica se a linha de "nenhum pedido" existe
+        
+        const noOrdersRow = document.querySelector('#pedidosList tr:not(.pedido-row)'); 
+        if(noOrdersRow){ 
             if (foundOne || document.querySelectorAll('#pedidosList tr.pedido-row').length === 0 && searchText !== '') {
-                 // Se encontrou algum item OU se não há pedidos na lista e está pesquisando, oculta a msg padrão de "nenhum pedido"
-                 // (a msg de "nenhum pedido" só deve aparecer se a lista inicial estiver vazia)
-                 // Esta lógica pode precisar de ajuste dependendo se a mensagem de "nenhum pedido" é inserida dinamicamente ou não
+                 
             }
-            // A lógica de mostrar/ocultar a mensagem de "nenhum pedido" pode ser mais complexa
-            // dependendo de como a lista é carregada e se a mensagem já está presente.
-            // Para simplificar, a mensagem PHP já cobre o caso inicial.
-            // O JavaScript aqui apenas garante que as linhas corretas são mostradas/ocultas pela pesquisa.
+           
         }
     }
 
@@ -365,18 +349,17 @@ if ($loggedInUserId === null) {
         searchInput.focus();
     });
 
-    // Aplicar filtro de pesquisa (que inicialmente será vazio) ao carregar a página
+   
     window.onload = function() {
-        filterPedidos(); // Garante que a exibição inicial esteja correta
-         // Verifica se há alguma linha de pedido visível após o filtro inicial
+        filterPedidos(); 
         const visibleRows = document.querySelectorAll('#pedidosList tr.pedido-row[style*="display: table-row"], #pedidosList tr.pedido-row:not([style*="display: none"])').length;
         const noOrdersMessageRow = document.querySelector('#pedidosList td[colspan="7"]'); // Linha de "Nenhum pedido"
 
-        if (noOrdersMessageRow) { // Se a mensagem de "nenhum pedido" existe (PHP a colocou)
-            if (document.querySelectorAll('#pedidosList tr.pedido-row').length > 0) { // Se existem linhas de pedido no HTML
-                noOrdersMessageRow.closest('tr').style.display = 'none'; // Oculta se há pedidos, a função filterPedidos vai cuidar de mostrá-la se necessário
-                 filterPedidos(); // Chama de novo para garantir que as linhas certas apareçam
-            } else { // Não há linhas de pedido no HTML, então a mensagem do PHP é a correta
+        if (noOrdersMessageRow) {
+            if (document.querySelectorAll('#pedidosList tr.pedido-row').length > 0) { 
+                noOrdersMessageRow.closest('tr').style.display = 'none'; 
+                 filterPedidos(); 
+            } else { 
                  noOrdersMessageRow.closest('tr').style.display = '';
             }
         }

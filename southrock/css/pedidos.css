@@ -1,13 +1,12 @@
-/* Estilos herdados do dashboard.css */
 body {
     display: flex;
     font-family: 'Arial', sans-serif;
     margin: 0;
     height: 100vh;
-    background-color: #fff4e8; /* */
+    background-color: #fff4e8; 
 }
 
-/* sidebar */
+
 .sidebar {
     width: 60px;
     background-color: #2045ff;
@@ -20,16 +19,16 @@ body {
 }
 
 .sidebar:hover {
-    width: 200px; /* */
+    width: 200px; 
 }
 
 .sidebar a {
-    display: flex; /* */
-    align-items: center; /* */
-    padding: 15px; /* */
-    color: white; /* */
-    text-decoration: none; /* */
-    transition: background 0.3s; /* */
+    display: flex; 
+    align-items: center; 
+    padding: 15px; 
+    color: white; 
+    text-decoration: none; 
+    transition: background 0.3s; 
 }
 
 .sidebar a:hover {
@@ -44,11 +43,11 @@ body {
 }
 
 .icon {
-    color: white; /* */
-    font-size: 20px; /* */
-    width: 30px; /* */
-    text-align: center; /* */
-    margin-right: 10px; /* */
+    color: white; 
+    font-size: 20px; 
+    width: 30px; 
+    text-align: center; 
+    margin-right: 10px; 
 }
 
 .text {
@@ -60,9 +59,9 @@ body {
 }
 
 .sidebar a .text {
-    display: inline; /* */
-    opacity: 0; /* */
-    transition: opacity 0.3s; /* */
+    display: inline; 
+    opacity: 0; 
+    transition: opacity 0.3s; 
 }
 
 .sidebar:hover a .text {
@@ -70,17 +69,17 @@ body {
 }
 
 .content {
-    flex: 1; /* */
-    padding: 0; /* */
-    background-color: #fffff3; /* */
-    display: flex; /* */
-    flex-direction: column; /* */
+    flex: 1; 
+    padding: 0; 
+    background-color: #fffff3; 
+    display: flex; 
+    flex-direction: column; 
 }
 
 .header {
-    margin-top: 2rem; /* */
-    padding: 20px; /* */
-    background-color: #fffff3; /* */
+    margin-top: 2rem; 
+    padding: 20px; 
+    background-color: #fffff3; 
 }
 
 .header h1 {
@@ -99,219 +98,219 @@ body {
 
 
 .main-content {
-    padding: 20px; /* */
-    flex: 1; /* */
-    overflow-y: auto; /* */
-    background-color: #fffff3; /* */
+    padding: 20px; 
+    flex: 1; 
+    overflow-y: auto; 
+    background-color: #fffff3; 
 }
 
 .button {
-    background-color: #aeff00; /* */
-    color: white; /* */
-    border-radius: 5px; /* */
-    padding: 8px 16px; /* */
-    border: none; /* */
-    transition: background-color 0.3s; /* */
-    cursor: pointer; /* */
+    background-color: #aeff00; 
+    color: white; 
+    border-radius: 5px; 
+    padding: 8px 16px; 
+    border: none; 
+    transition: background-color 0.3s; 
+    cursor: pointer; 
 }
 
 .button:hover {
-    background-color: #0056b3; /* */
+    background-color: #0056b3; 
 }
 
 .search-container {
-    background-color: white; /* */
-    border-radius: 10px; /* */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* */
-    padding: 25px; /* Increased padding for better internal spacing */
-    margin-bottom: 25px; /* Increased margin */
+    background-color: white; 
+    border-radius: 10px; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+    padding: 25px; 
+    margin-bottom: 25px; 
     width: 100%;
-    background-color: #F8FAFC; /* */
+    background-color: #F8FAFC; 
     display: flex;
-    flex-direction: column; /* Stack search bar and filter groups */
-    gap: 20px; /* Space between search bar and filter groups */
+    flex-direction: column; 
+    gap: 20px; 
 }
 
 .search-wrapper {
-    position: relative; /* */
-    width: 100%; /* Ensure it takes full width */
+    position: relative; 
+    width: 100%; 
 }
 
 .search-input {
-    border: 1px solid #ced4da; /* */
-    border-radius: 8px; /* Slightly more rounded */
-    padding: 12px 18px; /* Increased padding */
-    width: 100%; /* */
-    transition: border-color 0.3s, box-shadow 0.3s; /* Added box-shadow transition */
-    background-color: #FFFFFF; /* Changed to white for better contrast with F8FAFC */
-    padding-right: 45px; /* espaço para a lupa e botão de limpar */ /* */
+    border: 1px solid #ced4da; 
+    border-radius: 8px; 
+    padding: 12px 18px; 
+    width: 100%; 
+    transition: border-color 0.3s, box-shadow 0.3s; 
+    background-color: #FFFFFF; 
+    padding-right: 45px; 
 }
 
 .search-input:focus {
-    border-color: #007bff; /* */
-    outline: none; /* */
-    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25); /* Softer focus shadow */ /* */
+    border-color: #007bff; 
+    outline: none; 
+    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25); 
 }
 
 .search-icon {
-    position: absolute; /* */
-    right: 15px; /* Adjusted for clear button */ /* */
-    top: 50%; /* */
-    transform: translateY(-50%); /* */
-    color: #6c757d; /* */
-    font-size: 18px; /* */
-    pointer-events: none; /* */
+    position: absolute; 
+    right: 15px; 
+    top: 50%; 
+    transform: translateY(-50%); 
+    color: #6c757d; 
+    font-size: 18px; 
+    pointer-events: none; 
 }
 
-/* Styling for the clear search button if you keep it next to the icon */
+
 #clearSearch {
-    position: absolute; /* */
-    right: 10px; /* Position next to search icon */
-    top: 50%; /* */
-    transform: translateY(-50%); /* */
-    /* display: none; */ /* Controlled by JS */ /* */
-    /* Add other styles for the button if needed */
+    position: absolute; 
+    right: 10px; 
+    top: 50%; 
+    transform: translateY(-50%); 
+    
+    
 }
 
 
-.filters-area { /* New wrapper for both filter groups */
+.filters-area { 
     display: flex;
-    flex-direction: column; /* Stack status and type filters */
-    gap: 15px; /* Space between the two filter groups */
+    flex-direction: column; 
+    gap: 15px; 
 }
 
 
 .filters-container {
-    display: flex; /* */
-    gap: 12px; /* Slightly increased gap */ /* */
-    flex-wrap: wrap; /* */
-    /* margin-top: 0; Removed as .filters-area now handles spacing */
+    display: flex; 
+    gap: 12px; 
+    flex-wrap: wrap; 
+    
 }
 
 .filter-tag, .filter-tag2 {
-    background-color: #e9ecef; /* Lighter default background */
-    color: #495057; /* Darker text for readability */
-    border-radius: 20px; /* Softer radius */ /* */
-    padding: 10px 18px; /* Increased padding for a better touch target */ /* */
-    cursor: pointer; /* */
-    transition: all 0.2s ease-in-out; /* Smoother transition */ /* */
-    font-size: 14px; /* */
-    display: flex; /* */
-    align-items: center; /* */
-    border: 1px solid #ced4da; /* Subtle border */
-    font-weight: 500; /* Slightly bolder text */
+    background-color: #e9ecef; 
+    color: #495057; 
+    border-radius: 20px; 
+    padding: 10px 18px; 
+    cursor: pointer; 
+    transition: all 0.2s ease-in-out; 
+    font-size: 14px; 
+    display: flex; 
+    align-items: center; 
+    border: 1px solid #ced4da; 
+    font-weight: 500; 
 }
 
-/* Hover state for filters */
+
 .filter-tag:hover, .filter-tag2:hover {
-    background-color: #d1d9e0; /* Slightly darker on hover */
+    background-color: #d1d9e0; 
     border-color: #b8c2cc;
-    transform: translateY(-2px); /* */
-    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.1); /* Softer hover shadow */ /* */
+    transform: translateY(-2px); 
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.1); 
 }
 
-/* Active state for filters - HIGH CONTRAST */
+
 .filter-tag.active, .filter-tag2.active {
-    background-color: #007bff; /* Primary blue for strong active state */ /* */
-    color: white !important; /* Ensure text is white and overrides other text colors */ /* */
-    font-weight: bold; /* */
-    border-color: #0056b3; /* Darker blue border for active state */
-    box-shadow: 0 2px 5px rgba(0, 91, 179, 0.4); /* Shadow matching the active color */ /* */
-    transform: translateY(0); /* Reset transform if any on hover */
+    background-color: #007bff; 
+    color: white !important; 
+    font-weight: bold; 
+    border-color: #0056b3; 
+    box-shadow: 0 2px 5px rgba(0, 91, 179, 0.4); 
+    transform: translateY(0); 
 }
 
 .filter-tag.active i, .filter-tag2.active i {
-    color: white !important; /* Ensure icon color matches text on active */
+    color: white !important; 
 }
 
 
 .filter-tag i, .filter-tag2 i {
-    margin-right: 8px; /* */
-    color: #007bff; /* Default icon color to match primary actions */
+    margin-right: 8px; 
+    color: #007bff; 
 }
 
-/* Estilos específicos para a página de pedidos */
+
 .pedidos-list-container {
-    background-color: #fffff3; /* */
-    border-radius: 10px; /* */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Softer shadow */ /* */
-    overflow: hidden; /* */
+    background-color: #fffff3; 
+    border-radius: 10px; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); 
+    overflow: hidden; 
 }
 
 .pedidos-table {
-    margin-bottom: 0; /* */
-    background-color: white; /* */
+    margin-bottom: 0; 
+    background-color: white; 
 }
 
 .pedidos-table thead {
-    background-color: #f8f9fa; /* */
+    background-color: #f8f9fa; 
 }
 
 .pedidos-table th {
-    border-top: none; /* */
-    font-weight: 600; /* */
-    color: #343a40; /* Slightly darker header text */ /* */
-    padding: 12px 15px; /* Adjust padding */
+    border-top: none; 
+    font-weight: 600; 
+    color: #343a40; 
+    padding: 12px 15px; 
 }
 
 .pedidos-table td {
-    padding: 12px 15px; /* Consistent padding */
+    padding: 12px 15px; 
     vertical-align: middle;
 }
 
 
 .pedido-row {
-    cursor: pointer; /* */
-    transition: background-color 0.2s; /* */
+    cursor: pointer; 
+    transition: background-color 0.2s; 
 }
 
 .pedido-row:hover {
-    background-color: #f1f3f5; /* Lighter hover for rows */ /* */
+    background-color: #f1f3f5; 
 }
 
 .tipo-pedido {
-    display: flex; /* */
-    align-items: center; /* */
-    gap: 8px; /* */
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
 }
 
 .tipo-pedido i {
-    color: #0077B6; /* */
-    font-size: 1.1em; /* Slightly larger icon */
+    color: #0077B6; 
+    font-size: 1.1em; 
 }
 
 .badge {
-    font-size: 0.8rem; /* Adjusted size */ /* */
-    font-weight: 600; /* Bolder badge text */ /* */
-    padding: 0.4em 0.75em; /* Adjusted padding */ /* */
-    border-radius: 8px; /* More rounded badge */ /* */
+    font-size: 0.8rem; 
+    font-weight: 600; 
+    padding: 0.4em 0.75em; 
+    border-radius: 8px; 
 }
 
 .badge-primary {
-    background-color: #007bff; /* Consistent primary blue */ /* */
+    background-color: #007bff; 
     color: white;
 }
 
 .badge-warning {
-    background-color: #ffc107; /* */
-    color: #212529; /* */
+    background-color: #ffc107; 
+    color: #212529; 
 }
 
 .badge-success {
-    background-color: #28a745; /* */
+    background-color: #28a745; 
     color: white;
 }
 
 .btn-info {
-    background-color: #17a2b8; /* Standard Bootstrap info color */ /* */
-    border-color: #17a2b8; /* */
-    padding: 0.375rem 0.75rem; /* Standard padding */
-    font-size: 0.9rem; /* Standard font size */
+    background-color: #17a2b8; 
+    border-color: #17a2b8; 
+    padding: 0.375rem 0.75rem; 
+    font-size: 0.9rem; 
 }
 
 .btn-info:hover {
-    background-color: #138496; /* Darker shade on hover */ /* */
-    border-color: #117a8b; /* */
+    background-color: #138496; 
+    border-color: #117a8b; 
 }
 
 .btn-info i {
@@ -319,54 +318,53 @@ body {
 }
 
 
-/* Estilos responsivos */
-@media (min-width: 769px) { /* For larger screens, arrange filter groups side-by-side */
+@media (min-width: 769px) { 
     .filters-area {
-        flex-direction: row; /* Filters side-by-side */
-        justify-content: space-between; /* Distribute space */
-        align-items: center; /* Align items vertically */
+        flex-direction: row; 
+        justify-content: space-between; 
+        align-items: center; 
     }
     .filters-container {
-        margin-top: 0; /* Reset margin as they are now flex items */
-        flex-basis: auto; /* Allow them to take necessary width */
+        margin-top: 0; 
+        flex-basis: auto; 
     }
 }
 
 
-@media (max-width: 768px) { /* */
+@media (max-width: 768px) { 
     .pedidos-table th:nth-child(3), 
-    .pedidos-table td:nth-child(3) { /* CNPJ */ /* */
-        display: none; /* */
+    .pedidos-table td:nth-child(3) { 
+        display: none; 
     }
     .search-container {
-        padding: 20px; /* Adjust padding for smaller screens */
+        padding: 20px; 
     }
     .filters-area {
-        flex-direction: column; /* Stack filter groups on smaller screens */
+        flex-direction: column; 
         gap: 15px;
     }
-    .filters-container { /* Ensure filter tags can wrap properly */
+    .filters-container { 
         justify-content: flex-start;
     }
 
 }
 
-@media (max-width: 576px) { /* */
+@media (max-width: 576px) { 
     .header h1 {
-        font-size: 1.4rem; /* */
+        font-size: 1.4rem; 
     }
     .pedidos-table th:nth-child(4), 
-    .pedidos-table td:nth-child(4) { /* Data */ /* */
-        display: none; /* */
+    .pedidos-table td:nth-child(4) { 
+        display: none; 
     }
     
     .filter-tag, .filter-tag2 {
-        font-size: 13px; /* */
-        padding: 8px 15px; /* */
+        font-size: 13px; 
+        padding: 8px 15px; 
     }
     .search-input {
-        padding: 10px 15px; /* */
-        padding-right: 40px; /* */
+        padding: 10px 15px; 
+        padding-right: 40px; 
     }
     .search-container {
         padding: 15px;

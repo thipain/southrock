@@ -10,7 +10,6 @@ include '../../includes/db.php';
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
 
-    // Recuperar os dados do usuário
     $sql = "SELECT * FROM usuarios WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $id);
@@ -25,7 +24,6 @@ if (isset($_GET['id'])) {
     }
 }
 
-// Atualizar os dados do usuário
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $tipo_usuario = $_POST['tipo_usuario'];
@@ -62,12 +60,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Usuário - Dashboard</title>
-    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="../../css/editar_usuario.css">
 </head>
 <body>
-    <!-- Sidebar -->
     <div class="sidebar">
         <div>
             <div class="sidebar-header">
@@ -106,7 +102,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     </div>
 
-    <!-- Content -->
     <div class="content">
         <div class="header">
             <h1><i class="bi bi-pencil-square me-2"></i>Editar Usuário</h1>
@@ -187,7 +182,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
 
     <script>
-        // Script para gerenciar estado ativo do menu
         document.addEventListener('DOMContentLoaded', function() {
             const currentLocation = window.location.pathname;
             const menuItems = document.querySelectorAll('.sidebar a');

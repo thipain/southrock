@@ -10,9 +10,9 @@ include '../../includes/db.php';
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
 
-    // Verificar se o usuário logado é admin e se o id que está sendo excluído é de um admin
+ 
     if ($_SESSION['tipo_usuario'] == 1) {
-        // Verificar se o usuário logado está tentando excluir um admin
+      
         $sql = "SELECT tipo_usuario FROM usuarios WHERE id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $id);
@@ -22,14 +22,14 @@ if (isset($_GET['delete'])) {
         if ($result->num_rows == 1) {
             $user = $result->fetch_assoc();
             if ($user['tipo_usuario'] == 1) {
-                // Impedir a exclusão do admin
+              
                 echo "<script>alert('Não é possível excluir o usuário admin.'); window.location.href='usuarios.php';</script>";
                 exit();
             }
         }
     }
 
-    // Caso contrário, excluir o usuário
+  
     $sql = "DELETE FROM usuarios WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $id);
@@ -47,14 +47,14 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Usuários - Dashboard</title>
-    <!-- Bootstrap CSS -->
+  
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="../../css/usuarios.css">
     <style>
-        /* Estilos herdados do pedidos.css */
+      
         body {
             display: flex;
             font-family: 'Arial', sans-serif;
@@ -63,7 +63,7 @@ $result = $conn->query($sql);
             background-color:#fffff3;
         }
 
-        /* SIDEBAR */
+        
 
         .sidebar {
             width: 60px;
@@ -217,7 +217,7 @@ $result = $conn->query($sql);
 </head>
 
 <body>
-    <!-- Sidebar -->
+ 
     <div class="sidebar">
         <div>
             <div class="sidebar-header">
@@ -235,7 +235,7 @@ $result = $conn->query($sql);
     </div>
     </div>
 
-    <!-- Content -->
+   
     <div class="content">
         <div class="header">
             <h1><i class="bi bi-people-fill me-2"></i>Gerenciamento de Usuários</h1>
@@ -250,7 +250,7 @@ $result = $conn->query($sql);
                 </a>
             </div>
 
-            <!-- Search Box -->
+           
             <div class="search-container mb-4">
                 <div class="row">
                     <div class="col-md-8 mb-3 mb-md-0">
@@ -270,7 +270,7 @@ $result = $conn->query($sql);
                 </div>
             </div>
 
-            <!-- Users Table -->
+            
             <div class="card card-custom border-0">
                 <div class="card-body p-0">
                     <div class="table-responsive">
@@ -306,7 +306,7 @@ $result = $conn->query($sql);
                                                     <i class="bi bi-pencil"></i>
                                                 </a>
                                                 <?php if ($row['tipo_usuario'] == 1): ?>
-                                                    <!-- Desabilita o botão de excluir para admin -->
+                                                   
                                                     <button class="btn btn-sm btn-outline-danger" disabled>
                                                         <i class="bi bi-trash"></i>
                                                     </button>
@@ -328,12 +328,12 @@ $result = $conn->query($sql);
         </div>
     </div>
 
-    <!-- Bootstrap JS e Dependências -->
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- SweetAlert2 para confirmação de exclusão -->
+   
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // Script para confirmação de exclusão
+ 
         function confirmDelete(id) {
             Swal.fire({
                 title: 'Confirmar exclusão?',
@@ -351,7 +351,7 @@ $result = $conn->query($sql);
             });
         }
 
-        // Script para pesquisa dinâmica
+      
         document.getElementById('searchUsuario').addEventListener('keyup', function () {
             var input, filter, table, tr, td, i, txtValue;
             input = document.getElementById('searchUsuario');
@@ -361,7 +361,7 @@ $result = $conn->query($sql);
 
             for (i = 1; i < tr.length; i++) {
                 let found = false;
-                for (let j = 0; j < 3; j++) { // Buscar nos 3 primeiros campos (username, cnpj, responsável)
+                for (let j = 0; j < 3; j++) { 
                     td = tr[i].getElementsByTagName('td')[j];
                     if (td) {
                         txtValue = td.textContent || td.innerText;
@@ -379,7 +379,7 @@ $result = $conn->query($sql);
             }
         });
 
-        // Script para filtragem por tipo de usuário
+    
         document.getElementById('filterUsuario').addEventListener('change', function () {
             var filter = this.value;
             var table = document.querySelector('.table');

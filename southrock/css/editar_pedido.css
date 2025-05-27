@@ -1,19 +1,16 @@
-/* RESET BÁSICO */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* LAYOUT GERAL */
 body {
     display: flex;
     font-family: 'Arial', sans-serif;
     height: 100vh;
-    background-color: #fffff3; /* Mantém para evitar a "borda" por frestas */
+    background-color: #fffff3; 
 }
 
-/* SIDEBAR */
 .sidebar {
     width: 60px;
     background-color: #2045ff;
@@ -22,7 +19,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    box-shadow: none; /* Mantém sem sombra */
+    box-shadow: none; 
     z-index: 100;
 }
 
@@ -74,34 +71,17 @@ body {
     opacity: 1;
 }
 
-/* ÁREA DE CONTEÚDO */
 .content {
     flex: 1;
     overflow-y: auto;
     background-color: #fffff3;
-    /* O .content em si não precisa de padding lateral se o .container dentro dele for usado.
-       Se o .container não for usado em alguma seção, você pode adicionar padding aqui. */
 }
 
-/* Ajuste para o container padrão do Bootstrap dentro do .content */
 .content .container {
-    /* Bootstrap por padrão já define:
-       padding-right: 15px;
-       padding-left: 15px;
-       margin-right: auto;
-       margin-left: auto;
-       max-width: (varia com o breakpoint);
-       Estas são boas configurações para centralização.
-       Se você quiser um padding lateral ligeiramente menor que o padrão (15px),
-       ajuste AMBOS para manter a simetria e a centralização efetiva.
-       Por exemplo, 10px: */
-    padding-left: 15px;  /* Pode ajustar para 10px se 15px for muito */
-    padding-right: 15px; /* Pode ajustar para 10px se 15px for muito */
-    /* As margens automáticas e max-width devem ser deixadas para o Bootstrap
-       ou definidas explicitamente se você tiver um motivo forte. */
+    padding-left: 15px;  
+    padding-right: 15px; 
 }
 
-/* HEADER DO DASHBOARD (Mantido do dashboard.css, pode ser específico para outras páginas) */
 .dashboard-header {
     display: flex;
     justify-content: space-between;
@@ -109,9 +89,6 @@ body {
     padding-top: 10px;
     padding-bottom: 10px;
     border-bottom: 1px solid #aaaaaa;
-    /* Note que o .dashboard-header, se estiver DENTRO do .container,
-       herdará os paddings do .container. Se estiver FORA (direto no .content),
-       ocupará a largura total do .content. */
 }
 
 .painel-titulo {
@@ -125,7 +102,6 @@ body {
     color: #000000;
 }
 
-/* ESTILOS ESPECÍFICOS PARA editar_pedido.php (Importados do <style> da página) */
 .card-header-flex {
     display: flex;
     justify-content: space-between;
@@ -165,7 +141,6 @@ body {
     display: block;
 }
 
-/* Outros estilos que eram do dashboard.css */
 .estatistica-card {
     border-radius: 10px;
     border: none;
@@ -212,7 +187,7 @@ body {
     background-color: #ffc107;
 }
 
-.card-body /* Do dashboard.css */
+.card-body 
 {
     background-color: #fffcf9;
     border: 1px solid rgb(220, 220, 220);
@@ -267,8 +242,6 @@ body {
     margin-top: 15px;
 }
 
-
-/* RESPONSIVIDADE (Mantida do dashboard.css) */
 @media screen and (max-width: 768px) {
     .sidebar {
         position: fixed;
@@ -277,12 +250,12 @@ body {
     }
 
     .content {
-        margin-left: 60px; /* Importante para não sobrepor o sidebar fixo */
+        margin-left: 60px; 
     }
     
     .content .container {
-        padding-left: 10px;  /* Padding menor para telas mobile */
-        padding-right: 10px; /* Padding menor para telas mobile */
+        padding-left: 10px;  
+        padding-right: 10px; 
     }
 }
 

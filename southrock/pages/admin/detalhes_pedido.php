@@ -7,7 +7,6 @@ if (!isset($_SESSION['username'])) {
 
 require_once '../../includes/db.php';
 
-// Verificar se o ID do pedido foi fornecido
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     header("Location: pedidos.php");
     exit();
@@ -15,9 +14,6 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 
 $pedido_id = intval($_GET['id']);
 
-// Buscar informações do pedido
-// MODIFICADO: Usando a tabela usuarios em vez de filiais, onde eh_filial = TRUE
-// MODIFICADO: Adicionado JOIN com filial_destino para pedidos do tipo doação
 $query = "SELECT p.*, 
           u_filial.nome_filial AS nome_filial_origem, 
           u_filial.cnpj AS cnpj_origem, 
@@ -48,7 +44,6 @@ if ($resultado->num_rows === 0) {
 
 $pedido = $resultado->fetch_assoc();
 
-// Buscar itens do pedido
 $query_itens = "SELECT i.*, pr.produto, pr.unidade_medida 
                 FROM pedido_itens i
                 JOIN produtos pr ON i.sku = pr.sku
@@ -59,7 +54,6 @@ $stmt_itens->bind_param("i", $pedido_id);
 $stmt_itens->execute();
 $itens = $stmt_itens->get_result();
 
-// Mapear status para cores e ícones
 $statusInfo = [
     'novo' => [
         'bg' => '#E3F2FD',
@@ -100,7 +94,6 @@ $tipoPedidoInfo = [
     ]
 ];
 
-// Definir status atual para estilização
 $currentStatus = $statusInfo[$pedido['status']] ?? $statusInfo['novo'];
 $tipoPedido = $tipoPedidoInfo[$pedido['tipo_pedido']] ?? ['icon' => 'fa-question-circle', 'label' => 'Desconhecido'];
 ?>
@@ -112,9 +105,7 @@ $tipoPedido = $tipoPedidoInfo[$pedido['tipo_pedido']] ?? ['icon' => 'fa-question
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pedido #<?= $pedido_id ?> - <?= ucfirst($tipoPedido['label']) ?></title>
-    <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../../css/pedidos.css">
     <style>
@@ -523,7 +514,6 @@ $tipoPedido = $tipoPedidoInfo[$pedido['tipo_pedido']] ?? ['icon' => 'fa-question
             color: var(--dark-text);
         }
 
-        /* Estilos para impressão */
         @media print {
             .sidebar, .header, .order-actions, .btn, .back-button {
                 display: none !important;
@@ -582,12 +572,10 @@ $tipoPedido = $tipoPedidoInfo[$pedido['tipo_pedido']] ?? ['icon' => 'fa-question
         </div>
 
         <div class="main-content">
-            <!-- Botão de voltar -->
             <a href="pedidos.php" class="back-button">
                 <i class="fas fa-arrow-left"></i> Voltar para Lista de Pedidos
             </a>
             
-            <!-- Cabeçalho do pedido -->
             <div class="order-main-card">
                 <div class="order-header">
                     <div class="order-id-container">
@@ -614,14 +602,13 @@ $tipoPedido = $tipoPedidoInfo[$pedido['tipo_pedido']] ?? ['icon' => 'fa-question
 
                 <div class="progress-container">
                     <?php
-                    // Determinar o progresso baseado no status
                     $progressWidth = 0;
                     if ($pedido['status'] == 'novo') {
-                        $progressWidth = "17%"; // Apenas o primeiro passo
+                        $progressWidth = "17%"; 
                     } elseif ($pedido['status'] == 'processo') {
-                        $progressWidth = "50%"; // Até o segundo passo
+                        $progressWidth = "50%"; 
                     } elseif ($pedido['status'] == 'finalizado') {
-                        $progressWidth = "100%"; // Completo
+                        $progressWidth = "100%"; 
                     }
                     ?>
                     <div class="progress-steps">
@@ -658,12 +645,10 @@ $tipoPedido = $tipoPedidoInfo[$pedido['tipo_pedido']] ?? ['icon' => 'fa-question
                 </div>
 
                 <?php if ($pedido['tipo_pedido'] == 'doacao' && !empty($pedido['filial_destino_id'])): ?>
-                <!-- Informações das filiais para pedidos de doação -->
                 <div class="content-section">
                     <h3 class="section-title">Informações das Filiais</h3>
                     
                     <div class="filial-cards">
-                        <!-- Filial de Origem -->
                         <div class="filial-card origem">
                             <div class="filial-header">
                                 <div class="filial-icon origem">
@@ -696,7 +681,6 @@ $tipoPedido = $tipoPedidoInfo[$pedido['tipo_pedido']] ?? ['icon' => 'fa-question
                             </div>
                         </div>
                         
-                        <!-- Filial de Destino -->
                         <div class="filial-card destino">
                             <div class="filial-header">
                                 <div class="filial-icon destino">
@@ -731,7 +715,6 @@ $tipoPedido = $tipoPedidoInfo[$pedido['tipo_pedido']] ?? ['icon' => 'fa-question
                     </div>
                 </div>
                 <?php else: ?>
-                <!-- Informações da filial para outros tipos de pedidos -->
                 <div class="content-section">
                     <h3 class="section-title">Informações da Filial</h3>
                     <div class="address-card">
@@ -835,7 +818,6 @@ $tipoPedido = $tipoPedidoInfo[$pedido['tipo_pedido']] ?? ['icon' => 'fa-question
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="../../js/dashboard.js"></script>
     <script>
-        // Script para ajustar o layout e garantir que não haja espaço entre a sidebar e o conteúdo
         document.addEventListener('DOMContentLoaded', function() {
             function adjustLayout() {
                 const sidebarWidth = document.querySelector('.sidebar').offsetWidth;
@@ -843,10 +825,8 @@ $tipoPedido = $tipoPedidoInfo[$pedido['tipo_pedido']] ?? ['icon' => 'fa-question
                 document.querySelector('.content').style.width = `calc(100% - ${sidebarWidth}px)`;
             }
             
-            // Ajusta o layout inicialmente
             adjustLayout();
             
-            // Ajusta novamente quando a janela for redimensionada
             window.addEventListener('resize', adjustLayout);
         });
     </script>

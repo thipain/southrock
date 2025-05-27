@@ -10,17 +10,17 @@
     <style>
         body {
             display: flex;
-            justify-content: center; /* Centraliza horizontalmente */
-            align-items: center; /* Centraliza verticalmente */
+            justify-content: center; 
+            align-items: center; 
             height: 100vh;
             margin: 0;
             font-family: Verdana, Geneva, Tahoma, sans-serif;
-            background-image: url('../images/fundo_login.png'); /* Define a imagem de fundo */
-            background-size: cover; /* Cobre todo o corpo */
-            background-position: center; /* Centraliza a imagem */
-            background-repeat: no-repeat; /* Evita repetição */
-            position: relative; /* Necessário para o pseudo-elemento */
-            overflow: hidden; /* Garante que o blur não crie barras de rolagem */
+            background-image: url('../images/fundo_login.png'); 
+            background-size: cover; 
+            background-position: center; 
+            background-repeat: no-repeat; 
+            position: relative; 
+            overflow: hidden; 
         }
 
         body::before {
@@ -33,18 +33,17 @@
             background-image: url('../images/fundo_login.png');
             background-size: cover;
             background-position: center;
-            filter: blur(5px); /* Aplica o desfoque (ajuste o valor conforme necessário) */
-            z-index: -1; /* Coloca o pseudo-elemento atrás do conteúdo */
+            filter: blur(5px); 
+            z-index: -1; 
         }
 
         .container {
-            background-color: rgba(0, 0, 0, 0.6); /* Fundo preto com 60% de opacidade */
+            background-color: rgba(0, 0, 0, 0.8); 
             border-radius: 45px;
             padding: 40px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
             width: 390px;
             max-width: 100%;
-            /* Removido margin-right: 15%; para centralizar */
         }
 
         .logo-container {
@@ -82,14 +81,13 @@
 
         .btn-primary {
             background-color: #0028f1;
-            /* Removido margin-right: 15%; */
             height: 45px;
             font-weight: 500;
             margin-top: 25px;
             transition: background-color 0.3s;
             border-radius: 15px;
             font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-            width: 100%; /* Garante que o botão ocupe toda a largura */
+            width: 100%; 
         }
 
         .btn-primary:hover {
@@ -131,14 +129,6 @@
             border-radius: 15px;
             width: 100%;
         }
-
-        /* Removido .img para usar a imagem como background */
-        /* .img {
-            margin-left: 10%;
-            width: 380px;
-            align-items: center;
-            justify-content: center;
-        } */
 
     </style>
 </head>

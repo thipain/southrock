@@ -1,19 +1,15 @@
-/* RESET BÁSICO */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* LAYOUT GERAL */
 body {
     display: flex;
     font-family: 'Arial', sans-serif;
     height: 100vh;
     background-color: #242425;
 }
-
-/* SIDEBAR */
 
 .sidebar {
     width: 60px;
@@ -76,7 +72,6 @@ body {
     opacity: 1;
 }
 
-/* ÁREA DE CONTEÚDO */
 .content {
     flex: 1;
     overflow-y: auto;
@@ -84,7 +79,6 @@ body {
 
 }
 
-/* HEADER DO DASHBOARD */
 .dashboard-header {
     display: flex;
     justify-content: space-between;
@@ -106,7 +100,6 @@ body {
     
 }
 
-/* CARDS DE ESTATÍSTICAS */
 .estatistica-card {
     border-radius: 10px;
     border: none;
@@ -197,7 +190,6 @@ body {
     margin-top: 10px;
 }
 
-/* LOGO CENTRALIZADA */
 .logo-container {
     margin-top: 2rem;
     padding: 20px;
@@ -216,7 +208,6 @@ body {
     margin-top: 15px;
 }
 
-/* RESPONSIVIDADE */
 @media screen and (max-width: 768px) {
     .sidebar {
         position: fixed;

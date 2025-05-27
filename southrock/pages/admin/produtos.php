@@ -1,23 +1,18 @@
 <?php
-// Configura exibição de erros para desenvolvimento
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Inicia a sessão para verificar login
 session_start();
 if (!isset($_SESSION['username'])) {
     header("Location: index.php");
     exit();
 }
 
-// Inclui o arquivo de conexão
 require_once '../../includes/db.php';
 
-// Verifica se um produto deve ser excluído
 if (isset($_GET['delete'])) {
     $skuToDelete = $_GET['delete'];
 
-    // Prepara a consulta SQL para excluir o produto
     $sqlDelete = "DELETE FROM produtos WHERE sku = ?";
     $stmtDelete = $conn->prepare($sqlDelete);
     $stmtDelete->bind_param('i', $skuToDelete);
@@ -37,21 +32,17 @@ if (isset($_POST['search'])) {
 }
 
 try {
-    // Prepara a consulta SQL para buscar produtos com base no termo de pesquisa
     $sql = "SELECT sku, produto, grupo FROM produtos WHERE 
             sku LIKE ? OR 
             produto LIKE ? OR 
             grupo LIKE ? 
             ORDER BY sku";
 
-    // Prepara a declaração
     $stmt = $conn->prepare($sql);
     
-    // Adiciona os parâmetros de pesquisa
     $likeTerm = '%' . $searchTerm . '%';
     $stmt->bind_param('sss', $likeTerm, $likeTerm, $likeTerm);
 
-    // Executa a consulta
     $stmt->execute();
     $resultado = $stmt->get_result();
 
@@ -62,10 +53,8 @@ try {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Lista de Produtos - SouthRock</title>
-        <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-        <!-- Bootstrap Icons -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -132,7 +121,6 @@ try {
                                 </thead>
                                 <tbody>
                                     <?php
-                                    // Itera sobre os resultados e exibe cada produto
                                     if ($resultado->num_rows > 0) {
                                         while ($produto = $resultado->fetch_assoc()) {
                                             echo "<tr>";
@@ -167,9 +155,7 @@ try {
             </div>
         </div>
 
-        <!-- Bootstrap JS e Dependências -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- SweetAlert2 para confirmação de exclusão -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         <script>
@@ -193,12 +179,10 @@ try {
     </body>
     </html>
     <?php
-    // Fecha a conexão apenas no final do script
     $stmt->close();
     $conn->close();
 
 } catch (Exception $e) {
-    // Tratamento de erro
     echo "<div class='alert alert-danger'>Erro: " . $e->getMessage() . "</div>";
 }
 ?>

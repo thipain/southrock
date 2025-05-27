@@ -113,7 +113,7 @@ require_once '../../includes/db.php';
                     </thead>
                     <tbody id="pedidosList">
                         <?php
-                        // Query modificada para usar a nova estrutura unificada - agora buscamos na tabela usuarios onde eh_filial = TRUE
+                        
                         $query = "SELECT p.id, p.data, p.tipo_pedido, p.status, u.cnpj, u.nome_filial 
                                   FROM pedidos p 
                                   JOIN usuarios u ON p.filial_usuario_id = u.id 
@@ -124,7 +124,7 @@ require_once '../../includes/db.php';
 
                         if ($pedidos->num_rows > 0):
                             while ($pedido = $pedidos->fetch_assoc()):
-                                // Mapear tipo de pedido para ícones e classes CSS
+                              
                                 $tipoIconMap = [
                                     'requisicao' => '<i class="fas fa-file-invoice"></i>',
                                     'troca' => '<i class="fas fa-exchange-alt"></i>',
@@ -141,7 +141,7 @@ require_once '../../includes/db.php';
                                 $tipoIcon = $tipoIconMap[$pedido['tipo_pedido']] ?? '<i class="fas fa-question-circle"></i>';
                                 $statusBadge = $statusBadgeMap[$pedido['status']] ?? 'badge-secondary';
 
-                                // Formatar CNPJ se não estiver formatado
+                               
                                 $cnpj = $pedido['cnpj'];
                                 if (strpos($cnpj, '.') === false && strlen($cnpj) == 14) { // Adicionada verificação de comprimento para formatação de CNPJ
                                     $cnpj = preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $cnpj);
@@ -197,23 +197,23 @@ require_once '../../includes/db.php';
     <script src="../../js/dashboard.js"></script>
 
     <script>
-        // Filtrar por status
+       
         function filterByStatus(element) {
-            // Remove classe active de todos os elementos de status
+           
             document.querySelectorAll('.filter-tag').forEach(el => el.classList.remove('active'));
-            // Adiciona classe active ao elemento clicado
+           
             element.classList.add('active');
 
             filterPedidos();
         }
 
-        // Filtrar por tipo
+     
         function filterByType(element) {
             const isTodosTiposClicked = element.getAttribute('data-tipo') === 'todos';
             const todosTiposElement = document.querySelector('.filter-tag2[data-tipo="todos"]');
 
             if (isTodosTiposClicked) {
-                // Se "Todos os Tipos" foi clicado, ativa ele e desativa os outros
+                
                 document.querySelectorAll('.filter-tag2').forEach(el => {
                     if (el === todosTiposElement) {
                         el.classList.add('active');
@@ -222,15 +222,15 @@ require_once '../../includes/db.php';
                     }
                 });
             } else {
-                // Se um tipo específico foi clicado, desativa "Todos os Tipos"
+              
                 todosTiposElement.classList.remove('active');
-                // Toggle no elemento clicado
+          
                 element.classList.toggle('active');
 
-                // Verifica se algum filtro de tipo específico está ativo
+              
                 const activeSpecificTypes = document.querySelectorAll('.filter-tag2.active:not([data-tipo="todos"])');
                 if (activeSpecificTypes.length === 0) {
-                    // Se nenhum específico estiver ativo, reativa "Todos os Tipos"
+                  
                     todosTiposElement.classList.add('active');
                 }
             }
@@ -238,15 +238,15 @@ require_once '../../includes/db.php';
             filterPedidos();
         }
 
-        // Função para filtrar pedidos baseado em status e tipo
+       
         function filterPedidos() {
             const selectedStatus = document.querySelector('.filter-tag.active').getAttribute('data-status');
             const isTodosStatus = selectedStatus === 'todos';
 
-            // Verifica se "Todos os Tipos" está ativo
+          
             const isTodosTiposActive = document.querySelector('.filter-tag2[data-tipo="todos"]').classList.contains('active');
 
-            // Se "Todos os Tipos" não estiver ativo, pega os tipos selecionados. Caso contrário, selectedTypes será um array vazio.
+           
             const selectedTypes = isTodosTiposActive ? [] :
                 Array.from(document.querySelectorAll('.filter-tag2.active:not([data-tipo="todos"])')).map(el => el.getAttribute('data-tipo'));
 
@@ -256,39 +256,37 @@ require_once '../../includes/db.php';
                 const rowStatus = row.getAttribute('data-status');
                 const rowType = row.getAttribute('data-tipo');
 
-                // Capturar células específicas para pesquisa direcionada
+                
                 const pedidoNumero = row.cells[0].textContent.toLowerCase(); // Nº Pedido
                 const cnpj = row.cells[2].textContent.toLowerCase(); // CNPJ
 
-                // Verificar se corresponde ao status selecionado (ou se "Todos" está selecionado)
+              
                 const matchStatus = isTodosStatus || rowStatus === selectedStatus;
 
-                // Verificar se corresponde a algum dos tipos selecionados
-                // Se "Todos os Tipos" estiver ativo, matchType é sempre true.
-                // Caso contrário, verifica se rowType está incluído nos selectedTypes.
+               
                 const matchType = isTodosTiposActive || selectedTypes.includes(rowType);
 
-                // Verificar se corresponde ao texto de pesquisa (buscando especificamente no número do pedido ou CNPJ)
+               
                 const matchSearch = searchText === '' ||
                     pedidoNumero.includes(searchText) ||
                     cnpj.includes(searchText);
 
-                // Mostrar ou esconder a linha baseado nos filtros
+              
                 row.style.display = (matchStatus && matchType && matchSearch) ? '' : 'none';
             });
         }
 
-        // Evento de pesquisa
+       
         const searchInput = document.getElementById('searchInput');
         const clearButton = document.getElementById('clearSearch');
 
         searchInput.addEventListener('keyup', function () {
             filterPedidos();
-            // Mostrar ou esconder botão de limpar
+          
             clearButton.style.display = searchInput.value.length > 0 ? 'block' : 'none';
         });
 
-        // Botão para limpar a pesquisa
+      
         clearButton.addEventListener('click', function () {
             searchInput.value = '';
             clearButton.style.display = 'none';
@@ -296,9 +294,9 @@ require_once '../../includes/db.php';
             searchInput.focus();
         });
 
-        // Inicializar filtros ao carregar a página
+      
         window.onload = function () {
-            // Garante que "Todos os Pedidos" e "Todos os Tipos" estejam ativos inicialmente
+          
             document.querySelector('.filter-tag[data-status="todos"]').classList.add('active');
             document.querySelector('.filter-tag2[data-tipo="todos"]').classList.add('active');
             filterPedidos();

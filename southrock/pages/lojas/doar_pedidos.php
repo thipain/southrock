@@ -1,60 +1,42 @@
 <?php
-// Configura exibição de erros para desenvolvimento
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Inicia a sessão para acessar o ID do usuário logado e sua filial
 session_start();
 
-// Inclui o arquivo de conexão para a página principal
 require_once '../../includes/db.php';
 
-// OBTENDO OS VALORES DA SESSÃO REAL
-// Pega o ID do usuário logado da sessão, ou null se não estiver definido
 $loggedInUserId = $_SESSION['user_id'] ?? null;
-// Pega o ID da filial do usuário logado da sessão, ou null se não estiver definido
 $loggedInUserBranchId = $_SESSION['branch_id'] ?? null;
 
-// Lógica de verificação e redirecionamento para garantir que o usuário está logado
-// e que as variáveis de sessão cruciais estão definidas.
 if ($loggedInUserId === null || $loggedInUserBranchId === null) {
-    // Se não há ID de usuário ou ID da filial na sessão, redirecione para o login
-    // É crucial que esses valores sejam definidos em seu login.php
-    header('Location: /login.php'); // Ajuste este caminho para sua página de login real
+    header('Location: /login.php'); 
     exit();
 }
 
-// A filial de origem para a doação é a filial do usuário logado.
-// Este valor será usado como filial_usuario_id na tabela 'pedidos'
 $originBranchIdForDonation = $loggedInUserBranchId;
 
 
-// Verifica se é uma requisição AJAX para pesquisa de produtos
 if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
     $searchTerm = isset($_GET['term']) ? $_GET['term'] : '';
     $response = array('success' => false, 'products' => array());
 
     try {
         if (trim($searchTerm) !== '') {
-            // Prepara a consulta SQL
             $sql = "SELECT sku, produto, grupo FROM produtos WHERE
                      sku LIKE ? OR
                      produto LIKE ? OR
                      grupo LIKE ?
                      ORDER BY sku";
 
-            // Prepara a declaração
             $stmt = $conn->prepare($sql);
 
-            // Adiciona os parâmetros de pesquisa
             $likeTerm = '%' . $searchTerm . '%';
             $stmt->bind_param('sss', $likeTerm, $likeTerm, $likeTerm);
 
-            // Executa a consulta
             $stmt->execute();
             $resultado = $stmt->get_result();
 
-            // Converte os resultados para um array
             $products = array();
             while ($produto = $resultado->fetch_assoc()) {
                 $products[] = $produto;
@@ -66,7 +48,6 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
             $stmt->close();
         }
 
-        // Retorna os resultados como JSON
         header('Content-Type: application/json');
         echo json_encode($response);
 
@@ -80,37 +61,31 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
     }
 }
 
-// Verifica se é uma requisição AJAX para busca de destinatários
 if (isset($_GET['ajax']) && $_GET['ajax'] == 2) {
     $searchTerm = isset($_GET['term']) ? $_GET['term'] : '';
     $response = array('success' => false, 'users' => array());
 
     try {
-        // Consulta SQL para buscar usuários que são filiais/lojas (tipo_usuario = 2 e eh_filial = TRUE)
-        // E que NÃO SÃO a filial de origem (para evitar doação para si mesma)
         $sql = "SELECT id, nome, nome_filial, cidade, uf FROM usuarios WHERE
                  tipo_usuario = 2 AND eh_filial = TRUE AND id != ? AND
                  (nome LIKE ? OR nome_filial LIKE ? OR cidade LIKE ?)
                  ORDER BY nome_filial";
 
-        // Se o termo de pesquisa estiver vazio, retorna todos os usuários filiais, exceto a de origem
         if (trim($searchTerm) === '') {
             $sql = "SELECT id, nome, nome_filial, cidade, uf FROM usuarios WHERE
                      tipo_usuario = 2 AND eh_filial = TRUE AND id != ?
                      ORDER BY nome_filial";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param('i', $originBranchIdForDonation); // Bind the origin branch ID
+            $stmt->bind_param('i', $originBranchIdForDonation); 
         } else {
             $stmt = $conn->prepare($sql);
             $likeTerm = '%' . $searchTerm . '%';
-            $stmt->bind_param('isss', $originBranchIdForDonation, $likeTerm, $likeTerm, $likeTerm); // Bind origin and search terms
+            $stmt->bind_param('isss', $originBranchIdForDonation, $likeTerm, $likeTerm, $likeTerm); 
         }
 
-        // Executa a consulta
         $stmt->execute();
         $resultado = $stmt->get_result();
 
-        // Converte os resultados para um array
         $users = array();
         while ($user = $resultado->fetch_assoc()) {
             $users[] = $user;
@@ -121,7 +96,6 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 2) {
 
         $stmt->close();
 
-        // Retorna os resultados como JSON
         header('Content-Type: application/json');
         echo json_encode($response);
 
@@ -135,19 +109,15 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 2) {
     }
 }
 
-// Endpoint para salvar o pedido de doação
 if (isset($_POST['save_donation'])) {
     $response = array('success' => false);
 
     try {
-        // Iniciar transação
         $conn->begin_transaction();
 
-        // Obter dados do formulário
         $destinatario_id = $_POST['destinatario_id'];
         $observacoes = $_POST['observacoes'];
-        // A filial de origem é o ID da filial do usuário logado (já definido acima)
-        $filial_origem_id = $originBranchIdForDonation; // Utiliza a variável já definida
+        $filial_origem_id = $originBranchIdForDonation; 
         $items = json_decode($_POST['items'], true);
 
         if (empty($items)) {
@@ -161,12 +131,9 @@ if (isset($_POST['save_donation'])) {
         }
 
 
-        // Inserir registro na tabela de pedidos
-        // Agora, filial_usuario_id é a origem (quem está doando), e filial_destino_id é o destinatário.
         $sql = "INSERT INTO pedidos (tipo_pedido, status, filial_usuario_id, filial_destino_id, usuario_id, observacoes)
                  VALUES ('doacao', 'novo', ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        // Garante que $loggedInUserId e $filial_origem_id (que é $loggedInUserBranchId) são usados aqui
         $stmt->bind_param('iiis', $filial_origem_id, $destinatario_id, $loggedInUserId, $observacoes);
 
         if (!$stmt->execute()) {
@@ -176,7 +143,6 @@ if (isset($_POST['save_donation'])) {
         $pedido_id = $conn->insert_id;
         $stmt->close();
 
-        // Inserir itens do pedido
         $sql = "INSERT INTO pedido_itens (pedido_id, sku, quantidade, observacao) VALUES (?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
 
@@ -189,25 +155,21 @@ if (isset($_POST['save_donation'])) {
 
         $stmt->close();
 
-        // Confirmar transação
         $conn->commit();
 
         $response['success'] = true;
         $response['message'] = "Pedido de doação criado com sucesso!";
         $response['pedido_id'] = $pedido_id;
     } catch (Exception $e) {
-        // Reverter em caso de erro
         $conn->rollback();
         $response['error'] = $e->getMessage();
     }
 
-    // Retornar resposta como JSON
     header('Content-Type: application/json');
     echo json_encode($response);
     exit;
 }
 
-// ... (Restante do seu HTML e JavaScript - sem alterações aqui)
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -218,7 +180,6 @@ if (isset($_POST['save_donation'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        /* Styles for the cart button */
         .cart-button {
             position: fixed;
             bottom: 30px;
@@ -261,7 +222,6 @@ if (isset($_POST['save_donation'])) {
             font-weight: bold;
         }
 
-        /* Styles for the cart sidebar */
         .cart-sidebar {
             position: fixed;
             top: 0;
@@ -401,7 +361,6 @@ if (isset($_POST['save_donation'])) {
             cursor: not-allowed;
         }
 
-        /* Overlay */
         .overlay {
             position: fixed;
             top: 0;
@@ -413,7 +372,6 @@ if (isset($_POST['save_donation'])) {
             display: none;
         }
 
-        /* Search loading animation */
         .search-loading {
             display: none;
             width: 20px;
@@ -444,7 +402,6 @@ if (isset($_POST['save_donation'])) {
             color: #6c757d;
         }
 
-        /* Customizar tabela */
         .table-hover tbody tr:hover {
             background-color: rgba(13, 110, 253, 0.05);
         }
@@ -454,7 +411,6 @@ if (isset($_POST['save_donation'])) {
             border-radius: 0.5rem;
         }
 
-        /* Modal de destinatário */
         .recipient-item {
             padding: 15px;
             border: 1px solid #dee2e6;
@@ -642,7 +598,6 @@ if (isset($_POST['save_donation'])) {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Elementos DOM
             const searchInput = document.getElementById('search-input');
             const searchLoading = document.getElementById('search-loading');
             const searchIndicator = document.getElementById('search-indicator');
@@ -667,25 +622,19 @@ if (isset($_POST['save_donation'])) {
             const selectedRecipientInfo = document.getElementById('selected-recipient-info');
             const submitDonationBtn = document.getElementById('submit-donation');
 
-            // Bootstrap Modals
             const recipientModal = new bootstrap.Modal(document.getElementById('recipientModal'));
             const observationsModal = new bootstrap.Modal(document.getElementById('observationsModal'));
 
-            // Variáveis globais
             let cart = [];
             let searchTimeout;
             let recipientSearchTimeout;
             let selectedRecipientId = null;
             let selectedRecipientName = null;
 
-            // Variáveis do PHP (para o ID da filial de origem)
-            // Certifique-se de que originBranchIdForDonation está sendo definido corretamente no PHP
             const originBranchId = <?php echo json_encode($originBranchIdForDonation); ?>;
 
 
-            // Função para pesquisar produtos
             function searchProducts(term) {
-                // Resetar a interface
                 clearTimeout(searchTimeout);
 
                 if (term.trim() === '') {
@@ -696,11 +645,9 @@ if (isset($_POST['save_donation'])) {
                     return;
                 }
 
-                // Mostrar indicador de carregamento
                 searchLoading.style.display = 'block';
                 searchIndicator.innerHTML = '<i class="bi bi-clock me-2"></i>Pesquisando...';
 
-                // Definir um timeout para evitar muitas requisições
                 searchTimeout = setTimeout(() => {
                     fetch(`?ajax=1&term=${encodeURIComponent(term)}`)
                         .then(response => response.json())
@@ -711,14 +658,11 @@ if (isset($_POST['save_donation'])) {
                                 initialMessage.style.display = 'none';
 
                                 if (data.products.length > 0) {
-                                    // Exibir os resultados
                                     productsTableContainer.style.display = 'block';
                                     noResults.style.display = 'none';
 
-                                    // Limpar a tabela
                                     productsTableBody.innerHTML = '';
 
-                                    // Adicionar produtos à tabela
                                     data.products.forEach(product => {
                                         const row = productsTableBody.insertRow();
                                         row.innerHTML = `
@@ -738,7 +682,6 @@ if (isset($_POST['save_donation'])) {
 
                                     searchIndicator.innerHTML = `<i class="bi bi-check-circle me-2"></i>${data.products.length} produtos encontrados.`;
 
-                                    // Adicionar event listeners para os botões "Adicionar ao carrinho"
                                     document.querySelectorAll('.add-to-cart-btn').forEach(button => {
                                         button.addEventListener('click', function() {
                                             const sku = this.dataset.sku;
@@ -771,18 +714,15 @@ if (isset($_POST['save_donation'])) {
                             searchIndicator.innerHTML = '<i class="bi bi-x-circle me-2"></i>Erro de conexão.';
                             console.error('Erro:', error);
                         });
-                }, 500); // Atraso de 500ms
+                }, 500); 
             }
 
-            // Função para adicionar item ao carrinho
             function addToCart(product) {
                 const existingItemIndex = cart.findIndex(item => item.sku === product.sku);
 
                 if (existingItemIndex > -1) {
-                    // Se o produto já existe, incrementa a quantidade
                     cart[existingItemIndex].quantidade++;
                 } else {
-                    // Caso contrário, adiciona o novo produto
                     cart.push(product);
                 }
                 updateCartUI();
@@ -795,13 +735,11 @@ if (isset($_POST['save_donation'])) {
                 });
             }
 
-            // Função para remover item do carrinho
             function removeFromCart(sku) {
                 cart = cart.filter(item => item.sku !== sku);
                 updateCartUI();
             }
 
-            // Função para atualizar quantidade do item no carrinho
             function updateItemQuantity(sku, newQuantity) {
                 const item = cart.find(item => item.sku === sku);
                 if (item) {
@@ -814,18 +752,16 @@ if (isset($_POST['save_donation'])) {
                 }
             }
 
-            // Função para atualizar observação do item no carrinho
             function updateItemObservation(sku, observation) {
                 const item = cart.find(item => item.sku === sku);
                 if (item) {
-                    item.observacao = observation; // Atribui a observação ao item
-                    updateCartUI(); // Atualiza a UI para refletir a observação
+                    item.observacao = observation; 
+                    updateCartUI(); 
                 }
             }
 
-            // Função para atualizar a interface do carrinho
             function updateCartUI() {
-                cartItems.innerHTML = ''; // Limpa os itens existentes
+                cartItems.innerHTML = ''; 
                 if (cart.length === 0) {
                     emptyCartMessage.style.display = 'block';
                     checkoutBtn.disabled = true;
@@ -856,7 +792,6 @@ if (isset($_POST['save_donation'])) {
                         cartItems.appendChild(itemElement);
                     });
 
-                    // Adicionar event listeners para os botões de quantidade e observação
                     document.querySelectorAll('.decrease-quantity').forEach(btn => {
                         btn.addEventListener('click', function() {
                             const sku = this.dataset.sku;
@@ -896,14 +831,13 @@ if (isset($_POST['save_donation'])) {
                         });
                     });
                 }
-                cartCount.textContent = cart.length; // Atualiza o contador de itens no botão do carrinho
+                cartCount.textContent = cart.length; 
             }
 
-            // Função para pesquisar destinatários
             function searchRecipients(term) {
                 clearTimeout(recipientSearchTimeout);
                 recipientsLoading.style.display = 'block';
-                recipientsContainer.innerHTML = ''; // Limpa resultados anteriores
+                recipientsContainer.innerHTML = ''; 
 
                 recipientSearchTimeout = setTimeout(() => {
                     fetch(`?ajax=2&term=${encodeURIComponent(term)}`)
@@ -915,7 +849,7 @@ if (isset($_POST['save_donation'])) {
                                     const recipientItem = document.createElement('div');
                                     recipientItem.classList.add('recipient-item');
                                     recipientItem.dataset.id = user.id;
-                                    recipientItem.dataset.name = user.nome_filial || user.nome; // Prioriza nome_filial
+                                    recipientItem.dataset.name = user.nome_filial || user.nome; 
                                     recipientItem.innerHTML = `
                                         <div class="recipient-name">${user.nome_filial || user.nome}</div>
                                         <div class="recipient-details">${user.cidade} - ${user.uf}</div>
@@ -946,7 +880,6 @@ if (isset($_POST['save_donation'])) {
             }
 
 
-            // Event Listeners
             searchInput.addEventListener('input', function() {
                 searchProducts(this.value);
             });
@@ -971,7 +904,7 @@ if (isset($_POST['save_donation'])) {
                     Swal.fire('Carrinho Vazio', 'Adicione produtos ao carrinho antes de finalizar a doação.', 'warning');
                     return;
                 }
-                searchRecipients(''); // Carrega todos os destinatários ao abrir o modal
+                searchRecipients(''); 
                 recipientModal.show();
             });
 
@@ -984,8 +917,6 @@ if (isset($_POST['save_donation'])) {
                     Swal.fire('Erro', 'Por favor, selecione um destinatário.', 'warning');
                     return;
                 }
-                // JavaScript também precisa saber o ID da filial de origem para esta validação
-                // Por isso, passamos $originBranchIdForDonation para o JS como `originBranchId`
                 if (selectedRecipientId == originBranchId) {
                     Swal.fire('Erro', 'A filial de destino não pode ser a mesma que a filial de origem.', 'error');
                     return;
@@ -1023,7 +954,7 @@ if (isset($_POST['save_donation'])) {
                         formData.append('observacoes', observationsText.value);
                         formData.append('items', JSON.stringify(cart));
 
-                        fetch('', { // Envia para o próprio script PHP
+                        fetch('', { 
                                 method: 'POST',
                                 body: formData
                             })
@@ -1037,7 +968,6 @@ if (isset($_POST['save_donation'])) {
                                         showConfirmButton: false,
                                         timer: 2000
                                     }).then(() => {
-                                        // Limpar carrinho e fechar modais
                                         cart = [];
                                         selectedRecipientId = null;
                                         selectedRecipientName = null;
@@ -1059,7 +989,6 @@ if (isset($_POST['save_donation'])) {
                 });
             });
 
-            // Inicializar UI do carrinho ao carregar
             updateCartUI();
         });
     </script>

@@ -3,36 +3,31 @@ session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-if (!isset($_SESSION['username']) || $_SESSION['tipo_usuario'] != 1) { // Apenas administradores podem editar
+if (!isset($_SESSION['username']) || $_SESSION['tipo_usuario'] != 1) { 
     header("Location: ../index.php");
     exit();
 }
 
 require_once '../../includes/db.php';
 
-// --- Processamento do Formulário (POST) ---
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $pedido_id = intval($_POST['pedido_id']);
     $tipo_pedido = $_POST['tipo_pedido'];
     $filial_usuario_id = intval($_POST['filial_usuario_id']);
-    // Garante que filial_destino_id seja NULL se não for doação/troca ou estiver vazio
     $filial_destino_id = (isset($_POST['filial_destino_id']) && !empty($_POST['filial_destino_id']) && ($_POST['tipo_pedido'] == 'doacao' || $_POST['tipo_pedido'] == 'troca')) ? intval($_POST['filial_destino_id']) : NULL;
     $observacoes = $_POST['observacoes'];
-    $status = $_POST['status']; // O status também pode ser editado pelo admin
+    $status = $_POST['status']; 
 
-    // Arrays para os itens do pedido
     $item_sku = $_POST['item_sku'] ?? [];
     $item_quantidade = $_POST['item_quantidade'] ?? [];
     $item_observacao = $_POST['item_observacao'] ?? [];
 
-    $conn->begin_transaction(); // Inicia a transação
+    $conn->begin_transaction(); 
 
     try {
-        // 1. Atualizar informações básicas do pedido
         $query_update_pedido = "UPDATE pedidos SET tipo_pedido = ?, status = ?, filial_usuario_id = ?, filial_destino_id = ?, observacoes = ? WHERE id = ?";
         $stmt_update_pedido = $conn->prepare($query_update_pedido);
 
-        // Ajustar bind_param para filial_destino_id que pode ser NULL
         if ($filial_destino_id === NULL) {
             $stmt_update_pedido->bind_param("ssiisi", $tipo_pedido, $status, $filial_usuario_id, $filial_destino_id, $observacoes, $pedido_id);
         } else {
@@ -42,14 +37,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt_update_pedido->execute();
         $stmt_update_pedido->close();
 
-        // 2. Excluir itens existentes do pedido para reinserir os novos
         $query_delete_itens = "DELETE FROM pedido_itens WHERE pedido_id = ?";
         $stmt_delete_itens = $conn->prepare($query_delete_itens);
         $stmt_delete_itens->bind_param("i", $pedido_id);
         $stmt_delete_itens->execute();
         $stmt_delete_itens->close();
 
-        // 3. Inserir os novos/atualizados itens do pedido
         $query_insert_item = "INSERT INTO pedido_itens (pedido_id, sku, quantidade, observacao) VALUES (?, ?, ?, ?)";
         $stmt_insert_item = $conn->prepare($query_insert_item);
 
@@ -78,7 +71,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// --- Carregamento de Dados (GET) ---
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     header("Location: pedidos.php");
     exit();
@@ -146,7 +138,6 @@ $conn->close();
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="../../css/dashboard.css"> 
     <style>
-        /* Estilos específicos para este formulário, se necessário */
         .card-header-flex {
             display: flex;
             justify-content: space-between;
@@ -364,7 +355,6 @@ $conn->close();
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // Lógica para mostrar/esconder filial_destino_id com base no tipo_pedido
         $('#tipo_pedido').change(function() {
             const tipo = $(this).val();
             if (tipo === 'doacao' || tipo === 'troca') {
@@ -373,26 +363,23 @@ $conn->close();
             } else {
                 $('#filial_destino_group').hide();
                 $('#filial_destino_id').prop('required', false);
-                $('#filial_destino_id').val(''); // Limpa a seleção ao esconder
+                $('#filial_destino_id').val(''); 
             }
-        }).trigger('change'); // Dispara no carregamento para aplicar o estado inicial
+        }).trigger('change'); 
 
-        // Array de produtos para ser usado na função addItem()
         const productsData = <?= json_encode($produtos) ?>;
 
-        // Função para adicionar um novo item ao pedido (formulário)
         function addItem() {
             const itemsContainer = document.getElementById('items-container');
             const noItemsMessage = document.getElementById('no-items-message');
 
             if (noItemsMessage) {
-                noItemsMessage.style.display = 'none'; // Esconde a mensagem se estiver visível
+                noItemsMessage.style.display = 'none'; 
             }
 
             const newItem = document.createElement('div');
             newItem.className = 'item-row border p-3 mb-2 rounded position-relative';
 
-            // Gerar opções de produtos dinamicamente
             const productOptions = productsData.map(product => {
                 return `<option value="${product.sku}">${product.produto} (${product.unidade_medida})</option>`;
             }).join('');
@@ -422,7 +409,6 @@ $conn->close();
             itemsContainer.appendChild(newItem);
         }
 
-        // Função para remover um item do pedido
         function removeItem(button) {
             Swal.fire({
                 title: 'Tem certeza?',
@@ -438,7 +424,6 @@ $conn->close();
                     const itemRow = button.closest('.item-row');
                     itemRow.remove();
 
-                    // Se não houver mais itens, mostra a mensagem "Nenhum item..."
                     const itemsContainer = document.getElementById('items-container');
                     const noItemsMessage = document.getElementById('no-items-message');
                     const hasRealItems = itemsContainer.querySelector('.item-row') !== null;
@@ -463,7 +448,6 @@ $conn->close();
             });
         }
 
-        // Esconder a mensagem "Nenhum item..." se houver itens no carregamento inicial
         document.addEventListener('DOMContentLoaded', function() {
             const itemsContainer = document.getElementById('items-container');
             const noItemsMessage = document.getElementById('no-items-message');

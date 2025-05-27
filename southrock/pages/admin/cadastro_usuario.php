@@ -1,18 +1,15 @@
 <?php
 session_start();
-// Verifica se o usuário está logado. Redireciona para o login se não estiver.
 if (!isset($_SESSION['username'])) {
-    header("Location: ../index.php"); // Assumindo que index.php é sua página de login
+    header("Location: ../index.php"); 
     exit();
 }
 
-// Inclui o arquivo de conexão com o banco de dados
 include '../../includes/db.php'; 
 
 $success_message = "";
 $error_message = "";
 
-// Buscar os tipos de usuário disponíveis no sistema
 $tipos_usuario_query = "SELECT id, descricao FROM tipo_usuario";
 $tipos_result = $conn->query($tipos_usuario_query);
 $tipos_usuario = [];
@@ -33,9 +30,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $cidade = $_POST['cidade'];
     $uf = $_POST['uf'];
     $tipo_usuario_id = $_POST['tipo_usuario'];
-    $nome_completo_usuario = $_POST['nome']; // Nome completo do usuário/responsável
+    $nome_completo_usuario = $_POST['nome']; 
 
-    // Verificar se o nome de usuário já existe
     $check_sql = "SELECT id FROM usuarios WHERE username = ?";
     $check_stmt = $conn->prepare($check_sql);
     $check_stmt->bind_param("s", $username);
@@ -45,23 +41,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($check_result->num_rows > 0) {
         $error_message = "Nome de usuário já existe. Por favor, escolha outro.";
     } else {
-        // Lógica para definir eh_filial e nome_filial
-        $eh_filial = 0; // Padrão: não é filial
-        $nome_filial = NULL; // Padrão: sem nome de filial
+        $eh_filial = 0; 
+        $nome_filial = NULL; 
 
-        // Se o tipo de usuário selecionado for '2' (Loja), define eh_filial como TRUE (1)
-        // E o nome_filial será o valor do novo campo 'nome_filial' do formulário
         if ($tipo_usuario_id == 2) {
             $eh_filial = 1;
-            // Pega o nome da filial do novo campo 'nome_filial'. Se não existir, usa o nome do responsável.
             $nome_filial = $_POST['nome_filial'] ?? $nome_completo_usuario; 
         }
 
-        // Preparar a consulta SQL para inserir o novo usuário
         $sql = "INSERT INTO usuarios (username, password, tipo_usuario, cnpj, responsavel, endereco, cep, bairro, cidade, uf, nome, eh_filial, nome_filial) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
 
-        // Bind dos parâmetros. 's' para string, 'i' para inteiro, 's' para string.
         $stmt->bind_param(
             "ssissssssssis",
             $username,
@@ -109,37 +99,34 @@ $conn->close();
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
-        /* Estes estilos complementam seu cadastro_usuario.css e dashboard.css */
         body {
             display: flex; 
-            flex-direction: column; /* Organiza o body em coluna: navbar, depois o resto */
+            flex-direction: column; 
             font-family: 'Arial', sans-serif; 
             height: 100vh;
-            background-color: #f0f2f5; /* Fundo principal claro */
+            background-color: #f0f2f5; 
             margin: 0; 
             padding: 0; 
         }
         
-        /* NAVBAR SUPERIOR */
         .navbar {
-            background-color: #ffffff; /* Fundo branco para a navbar */
-            color: #2045ff; /* Cor do texto e ícones */
+            background-color: #ffffff; 
+            color: #2045ff; 
             padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            position: fixed; /* Fixa a navbar no topo */
+            position: fixed; 
             top: 0;
             width: 100%;
-            z-index: 1000; /* Garante que a navbar fique acima de outros elementos */
+            z-index: 1000; 
         }
 
-        /* Removido .navbar .logo-text, substituído por .navbar .logo-img */
-        .navbar .logo-img { /* Novo estilo para a imagem da logo na navbar */
-            height: 40px; /* Ajuste a altura conforme necessário */
+        .navbar .logo-img { 
+            height: 40px; 
             width: auto;
-            margin-left: 10px; /* Espaço entre o hambúrguer e a logo */
+            margin-left: 10px; 
         }
 
         .navbar .user-info {
@@ -161,45 +148,40 @@ $conn->close();
         .menu-toggle {
             font-size: 1.8rem;
             cursor: pointer;
-            /* margin-right: 20px; remova se a imagem já tiver margin-left suficiente */
-            color: #2045ff; /* Cor do ícone de hambúrguer */
+            color: #2045ff; 
         }
         
-        /* WRAPPER PARA SIDEBAR E CONTEÚDO */
         .main-wrapper {
             display: flex;
-            flex: 1; /* Ocupa o espaço restante após a navbar */
-            margin-top: 60px; /* Espaço para a navbar fixa (altura da navbar) */
+            flex: 1; 
+            margin-top: 60px; 
             width: 100%;
-            background-color: #f0f2f5; /* Fundo do wrapper igual ao do conteúdo */
+            background-color: #f0f2f5; 
         }
 
-        /* SIDEBAR */
         .sidebar {
-            width: 0px; /* **INICIALMENTE ESCONDIDA** */
+            width: 0px; 
             background-color: #2045ff;
             transition: width 0.3s ease;
-            overflow: hidden; /* IMPORTANTE: Garante que o conteúdo que excede a largura não seja visível */
+            overflow: hidden; 
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-            z-index: 999; /* Abaixo da navbar, mas acima do conteúdo */
+            z-index: 999; 
             position: relative; 
-            flex-shrink: 0; /* Impede que a sidebar encolha quando o conteúdo é muito largo */
+            flex-shrink: 0; 
         }
 
         .sidebar.open {
-            width: 250px; /* Largura expandida ao clicar */
+            width: 250px; 
         }
 
-        /* REMOVIDO: Todo o estilo para .sidebar-header e .sidebar-header img */
-        /* Pois o header com a logo agora está na navbar */
         .sidebar-menu {
             list-style: none;
             padding: 0;
-            flex-grow: 1; /* Faz a lista ocupar o espaço central */
-            padding-top: 15px; /* Adiciona um padding no topo da navegação, já que não tem mais header */
+            flex-grow: 1; 
+            padding-top: 15px; 
         }
 
         .sidebar-menu li a {
@@ -208,67 +190,64 @@ $conn->close();
             padding: 15px;
             color: white;
             text-decoration: none;
-            white-space: nowrap; /* Impede que o texto quebre linha */
+            white-space: nowrap; 
             transition: background-color 0.3s ease;
         }
 
         .sidebar-menu li a .fas {
             font-size: 1.2rem;
-            margin-right: 20px; /* Espaço entre ícone e texto */
-            width: 20px; /* Garante que os ícones fiquem alinhados */
+            margin-right: 20px; 
+            width: 20px; 
             text-align: center;
         }
         
         .sidebar-menu li a span {
-            opacity: 0; /* Esconde o texto inicialmente */
+            opacity: 0; 
             transition: opacity 0.3s ease;
         }
 
         .sidebar.open .sidebar-menu li a span {
-            opacity: 1; /* Mostra o texto quando a sidebar está aberta */
+            opacity: 1; 
         }
         
         .sidebar-menu li.active > a {
-            background-color: #0033cc; /* Cor de fundo para o item ativo */
-            border-left: 5px solid #ffc107; /* Borda lateral amarela */
-            padding-left: 10px; /* Ajusta o padding para compensar a borda */
+            background-color: #0033cc; 
+            border-left: 5px solid #ffc107; 
+            padding-left: 10px; 
         }
 
         .sidebar-menu li a:hover {
             background-color: #0033cc;
         }
 
-        /* Conteúdo principal */
         .content { 
             flex-grow: 1; 
             padding: 20px; 
             overflow-y: auto; 
             background-color: #f0f2f5; 
-            display: flex; /* Adicionado para usar flexbox para centralizar o formulário */
-            justify-content: center; /* Centraliza horizontalmente o conteúdo do .content */
-            align-items: flex-start; /* Alinha o conteúdo ao topo (ou center, se preferir centralizar verticalmente) */
-            transition: all 0.3s ease; /* Transição para suavizar a centralização/movimento */
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-start; 
+            transition: all 0.3s ease; 
         }
 
 
         .form-container {
             max-width: 800px;
-            width: 100%; /* Permite que o container use a largura máxima dentro do content */
-            margin: 30px auto; /* O 'auto' aqui continuará a centralizar HORIZONTALMENTE o formulário dentro do .content */
+            width: 100%; 
+            margin: 30px auto; 
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
             background-color: #fff;
         }
 
-        /* Estilo para as labels */
         label.form-label { 
             display: block; 
             margin-bottom: 5px;
             font-weight: bold;
             text-align: left;
         }
-        /* Estilo para o <select> para se parecer com seus inputs */
         select {
             width: 100%;
             padding: 10px;
@@ -280,15 +259,13 @@ $conn->close();
         }
         select:focus {
             outline: none;
-            border-color: #007bff; /* Borda azul ao focar, similar ao Bootstrap */
+            border-color: #007bff; 
             box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
         }
 
-        /* Estilo para os grupos de campos (divs que agrupam label e input/select) */
         .form-container > div { 
             margin-bottom: 15px; 
         }
-        /* Para o cabeçalho do formulário */
         .form-header {
             margin-bottom: 30px;
             text-align: center;
@@ -301,7 +278,6 @@ $conn->close();
             margin-right: 8px;
         }
 
-        /* Grupo de botões */
         .button-group {
             margin-top: 20px;
             display: flex; 
@@ -310,7 +286,6 @@ $conn->close();
             flex-wrap: wrap; 
         }
 
-        /* Estilo para o botão secundário (Voltar ao Dashboard) */
         .button.secondary {
             background-color: #6c757d; 
             color: white;
@@ -326,16 +301,14 @@ $conn->close();
             background-color: #5a6268;
         }
 
-        /* ESTILO PARA VALIDAÇÃO: Borda vermelha em campos inválidos */
         input:invalid:not(:placeholder-shown),
         select:invalid:not([value=""]):not(:focus) { 
-            border-color: #dc3545; /* Cor da borda vermelha */
+            border-color: #dc3545; 
         }
         
-        /* Opcional: Estilo para a borda verde quando o campo é válido */
         input:valid:not(:placeholder-shown),
         select:valid:not([value=""]) {
-            border-color: #28a745; /* Cor da borda verde */
+            border-color: #28a745; 
         }
     </style>
 </head>
@@ -361,7 +334,7 @@ $conn->close();
                     </a>
                 </li>
 
-                <?php if (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 1): // Administrador ?>
+                <?php if (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 1): ?>
                     <li <?php if(basename($_SERVER['PHP_SELF']) == 'aprovar_rejeitar_pedidos.php') echo 'class="active"'; ?>>
                         <a href="aprovar_rejeitar_pedidos.php">
                             <i class="fas fa-shopping-cart"></i>
@@ -370,7 +343,7 @@ $conn->close();
                     </li>
                 <?php endif; ?>
 
-                <?php if (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 1): // Administrador ?>
+                <?php if (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 1): ?>
                     <li <?php if(basename($_SERVER['PHP_SELF']) == 'produtos.php') echo 'class="active"'; ?>>
                         <a href="produtos.php">
                             <i class="fas fa-box-open"></i>
@@ -379,7 +352,7 @@ $conn->close();
                     </li>
                 <?php endif; ?>
 
-                <?php if (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 1): // Administrador ?>
+                <?php if (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 1): ?>
                     <li <?php if(basename($_SERVER['PHP_SELF']) == 'usuarios.php') echo 'class="active"'; ?>>
                         <a href="usuarios.php">
                             <i class="fas fa-users"></i>
@@ -388,7 +361,7 @@ $conn->close();
                     </li>
                 <?php endif; ?>
                 
-                <?php if (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 1): // Administrador ?>
+                <?php if (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 1): ?>
                     <li <?php if(basename($_SERVER['PHP_SELF']) == 'cadastro_usuario.php') echo 'class="active"'; ?>>
                         <a href="cadastro_usuario.php">
                             <i class="fas fa-user-plus"></i>
@@ -397,7 +370,7 @@ $conn->close();
                     </li>
                 <?php endif; ?>
 
-                <?php if (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 2): // Loja ?>
+                <?php if (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 2): ?>
                     <li <?php if(basename($_SERVER['PHP_SELF']) == 'fazer_pedidos.php') echo 'class="active"'; ?>>
                         <a href="fazer_pedidos.php">
                             <i class="fas fa-shopping-bag"></i>
@@ -520,7 +493,6 @@ $conn->close();
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
-        // Validação HTML5 do formulário - Mantido para a borda vermelha e impedir envio
         (function () {
             'use strict';
             var forms = document.querySelectorAll('.needs-validation');
@@ -536,7 +508,6 @@ $conn->close();
                 });
         })();
         
-        // Aplicar máscaras nos campos e buscar CEP via API
         $(document).ready(function() {
             $('#cnpj').mask('00.000.000/0000-00');
             $('#cep').mask('00000-000');
@@ -559,23 +530,19 @@ $conn->close();
                 }
             });
 
-            // Lógica para mostrar/esconder o campo 'nome_filial'
             $('#tipo_usuario').change(function() {
-                // Supondo que '2' é o ID para o tipo de usuário 'Loja'
                 if ($(this).val() == '2') { 
                     $('#nome-filial-group').show();
-                    $('#nome_filial').prop('required', true); // Torna o campo obrigatório
+                    $('#nome_filial').prop('required', true); 
                 } else {
                     $('#nome-filial-group').hide();
-                    $('#nome_filial').prop('required', false); // Remove a obrigatoriedade
-                    $('#nome_filial').val(''); // Limpa o valor ao esconder
+                    $('#nome_filial').prop('required', false); 
+                    $('#nome_filial').val(''); 
                 }
             });
 
-            // Trigger inicial para o caso de o formulário ser carregado com um tipo de usuário pré-selecionado
             $('#tipo_usuario').trigger('change');
 
-            // Lógica do Menu Hambúrguer (Toggle Sidebar)
             $('.menu-toggle').on('click', function() {
                 $('.sidebar').toggleClass('open');
             });

@@ -1,11 +1,11 @@
 <?php
-// Configura exibição de erros para desenvolvimento
+
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Verifica se é uma requisição AJAX
+
 if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
-    // Inclui o arquivo de conexão
+ 
     require_once '../../includes/db.php';
     
     $searchTerm = isset($_GET['term']) ? $_GET['term'] : '';
@@ -13,25 +13,25 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
     
     try {
         if (trim($searchTerm) !== '') {
-            // Prepara a consulta SQL
+  
             $sql = "SELECT sku, produto, grupo FROM produtos WHERE 
                     sku LIKE ? OR 
                     produto LIKE ? OR 
                     grupo LIKE ? 
                     ORDER BY sku";
             
-            // Prepara a declaração
+     
             $stmt = $conn->prepare($sql);
             
-            // Adiciona os parâmetros de pesquisa
+       
             $likeTerm = '%' . $searchTerm . '%';
             $stmt->bind_param('sss', $likeTerm, $likeTerm, $likeTerm);
             
-            // Executa a consulta
+        
             $stmt->execute();
             $resultado = $stmt->get_result();
             
-            // Converte os resultados para um array
+       
             $products = array();
             while ($produto = $resultado->fetch_assoc()) {
                 $products[] = $produto;
@@ -43,7 +43,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
             $stmt->close();
         }
         
-        // Retorna os resultados como JSON
+
         header('Content-Type: application/json');
         echo json_encode($response);
         
@@ -57,7 +57,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
     }
 }
 
-// Inclui o arquivo de conexão para a página principal
+
 require_once '../../includes/db.php';
 
 try {
@@ -67,9 +67,9 @@ try {
     <head>
         <meta charset="UTF-8">
         <title>Lista de Produtos - SouthRock</title>
-        <!-- Bootstrap CSS -->
+    
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-        <!-- Bootstrap Icons -->
+    
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
         <link rel="stylesheet" href="../../css/trocar_produtos.css">
     </head>
@@ -122,7 +122,7 @@ try {
                                         </tr>
                                     </thead>
                                     <tbody id="products-table-body">
-                                        <!-- Os resultados da pesquisa serão inseridos aqui via JavaScript -->
+                                       
                                     </tbody>
                                 </table>
                             </div>
@@ -137,16 +137,16 @@ try {
             </div>
         </div>
 
-        <!-- Botão do carrinho -->
+     
         <div class="cart-button" id="cart-btn">
             <div class="cart-icon"><i class="bi bi-cart"></i></div>
             <div class="cart-count" id="cart-count">0</div>
         </div>
         
-        <!-- Overlay para fechar o carrinho ao clicar fora -->
+       
         <div class="overlay" id="overlay"></div>
         
-        <!-- Carrinho lateral -->
+       
         <div class="cart-sidebar" id="cart-sidebar">
             <div class="cart-header">
                 <div class="cart-title">Seu carrinho</div>
@@ -154,7 +154,7 @@ try {
             </div>
             
             <div class="cart-items" id="cart-items">
-                <!-- Os itens do carrinho serão inseridos dinamicamente via JavaScript -->
+             
                 <div class="empty-cart-message" id="empty-cart-message">
                     Seu carrinho está vazio
                 </div>
@@ -165,9 +165,9 @@ try {
             </div>
         </div>
 
-        <!-- Bootstrap JS e Dependências -->
+       
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- SweetAlert2 para notificações -->
+       
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="../../js/trocar_produtos.js"></script>
         
@@ -178,7 +178,7 @@ try {
     $conn->close();
 
 } catch (Exception $e) {
-    // Tratamento de erro
+   
     echo "Erro: " . $e->getMessage();
 }
 ?>

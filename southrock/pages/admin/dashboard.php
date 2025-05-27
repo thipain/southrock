@@ -5,21 +5,17 @@ if (!isset($_SESSION['username'])) {
     exit();
 }
 
-// Conexão com o banco de dados
-$servername = "localhost"; // Altere para o seu servidor de banco de dados
-$username = "root"; // Altere para o seu usuário do banco de dados
-$password = ""; // Altere para sua senha do banco de dados
-$dbname = "southrock"; // Altere para o nome do seu banco de dados
+$servername = "localhost"; 
+$username = "root"; 
+$password = ""; 
+$dbname = "southrock"; 
 
-// Criar conexão
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Verificar conexão
 if ($conn->connect_error) {
     die("Falha na conexão: " . $conn->connect_error);
 }
 
-// Consulta para obter o número de pedidos pendentes
 $sql_pedidos = "SELECT COUNT(*) as total_pedidos FROM pedidos WHERE status = 'novo'";
 $result_pedidos = $conn->query($sql_pedidos);
 $total_pedidos = 0;
@@ -28,7 +24,6 @@ if ($result_pedidos && $result_pedidos->num_rows > 0) {
     $total_pedidos = $row["total_pedidos"];
 }
 
-// Consulta para obter o número total de produtos cadastrados
 $sql_produtos = "SELECT COUNT(*) as total_produtos FROM produtos";
 $result_produtos = $conn->query($sql_produtos);
 $total_produtos = 0;
@@ -37,7 +32,6 @@ if ($result_produtos && $result_produtos->num_rows > 0) {
     $total_produtos = $row["total_produtos"];
 }
 
-// Consulta para obter o número total de usuários (independente do status)
 $sql_usuarios = "SELECT COUNT(*) as total_usuarios FROM usuarios";
 $result_usuarios = $conn->query($sql_usuarios);
 $total_usuarios = 0;
@@ -46,11 +40,9 @@ if ($result_usuarios && $result_usuarios->num_rows > 0) {
     $total_usuarios = $row["total_usuarios"];
 }
 
-// Informações do sistema
-$versao_sistema = "1.3.8"; // Versão atual do sistema
-$data_atualizacao = "22/05/2025"; // Data da última atualização
+$versao_sistema = "1.3.8"; 
+$data_atualizacao = "22/05/2025"; 
 
-// Fechar conexão
 $conn->close();
 ?>
 
@@ -67,7 +59,6 @@ $conn->close();
 </head>
 
 <body>
-    <!-- Sidebar -->
     <div class="sidebar">
         <div>
             <div class="sidebar-header">
@@ -81,10 +72,8 @@ $conn->close();
         <a href="../../logout/logout.php"><i class="fas fa-sign-out-alt icon"></i><span class="text">Sair</span></a>
     </div>
 
-    <!-- Conteúdo principal -->
     <div class="content">
         <div class="container py-4">
-            <!-- Header com título e informação de usuário -->
             <div class="dashboard-header mb-4">
                 <h1 class="painel-titulo">Painel de Controle</h1>
                 <div class="user-info">
@@ -93,9 +82,7 @@ $conn->close();
                 </div>
             </div>
 
-            <!-- Cards de estatísticas -->
             <div class="row">
-                <!-- Card de Pedidos -->
                 <div class="col-md-3 mb-4">
                     <div class="card estatistica-card">
                         <div class="card-body">
@@ -112,7 +99,6 @@ $conn->close();
                     </div>
                 </div>
 
-                <!-- Card de Produtos -->
                 <div class="col-md-3 mb-4">
                     <div class="card estatistica-card">
                         <div class="card-body">
@@ -129,7 +115,6 @@ $conn->close();
                     </div>
                 </div>
 
-                <!-- Card de Usuários -->
                 <div class="col-md-3 mb-4">
                     <div class="card estatistica-card">
                         <div class="card-body">
@@ -146,7 +131,6 @@ $conn->close();
                     </div>
                 </div>
 
-                <!-- Card de Sistema -->
                 <div class="col-md-3 mb-4">
                     <div class="card estatistica-card">
                         <div class="card-body">
@@ -164,7 +148,6 @@ $conn->close();
                 </div>
             </div>
 
-            <!-- Logo e mensagem de boas-vindas -->
             <div class="logo-container text-center mt-4 mb-2">
                 <img src="../../images/zamp.png" alt="Logo Zamp" class="logo-img">
                 <p class="instruction-text mt-3">

@@ -1,11 +1,7 @@
 <?php
-session_start(); // **ADICIONADO: Inicia a sessão para manter as variáveis de sessão**
-
-// Opcional, mas recomendado: Verificação de segurança para garantir que o usuário está logado
-// e é do tipo 2 (Loja) antes de exibir o conteúdo.
-// Ajuste o redirecionamento (../index.php) para a sua página de login, se for diferente.
+session_start(); 
 if (!isset($_SESSION['user_id']) || $_SESSION['tipo_usuario'] != 2) {
-    header('Location: ../index.php'); // Redireciona para a página de login se não estiver logado ou não for tipo 2
+    header('Location: ../index.php'); 
     exit();
 }
 ?>

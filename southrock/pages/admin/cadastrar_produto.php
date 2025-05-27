@@ -13,12 +13,12 @@ $grupo = '';
 $mensagem = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar'])) {
-    // Captura os dados do formulário de cadastro
+
     $sku = $_POST['sku'];
     $produto = $_POST['produto'];
     $grupo = $_POST['grupo'];
 
-    // Prepara a consulta SQL para inserir um novo produto
+ 
     $sqlInsert = "INSERT INTO produtos (sku, produto, grupo) VALUES (?, ?, ?)";
     $stmtInsert = $conn->prepare($sqlInsert);
     $stmtInsert->bind_param('iss', $sku, $produto, $grupo);
@@ -39,15 +39,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastrar Produto - SouthRock</title>
-    <!-- Bootstrap CSS -->
+  
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
+  
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="../../css/dashboard.css">
     <link rel="stylesheet" href="../../css/produtos.css">
 </head>
 <body>
-    <!-- Layout com sidebar -->
+  
     <div class="sidebar">
         <div class="sidebar-header">SR</div>
         <a href="dashboard.php">
@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar'])) {
                 </div>
             </div>
 
-            <!-- Mensagem de sucesso ou erro -->
+           
             <?php if ($mensagem): ?>
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <?php echo htmlspecialchars($mensagem); ?>
@@ -134,12 +134,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar'])) {
         </div>
     </div>
 
-    <!-- Bootstrap JS e Dependências -->
+  
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 
 <?php
-// Fecha a conexão
+
 $conn->close();
 ?>
