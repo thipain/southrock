@@ -40,8 +40,8 @@ if ($result_usuarios && $result_usuarios->num_rows > 0) {
     $total_usuarios = $row["total_usuarios"];
 }
 
-$versao_sistema = "1.3.8"; 
-$data_atualizacao = "22/05/2025"; 
+$versao_sistema = "1.4.5"; 
+$data_atualizacao = "27/05/2025"; 
 
 $conn->close();
 ?>
