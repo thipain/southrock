@@ -153,6 +153,8 @@ $result = $conn->query($sql);
         .header h1 {
             margin: 0;
             font-size: 1.5rem;
+            margin-top: 50px;
+            margin-left: 25px;
         }
 
         .main-content {
