@@ -12,7 +12,7 @@
             border-radius: 5px;
             background-color: #f9f9f9;
         }
-
+         
         .form-container input {
             width: 100%;
             padding: 10px;
@@ -24,7 +24,7 @@
 
         .button {
             padding: 10px 15px;
-            background-color: #4CAF50;
+            background-color: #3410ff;
             color: white;
             border: none;
             cursor: pointer;
@@ -32,7 +32,7 @@
         }
 
         .button:hover {
-            background-color: #45a049;
+            background-color: #e47c27;
         }
 
         .mensagem {

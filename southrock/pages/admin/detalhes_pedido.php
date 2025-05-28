@@ -140,6 +140,7 @@ $tipoPedido = $tipoPedidoInfo[$pedido['tipo_pedido']] ?? ['icon' => 'fa-question
             background-color: var(--light-bg);
             width: calc(100% - 240px);
             box-sizing: border-box;
+            background-color: #fffff3;
         }
 
         .content.expanded {
@@ -152,9 +153,11 @@ $tipoPedido = $tipoPedidoInfo[$pedido['tipo_pedido']] ?? ['icon' => 'fa-question
         }
 
         .header h1 {
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: var(--primary-color);
+            margin-top: 10px;
+            background-color: #fffff3;
+            font-size: 1.6rem;
+            color: #000000;
+            font-weight: bold;
         }
 
         .back-button {
@@ -514,16 +517,25 @@ $tipoPedido = $tipoPedidoInfo[$pedido['tipo_pedido']] ?? ['icon' => 'fa-question
             color: var(--dark-text);
         }
 
+        .barrinha{
+            color:rgb(83, 83, 83);
+        }
+
         @media print {
-            .sidebar, .header, .order-actions, .btn, .back-button {
+
+            .sidebar,
+            .header,
+            .order-actions,
+            .btn,
+            .back-button {
                 display: none !important;
             }
-            
+
             .content {
                 margin: 0;
                 padding: 0;
             }
-            
+
             .order-main-card {
                 box-shadow: none;
                 border: 1px solid #EEEEEE;
@@ -533,49 +545,30 @@ $tipoPedido = $tipoPedidoInfo[$pedido['tipo_pedido']] ?? ['icon' => 'fa-question
 </head>
 
 <body>
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <i class="fas fa-bars"></i>
-        </div>
-
+  <div class="sidebar">
         <div>
-            <a href="dashboard.php">
-                <i class="fas fa-home icon"></i>
-                <span class="text">Início</span>
-            </a>
-
-            <a href="pedidos.php">
-                <i class="fas fa-shopping-cart icon"></i>
-                <span class="text">Pedidos</span>
-            </a>
-
-            <a href="usuarios.php">
-                <i class="fas fa-users icon"></i>
-                <span class="text">Usuários</span>
-            </a>
-
-            <a href="produtos.php">
-                <i class="fas fa-box icon"></i>
-                <span class="text">Produtos</span>
-            </a>
+            <div class="sidebar-header">
+                <i class="fas fa-bars icon"></i><span class="text">Menu</span>
+            </div>
+            <a href="dashboard.php"><i class="fas fa-home icon"></i><span class="text">Início</span></a>
+            <a href="pedidos.php" class="active"><i class="fas fa-shopping-cart icon"></i><span class="text">Pedidos</span></a>
+            <a href="produtos.php"><i class="fas fa-box icon"></i><span class="text">Produtos</span></a>
+            <a href="usuarios.php"><i class="fas fa-users icon"></i><span class="text">Usuários</span></a>
         </div>
-
-        <a href="../../logout/logout.php">
-            <i class="fas fa-sign-out-alt icon"></i>
-            <span class="text">Sair</span>
-        </a>
+        <a href="../../logout/logout.php"><i class="fas fa-sign-out-alt icon"></i><span class="text">Sair</span></a>
     </div>
 
     <div class="content">
         <div class="header">
             <h1>Detalhes do Pedido</h1>
+            <hr class="barrinha">
         </div>
 
         <div class="main-content">
             <a href="pedidos.php" class="back-button">
                 <i class="fas fa-arrow-left"></i> Voltar para Lista de Pedidos
             </a>
-            
+
             <div class="order-main-card">
                 <div class="order-header">
                     <div class="order-id-container">
@@ -590,7 +583,7 @@ $tipoPedido = $tipoPedidoInfo[$pedido['tipo_pedido']] ?? ['icon' => 'fa-question
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="status-container">
                             <div class="status-badge" style="background-color: <?= $currentStatus['bg'] ?>; color: <?= $currentStatus['text'] ?>;">
                                 <i class="fas <?= $currentStatus['icon'] ?>"></i>
@@ -604,16 +597,16 @@ $tipoPedido = $tipoPedidoInfo[$pedido['tipo_pedido']] ?? ['icon' => 'fa-question
                     <?php
                     $progressWidth = 0;
                     if ($pedido['status'] == 'novo') {
-                        $progressWidth = "17%"; 
+                        $progressWidth = "17%";
                     } elseif ($pedido['status'] == 'processo') {
-                        $progressWidth = "50%"; 
+                        $progressWidth = "50%";
                     } elseif ($pedido['status'] == 'finalizado') {
-                        $progressWidth = "100%"; 
+                        $progressWidth = "100%";
                     }
                     ?>
                     <div class="progress-steps">
                         <div class="progress-line" style="width: <?= $progressWidth ?>"></div>
-                        
+
                         <div class="progress-step completed">
                             <div class="step-icon">
                                 <i class="fas fa-check"></i>
@@ -621,7 +614,7 @@ $tipoPedido = $tipoPedidoInfo[$pedido['tipo_pedido']] ?? ['icon' => 'fa-question
                             <div class="step-text">Criado</div>
                             <div class="step-date"><?= date('d/m/Y', strtotime($pedido['data'])) ?></div>
                         </div>
-                        
+
                         <div class="progress-step <?= ($pedido['status'] == 'processo' || $pedido['status'] == 'finalizado') ? 'completed' : '' ?>">
                             <div class="step-icon">
                                 <?= ($pedido['status'] == 'processo' || $pedido['status'] == 'finalizado') ? '<i class="fas fa-check"></i>' : '<i class="fas fa-spinner"></i>' ?>
@@ -631,7 +624,7 @@ $tipoPedido = $tipoPedidoInfo[$pedido['tipo_pedido']] ?? ['icon' => 'fa-question
                                 <?= isset($pedido['data_processamento']) && $pedido['data_processamento'] ? date('d/m/Y', strtotime($pedido['data_processamento'])) : 'Pendente' ?>
                             </div>
                         </div>
-                        
+
                         <div class="progress-step <?= $pedido['status'] == 'finalizado' ? 'completed' : '' ?>">
                             <div class="step-icon">
                                 <?= $pedido['status'] == 'finalizado' ? '<i class="fas fa-check"></i>' : '<i class="fas fa-flag-checkered"></i>' ?>
@@ -645,104 +638,104 @@ $tipoPedido = $tipoPedidoInfo[$pedido['tipo_pedido']] ?? ['icon' => 'fa-question
                 </div>
 
                 <?php if ($pedido['tipo_pedido'] == 'doacao' && !empty($pedido['filial_destino_id'])): ?>
-                <div class="content-section">
-                    <h3 class="section-title">Informações das Filiais</h3>
-                    
-                    <div class="filial-cards">
-                        <div class="filial-card origem">
-                            <div class="filial-header">
-                                <div class="filial-icon origem">
-                                    <i class="fas fa-building"></i>
+                    <div class="content-section">
+                        <h3 class="section-title">Informações das Filiais</h3>
+
+                        <div class="filial-cards">
+                            <div class="filial-card origem">
+                                <div class="filial-header">
+                                    <div class="filial-icon origem">
+                                        <i class="fas fa-building"></i>
+                                    </div>
+                                    <div class="filial-title">Filial de Origem</div>
                                 </div>
-                                <div class="filial-title">Filial de Origem</div>
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <div class="info-label">Nome da Filial</div>
+                                        <div class="info-value"><?= $pedido['nome_filial_origem'] ?></div>
+                                    </div>
+
+                                    <div class="info-item">
+                                        <div class="info-label">CNPJ</div>
+                                        <div class="info-value">
+                                            <?= preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $pedido['cnpj_origem']) ?>
+                                        </div>
+                                    </div>
+
+                                    <div class="info-item">
+                                        <div class="info-label">Endereço</div>
+                                        <div class="info-value"><?= $pedido['endereco_origem'] ?></div>
+                                    </div>
+
+                                    <div class="info-item">
+                                        <div class="info-label">Cidade/Estado</div>
+                                        <div class="info-value"><?= $pedido['cidade_origem'] ?>/<?= $pedido['estado_origem'] ?></div>
+                                    </div>
+                                </div>
                             </div>
+
+                            <div class="filial-card destino">
+                                <div class="filial-header">
+                                    <div class="filial-icon destino">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    <div class="filial-title">Filial de Destino</div>
+                                </div>
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <div class="info-label">Nome da Filial</div>
+                                        <div class="info-value"><?= $pedido['nome_filial_destino'] ?></div>
+                                    </div>
+
+                                    <div class="info-item">
+                                        <div class="info-label">CNPJ</div>
+                                        <div class="info-value">
+                                            <?= preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $pedido['cnpj_destino']) ?>
+                                        </div>
+                                    </div>
+
+                                    <div class="info-item">
+                                        <div class="info-label">Endereço</div>
+                                        <div class="info-value"><?= $pedido['endereco_destino'] ?></div>
+                                    </div>
+
+                                    <div class="info-item">
+                                        <div class="info-label">Cidade/Estado</div>
+                                        <div class="info-value"><?= $pedido['cidade_destino'] ?>/<?= $pedido['estado_destino'] ?></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <div class="content-section">
+                        <h3 class="section-title">Informações da Filial</h3>
+                        <div class="address-card">
                             <div class="info-grid">
                                 <div class="info-item">
                                     <div class="info-label">Nome da Filial</div>
                                     <div class="info-value"><?= $pedido['nome_filial_origem'] ?></div>
                                 </div>
-                                
+
                                 <div class="info-item">
                                     <div class="info-label">CNPJ</div>
                                     <div class="info-value">
                                         <?= preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $pedido['cnpj_origem']) ?>
                                     </div>
                                 </div>
-                                
+
                                 <div class="info-item">
                                     <div class="info-label">Endereço</div>
                                     <div class="info-value"><?= $pedido['endereco_origem'] ?></div>
                                 </div>
-                                
+
                                 <div class="info-item">
                                     <div class="info-label">Cidade/Estado</div>
                                     <div class="info-value"><?= $pedido['cidade_origem'] ?>/<?= $pedido['estado_origem'] ?></div>
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="filial-card destino">
-                            <div class="filial-header">
-                                <div class="filial-icon destino">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                </div>
-                                <div class="filial-title">Filial de Destino</div>
-                            </div>
-                            <div class="info-grid">
-                                <div class="info-item">
-                                    <div class="info-label">Nome da Filial</div>
-                                    <div class="info-value"><?= $pedido['nome_filial_destino'] ?></div>
-                                </div>
-                                
-                                <div class="info-item">
-                                    <div class="info-label">CNPJ</div>
-                                    <div class="info-value">
-                                        <?= preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $pedido['cnpj_destino']) ?>
-                                    </div>
-                                </div>
-                                
-                                <div class="info-item">
-                                    <div class="info-label">Endereço</div>
-                                    <div class="info-value"><?= $pedido['endereco_destino'] ?></div>
-                                </div>
-                                
-                                <div class="info-item">
-                                    <div class="info-label">Cidade/Estado</div>
-                                    <div class="info-value"><?= $pedido['cidade_destino'] ?>/<?= $pedido['estado_destino'] ?></div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
-                </div>
-                <?php else: ?>
-                <div class="content-section">
-                    <h3 class="section-title">Informações da Filial</h3>
-                    <div class="address-card">
-                        <div class="info-grid">
-                            <div class="info-item">
-                                <div class="info-label">Nome da Filial</div>
-                                <div class="info-value"><?= $pedido['nome_filial_origem'] ?></div>
-                            </div>
-                            
-                            <div class="info-item">
-                                <div class="info-label">CNPJ</div>
-                                <div class="info-value">
-                                    <?= preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $pedido['cnpj_origem']) ?>
-                                </div>
-                            </div>
-                            
-                            <div class="info-item">
-                                <div class="info-label">Endereço</div>
-                                <div class="info-value"><?= $pedido['endereco_origem'] ?></div>
-                            </div>
-                            
-                            <div class="info-item">
-                                <div class="info-label">Cidade/Estado</div>
-                                <div class="info-value"><?= $pedido['cidade_origem'] ?>/<?= $pedido['estado_origem'] ?></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <?php endif; ?>
 
                 <div class="content-section">
@@ -759,26 +752,26 @@ $tipoPedido = $tipoPedidoInfo[$pedido['tipo_pedido']] ?? ['icon' => 'fa-question
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php 
+                                <?php
                                 $total_itens = 0;
                                 if ($itens->num_rows > 0):
                                     while ($item = $itens->fetch_assoc()):
                                         $total_itens += $item['quantidade'];
                                 ?>
-                                <tr>
-                                    <td><?= $item['sku'] ?></td>
-                                    <td><?= $item['produto'] ?></td>
-                                    <td><?= $item['quantidade'] ?></td>
-                                    <td><?= $item['unidade_medida'] ?></td>
-                                    <td><?= !empty($item['observacao']) ? $item['observacao'] : '-' ?></td>
-                                </tr>
-                                <?php 
+                                        <tr>
+                                            <td><?= $item['sku'] ?></td>
+                                            <td><?= $item['produto'] ?></td>
+                                            <td><?= $item['quantidade'] ?></td>
+                                            <td><?= $item['unidade_medida'] ?></td>
+                                            <td><?= !empty($item['observacao']) ? $item['observacao'] : '-' ?></td>
+                                        </tr>
+                                    <?php
                                     endwhile;
                                 else:
-                                ?>
-                                <tr>
-                                    <td colspan="5" class="text-center">Nenhum item encontrado para este pedido.</td>
-                                </tr>
+                                    ?>
+                                    <tr>
+                                        <td colspan="5" class="text-center">Nenhum item encontrado para este pedido.</td>
+                                    </tr>
                                 <?php endif; ?>
                             </tbody>
 
@@ -791,21 +784,21 @@ $tipoPedido = $tipoPedidoInfo[$pedido['tipo_pedido']] ?? ['icon' => 'fa-question
                         <button class="btn btn-outline-secondary" onclick="window.print();">
                             <i class="fas fa-print"></i> Imprimir
                         </button>
-                        
+
                         <?php if ($pedido['status'] == 'novo'): ?>
-                        <a href="processar_pedido.php?id=<?= $pedido_id ?>" class="btn btn-warning">
-                            <i class="fas fa-spinner"></i> Processar Pedido
-                        </a>
+                            <a href="processar_pedido.php?id=<?= $pedido_id ?>" class="btn btn-warning">
+                                <i class="fas fa-spinner"></i> Processar Pedido
+                            </a>
                         <?php elseif ($pedido['status'] == 'processo'): ?>
-                        <a href="finalizar_pedido.php?id=<?= $pedido_id ?>" class="btn btn-success">
-                            <i class="fas fa-check-circle"></i> Finalizar Pedido
-                        </a>
+                            <a href="finalizar_pedido.php?id=<?= $pedido_id ?>" class="btn btn-success">
+                                <i class="fas fa-check-circle"></i> Finalizar Pedido
+                            </a>
                         <?php endif; ?>
-                        
+
                         <?php if ($pedido['status'] != 'finalizado'): ?>
-                        <a href="editar_pedido.php?id=<?= $pedido_id ?>" class="btn btn-primary">
-                            <i class="fas fa-edit"></i> Editar
-                        </a>
+                            <a href="editar_pedido.php?id=<?= $pedido_id ?>" class="btn btn-primary">
+                                <i class="fas fa-edit"></i> Editar
+                            </a>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -824,9 +817,9 @@ $tipoPedido = $tipoPedidoInfo[$pedido['tipo_pedido']] ?? ['icon' => 'fa-question
                 document.querySelector('.content').style.marginLeft = sidebarWidth + 'px';
                 document.querySelector('.content').style.width = `calc(100% - ${sidebarWidth}px)`;
             }
-            
+
             adjustLayout();
-            
+
             window.addEventListener('resize', adjustLayout);
         });
     </script>

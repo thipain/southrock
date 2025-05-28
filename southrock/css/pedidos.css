@@ -31,15 +31,12 @@ body {
     transition: background 0.3s; 
 }
 
-.sidebar a:hover {
-    background-color: #480ca8;
-}
-
 .sidebar-header {
     color: white;
     text-align: center;
-    padding: 13px 0;
+    padding: 15px 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-weight: bold;;
 }
 
 .icon {
@@ -51,11 +48,18 @@ body {
 }
 
 .text {
-    display: none;
+    display: inline;
+    opacity: 0;
+    transition: opacity 0.3s;
+    white-space: nowrap;
 }
 
-.sidebar a:hover .text {
-    display: inline;
+.sidebar a:hover, .sidebar a.active {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar a.active {
+    border-left: 4px solid #ffffff;
 }
 
 .sidebar a .text {
