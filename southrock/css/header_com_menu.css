@@ -1,0 +1,212 @@
+/* southrock/css/header_com_menu.css */
+body.hcm-body-fixed-header {
+    padding-top: 60px; 
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f2f5;
+}
+
+.hcm-navbar {
+    background-color: #ffffff;
+    color: #2045ff;
+    padding: 0 20px; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1030;
+    height: 60px;
+    box-sizing: border-box;
+}
+
+.hcm-navbar-left {
+    display: flex;
+    align-items: center;
+}
+
+.hcm-logo-link,
+.hcm-logo-link:hover,
+.hcm-logo-link:focus,
+.hcm-logo-link:active {
+    text-decoration: none; 
+    border: none; 
+    outline: none; 
+}
+
+.hcm-logo-link img { /* Referenciado como .hcm-logo-img na tag img */
+    display: block; 
+}
+.hcm-logo-img { /* Classe da tag img */
+    height: 40px; 
+    width: auto;
+    margin-left: 15px;
+}
+
+
+.hcm-user-info {
+    display: flex;
+    align-items: center;
+    color: #333;
+}
+
+.hcm-user-info span {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.hcm-user-info i.fas { 
+    color: #2045ff;
+    font-size: 1.5rem; 
+}
+
+.hcm-menu-toggle {
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: #2045ff;
+    padding: 10px; 
+    margin-right: 5px; 
+}
+
+/* --- Estilos do Sidebar --- */
+.hcm-sidebar {
+    width: 0; 
+    background-color: #2045ff;
+    height: calc(100vh - 60px); 
+    position: fixed;
+    top: 60px; 
+    left: -250px; 
+    transition: left 0.3s ease, width 0.3s ease; 
+    overflow: hidden; /* Alterado: overflow-x: hidden e overflow-y: hidden; a rolagem será na lista */
+    display: flex;
+    flex-direction: column; /* Mantém */
+    /* justify-content: space-between; Removido para controle explícito com flex-grow */
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 1020;
+    /* padding-top: 15px; Removido daqui, será no .hcm-sidebar-menu se necessário */
+    box-sizing: border-box;
+}
+
+.hcm-sidebar.hcm-open {
+    width: 250px; 
+    left: 0; 
+}
+
+.hcm-sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1; /* NOVO: Faz esta lista ocupar o espaço vertical disponível */
+    overflow-y: auto; /* NOVO: Adiciona rolagem APENAS à lista de menu se necessário */
+    padding-top: 15px; /* Adicionado padding aqui */
+}
+
+.hcm-sidebar-menu li a {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    color: white;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, opacity 0.3s ease; 
+    opacity: 0; 
+}
+
+.hcm-sidebar.hcm-open .hcm-sidebar-menu li a {
+    opacity: 1; 
+    transition-delay: 0.1s; 
+}
+
+
+.hcm-sidebar-menu li a .fas {
+    font-size: 1.2rem;
+    margin-right: 20px;
+    width: 20px;
+    text-align: center;
+}
+
+.hcm-sidebar:not(.hcm-open) .hcm-sidebar-menu li a {
+    padding-left: 20px; 
+    justify-content: center; 
+}
+.hcm-sidebar:not(.hcm-open) .hcm-sidebar-menu li a .fas{
+    margin-right: 0;
+}
+.hcm-sidebar:not(.hcm-open) .hcm-sidebar-menu li a span {
+    display: none; 
+}
+
+
+.hcm-sidebar-menu li.hcm-active > a {
+    background-color: #0033cc;
+    border-left: 5px solid #ffc107;
+    padding-left: 15px; 
+}
+.hcm-sidebar.hcm-open .hcm-sidebar-menu li.hcm-active > a {
+    padding-left: 15px; 
+}
+
+
+.hcm-sidebar-menu li a:hover {
+    background-color: #0033cc;
+}
+
+/* NOVO: Estilos para o footer do sidebar e o link de Sair */
+.hcm-sidebar-footer {
+    padding: 10px 0; /* Espaçamento vertical para o footer */
+    border-top: 1px solid rgba(255, 255, 255, 0.2); /* Linha divisória */
+    flex-shrink: 0; /* Impede que o footer encolha */
+}
+
+.hcm-sidebar-footer a { /* Link de Sair */
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    color: white;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, opacity 0.3s ease;
+    opacity: 0; /* Mesmo comportamento de opacidade dos outros itens */
+}
+
+.hcm-sidebar.hcm-open .hcm-sidebar-footer a {
+    opacity: 1;
+    transition-delay: 0.1s;
+}
+
+.hcm-sidebar-footer a .fas {
+    font-size: 1.2rem;
+    margin-right: 20px;
+    width: 20px;
+    text-align: center;
+}
+
+.hcm-sidebar:not(.hcm-open) .hcm-sidebar-footer a {
+    justify-content: center;
+}
+
+.hcm-sidebar:not(.hcm-open) .hcm-sidebar-footer a .fas {
+    margin-right: 0;
+}
+
+.hcm-sidebar:not(.hcm-open) .hcm-sidebar-footer a span {
+    display: none;
+}
+
+.hcm-sidebar-footer a:hover {
+    background-color: #0033cc;
+}
+
+/* Estilização do conteúdo principal */
+.hcm-main-content {
+    margin-top: 60px; 
+    padding: 20px;
+    background-color: #f0f2f5; 
+    width: 100%;
+    box-sizing: border-box;
+    min-height: calc(100vh - 60px); 
+    transition: margin-left 0.3s ease; 
+}

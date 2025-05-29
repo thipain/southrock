@@ -4,88 +4,17 @@
     box-sizing: border-box;
 }
 
-body {
-    display: flex;
-    font-family: 'Arial', sans-serif;
-    height: 100vh;
-    background-color: #242425;
-}
+/* Estilos de body e .content foram removidos daqui para não conflitarem com header_com_menu.css */
+/* Se precisar de estilos específicos para o corpo ou conteúdo do dashboard, 
+   use seletores mais específicos ou ajuste após testar a integração do menu. */
 
-.sidebar {
-    width: 60px;
-    background-color: #2045ff; 
-    transition: width 0.3s ease; 
-    overflow: hidden; 
-    display: flex; 
-    flex-direction: column; 
-    justify-content: space-between; 
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.03);
-    z-index: 100; 
-}
-
-.sidebar:hover {
-    width: 200px;
-}
-
-.sidebar-header {
-    color: white;
-    text-align: center;
-    padding: 15px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    font-weight: bold;
-}
-
-.sidebar a {
-    display: flex;
-    align-items: center;
-    padding: 15px;
-    color: white;
-    text-decoration: none;
-    transition: background 0.3s;
-}
-
-.sidebar a:hover, .sidebar a.active {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.sidebar a.active {
-    border-left: 4px solid #ffffff;
-}
-
-
-.icon {
-    color: white;
-    font-size: 20px;
-    width: 30px;
-    text-align: center;
-    margin-right: 10px;
-}
-
-.text {
-    display: inline;
-    opacity: 0;
-    transition: opacity 0.3s;
-    white-space: nowrap;
-}
-
-.sidebar:hover .text {
-    opacity: 1;
-}
-
-.content {
-    flex: 1;
-    overflow-y: auto;
-    background-color: #fffff3;
-
-}
-
+/* Os estilos específicos do conteúdo do dashboard são mantidos: */
 .dashboard-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 0;
+    padding: 10px 0; /* Removido mb-4, pode ser no HTML ou via .container */
     border-bottom: 1px solid #aaaaaa;
-
 }
 
 .painel-titulo {
@@ -94,10 +23,10 @@ body {
     font-weight: bold;
 }
 
-.user-info {
+/* .user-info no dashboard-header, não o do menu */
+.dashboard-header .user-info { 
     font-size: 0.9rem;
     color: #000000;
-    
 }
 
 .estatistica-card {
@@ -105,7 +34,7 @@ body {
     border: none;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     transition: transform 0.3s, box-shadow 0.3s;
-    height: 100%;
+    height: 100%; /* Para que todos os cards na mesma linha tenham a mesma altura */
 }
 
 .estatistica-card:hover {
@@ -137,28 +66,34 @@ body {
     color: white;
 }
 
+.card-icon .fas { /* Para garantir que o ícone dentro do card-icon seja visível */
+    font-size: 1.2rem; 
+}
+
+
 .bg-primary {
-    background-color: #0066ff;
+    background-color: #0066ff !important; /* Adicionado !important se Bootstrap estiver sobrescrevendo */
 }
 
 .bg-success {
-    background-color: #fd7f25;
+    background-color: #fd7f25 !important;
 }
 
 .bg-info {
-    background-color: #ff373f;
+    background-color: #ff373f !important;
 }
 
 .bg-warning {
-    background-color: #072efc;
+    background-color: #072efc !important;
 }
 
-.card-body
-{
+.card-body { /* Seletor original */
     background-color: #fffcf9;
     border: 1px solid rgb(220, 220, 220);
-    border-radius: 6%;
+    border-radius: .25rem; /* Bootstrap usa .25rem, ajustado para consistência */
+    padding: 1.25rem; /* Padding padrão do Bootstrap card-body */
 }
+
 .card-value {
     font-size: 1.8rem;
     font-weight: 700;
@@ -197,7 +132,7 @@ body {
     background-color: white;
 }
 
-.logo-img {
+.logo-container .logo-img { /* Especificidade para o logo dentro do logo-container */
     max-width: 200px;
     height: auto;
 }
@@ -208,23 +143,15 @@ body {
     margin-top: 15px;
 }
 
+/* Media queries do dashboard.css original podem ser mantidas se não conflitarem com o layout do menu */
 @media screen and (max-width: 768px) {
-    .sidebar {
-        position: fixed;
-        height: 100vh;
-        z-index: 999;
-    }
-
-    .content {
-        margin-left: 60px;
-    }
-    
+    /* A regra original para .sidebar e .content foi removida */
+    /* Ajustes para o conteúdo do dashboard em telas menores, se necessário */
     .row {
-        flex-direction: column;
+        /* flex-direction: column; Isto pode ser mantido se for o comportamento desejado para os cards */
     }
-    
     .col-md-3 {
-        width: 100%;
+        /* width: 100%; */ /* Bootstrap já cuida disso com as classes col-md-3 mb-4 */
     }
 }
 
@@ -234,7 +161,7 @@ body {
         align-items: flex-start;
     }
     
-    .user-info {
+    .dashboard-header .user-info { /* Especificidade */
         margin-top: 10px;
     }
 }

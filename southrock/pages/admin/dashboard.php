@@ -1,21 +1,24 @@
 <?php
 session_start();
 if (!isset($_SESSION['username'])) {
-    header("Location: index.php");
+    // Assumindo que dashboard.php está em admin/pages/, e index.php está dois níveis acima
+    header("Location: ../../index.php"); 
     exit();
 }
 
+// Conexão com o banco de dados
 $servername = "localhost"; 
-$username = "root"; 
-$password = ""; 
+$username_db = "root"; // Renomeado para evitar conflito com $_SESSION['username']
+$password_db = ""; 
 $dbname = "southrock"; 
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli($servername, $username_db, $password_db, $dbname);
 
 if ($conn->connect_error) {
     die("Falha na conexão: " . $conn->connect_error);
 }
 
+// Consultas SQL
 $sql_pedidos = "SELECT COUNT(*) as total_pedidos FROM pedidos WHERE status = 'novo'";
 $result_pedidos = $conn->query($sql_pedidos);
 $total_pedidos = 0;
@@ -44,6 +47,20 @@ $versao_sistema = "1.4.5";
 $data_atualizacao = "27/05/2025"; 
 
 $conn->close();
+
+
+$path_to_css_folder_from_page = '../../css/';
+$logo_image_path_from_page = '../../images/zamp.png';
+$logout_script_path_from_page = '../../logout/logout.php';
+
+
+$link_dashboard = 'dashboard.php'; 
+$link_pedidos_admin = 'pedidos.php'; 
+$link_produtos_admin = 'produtos.php';
+$link_usuarios_admin = 'usuarios.php';
+$link_cadastro_usuario_admin = 'cadastro_usuario.php';
+
+
 ?>
 
 <!DOCTYPE html>
@@ -53,32 +70,38 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Matriz</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../css/dashboard.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <?php
+
+        if (file_exists(__DIR__ . '/../../includes/header_com_menu.php')) {
+            include __DIR__ . '/../../includes/header_com_menu.php';
+        } else {
+            echo "Erro: Arquivo de menu não encontrado. Verifique o caminho do include.";
+        }
+    ?>
+     <link rel="stylesheet" href="../../css/dashboard.css">
+
+
 </head>
 
-<body>
-    <div class="sidebar">
-        <div>
-            <div class="sidebar-header">
-                <i class="fas fa-bars icon"></i><span class="text">Menu</span>
-            </div>
-            <a href="dashboard.php" class="active"><i class="fas fa-home icon"></i><span class="text">Início</span></a>
-            <a href="pedidos.php"><i class="fas fa-shopping-cart icon"></i><span class="text">Pedidos</span></a>
-            <a href="produtos.php"><i class="fas fa-box icon"></i><span class="text">Produtos</span></a>
-            <a href="usuarios.php"><i class="fas fa-users icon"></i><span class="text">Usuários</span></a>
-        </div>
-        <a href="../../logout/logout.php"><i class="fas fa-sign-out-alt icon"></i><span class="text">Sair</span></a>
-    </div>
+<body class="hcm-body-fixed-header"> 
 
-    <div class="content">
+    
+    <?php // include __DIR__ . '/../../includes/header_com_menu.php'; ?>
+    
+
+
+    <div class="hcm-main-content">  
         <div class="container py-4">
             <div class="dashboard-header mb-4">
                 <h1 class="painel-titulo">Painel de Controle</h1>
                 <div class="user-info">
-                    <span>Bem-vindo, <?php echo $_SESSION['username']; ?></span>
-                    <span class="badge badge-primary ml-2">Administrador</span>
+                   
+                   <span>Bem-vindo, <?php //echo htmlspecialchars($_SESSION['username']); ?></span> 
+                    <span class="badge badge-primary ml-2">Administrador</span> 
                 </div>
             </div>
 
@@ -94,7 +117,7 @@ $conn->close();
                             </div>
                             <h2 class="card-value <?php echo ($total_pedidos > 0) ? 'text-primary' : 'text-success'; ?>"><?php echo $total_pedidos; ?></h2>
                             <p class="card-subtitle">Pedidos Pendentes</p>
-                            <a href="pedidos.php" class="card-link">Ver Detalhes <i class="fas fa-arrow-right"></i></a>
+                            <a href="<?php echo htmlspecialchars($link_pedidos_admin); ?>" class="card-link">Ver Detalhes <i class="fas fa-arrow-right"></i></a>
                         </div>
                     </div>
                 </div>
@@ -110,7 +133,7 @@ $conn->close();
                             </div>
                             <h2 class="card-value text-success"><?php echo $total_produtos; ?></h2>
                             <p class="card-subtitle">Produtos Cadastrados</p>
-                            <a href="produtos.php" class="card-link">Ver Detalhes <i class="fas fa-arrow-right"></i></a>
+                            <a href="<?php echo htmlspecialchars($link_produtos_admin); ?>" class="card-link">Ver Detalhes <i class="fas fa-arrow-right"></i></a>
                         </div>
                     </div>
                 </div>
@@ -126,7 +149,7 @@ $conn->close();
                             </div>
                             <h2 class="card-value text-info"><?php echo $total_usuarios; ?></h2>
                             <p class="card-subtitle">Usuários Cadastrados</p>
-                            <a href="usuarios.php" class="card-link">Ver Detalhes <i class="fas fa-arrow-right"></i></a>
+                            <a href="<?php echo htmlspecialchars($link_usuarios_admin); ?>" class="card-link">Ver Detalhes <i class="fas fa-arrow-right"></i></a>
                         </div>
                     </div>
                 </div>
@@ -149,7 +172,7 @@ $conn->close();
             </div>
 
             <div class="logo-container text-center mt-4 mb-2">
-                <img src="../../images/zamp.png" alt="Logo Zamp" class="logo-img">
+                <img src="<?php echo htmlspecialchars($logo_image_path_from_page); ?>" alt="Logo Zamp" class="logo-img">
                 <p class="instruction-text mt-3">
                     Bem-vindo ao Sistema Matriz. Utilize o menu lateral para navegar entre as funcionalidades disponíveis.
                 </p>
@@ -157,7 +180,7 @@ $conn->close();
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    {/* <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> jQuery já carregado no head */}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
