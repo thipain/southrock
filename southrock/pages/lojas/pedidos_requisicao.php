@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['finalizar'])) {
         $eh_filial = $usuario['eh_filial'];
 
         $filial_usuario_id = null;
-        if ($tipo_usuario == 2) { 
+        if ($tipo_usuario == 2) {
             if ($eh_filial) {
                 $filial_usuario_id = $usuario_id;
             } else {
@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['finalizar'])) {
         }
 
         $stmtPedido = $conn->prepare(
-            "INSERT INTO pedidos (tipo_pedido, status, filial_usuario_id, usuario_id) 
+            "INSERT INTO pedidos (tipo_pedido, status, filial_usuario_id, usuario_id)
              VALUES ('requisicao', 'novo', ?, ?)"
         );
         $stmtPedido->bind_param("ii", $filial_usuario_id, $usuario_id);
@@ -99,10 +99,10 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
     
     try {
         if (trim($searchTerm) !== '') {
-            $sql = "SELECT sku, produto, grupo FROM produtos WHERE 
-                    CAST(sku AS CHAR) LIKE ? OR 
-                    produto LIKE ? OR 
-                    grupo LIKE ? 
+            $sql = "SELECT sku, produto, grupo FROM produtos WHERE
+                    CAST(sku AS CHAR) LIKE ? OR
+                    produto LIKE ? OR
+                    grupo LIKE ?
                     ORDER BY sku
                     LIMIT 50";
             
@@ -298,8 +298,8 @@ try {
                                         <td>${product.produto}</td>
                                         <td>${product.grupo}</td>
                                         <td class="text-center">
-                                            <button class="add-to-cart-btn" 
-                                                data-id="${product.sku}" 
+                                            <button class="add-to-cart-btn"
+                                                data-id="${product.sku}"
                                                 data-title="${product.produto}">
                                                 <i class="bi bi-cart-plus me-1"></i>Adicionar
                                             </button>
@@ -363,13 +363,13 @@ try {
             function openCart() {
                 cartSidebar.classList.add('open');
                 overlay.style.display = 'block';
-                document.body.style.overflow = 'hidden'; 
+                document.body.style.overflow = 'hidden';
             }
             
             function closeCart() {
                 cartSidebar.classList.remove('open');
                 overlay.style.display = 'none';
-                document.body.style.overflow = 'auto'; 
+                document.body.style.overflow = 'auto';
             }
             
             function addToCart(button) {
@@ -391,7 +391,7 @@ try {
                 updateCart();
                 
                 Swal.fire({
-                    position: 'top-end',
+                    // position: 'top-end', // Removed to center the alert
                     icon: 'success',
                     title: 'Produto adicionado!',
                     showConfirmButton: false,
@@ -523,18 +523,16 @@ try {
                             icon: 'success',
                             title: 'Requisição concluída!',
                             text: `Sua requisição #${data.pedido_id} foi registrada com sucesso como "nova requisição".`,
-                            confirmButtonText: 'Ver pedidos',
-                            showCancelButton: true,
-                            cancelButtonText: 'Continuar comprando'
-                        }).then((result) => {
+                            confirmButtonText: 'OK' // Changed
+                            // showCancelButton: false, // Removed (default is false)
+                            // cancelButtonText: 'Continuar comprando' // Removed
+                        }).then(() => { // Simplified .then()
                             cartItems = [];
                             localStorage.removeItem('cartItems');
                             updateCart();
                             closeCart();
                             
-                            if (result.isConfirmed) {
-                                window.location.href = 'pedidos.php';
-                            }
+                            // Removed: if (result.isConfirmed) { window.location.href = 'pedidos.php'; }
                         });
                     } else {
                         Swal.fire('Erro', data.error || 'Falha ao registrar o pedido.', 'error');

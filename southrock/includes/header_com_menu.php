@@ -64,12 +64,6 @@ $link_fazer_pedidos_filial = isset($link_fazer_pedidos_filial) ? $link_fazer_ped
                     <span>Usuários</span>
                 </a>
             </li>
-            <li <?php if($current_page_basename == 'cadastro_usuario.php') echo 'class="hcm-active"'; ?>>
-                <a href="<?php echo htmlspecialchars($link_cadastro_usuario_admin); ?>">
-                    <i class="fas fa-user-plus"></i>
-                    <span>Cadastro Usuário</span>
-                </a>
-            </li>
         <?php elseif (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 2): // Filial ?>
             <li <?php if($current_page_basename == 'fazer_pedidos.php') echo 'class="hcm-active"'; ?>>
                 <a href="<?php echo htmlspecialchars($link_fazer_pedidos_filial); ?>">
