@@ -13,7 +13,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 0; /* Removido mb-4, pode ser no HTML ou via .container */
+    padding: 10px 0;
     border-bottom: 1px solid #aaaaaa;
 }
 
@@ -34,7 +34,7 @@
     border: none;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     transition: transform 0.3s, box-shadow 0.3s;
-    height: 100%; /* Para que todos os cards na mesma linha tenham a mesma altura */
+    height: 100%;
 }
 
 .estatistica-card:hover {
@@ -66,13 +66,13 @@
     color: white;
 }
 
-.card-icon .fas { /* Para garantir que o ícone dentro do card-icon seja visível */
+.card-icon .fas {
     font-size: 1.2rem; 
 }
 
-
+/* Adicionado !important se Bootstrap estiver sobrescrevendo */
 .bg-primary {
-    background-color: #0066ff !important; /* Adicionado !important se Bootstrap estiver sobrescrevendo */
+    background-color: #0066ff !important;
 }
 
 .bg-success {
@@ -87,7 +87,7 @@
     background-color: #072efc !important;
 }
 
-.card-body { /* Seletor original */
+.card-body {
     background-color: #fffcf9;
     border: 1px solid rgb(220, 220, 220);
     border-radius: .25rem; /* Bootstrap usa .25rem, ajustado para consistência */
@@ -132,7 +132,7 @@
     background-color: white;
 }
 
-.logo-container .logo-img { /* Especificidade para o logo dentro do logo-container */
+.logo-container .logo-img {
     max-width: 200px;
     height: auto;
 }
@@ -144,16 +144,7 @@
 }
 
 /* Media queries do dashboard.css original podem ser mantidas se não conflitarem com o layout do menu */
-@media screen and (max-width: 768px) {
-    /* A regra original para .sidebar e .content foi removida */
-    /* Ajustes para o conteúdo do dashboard em telas menores, se necessário */
-    .row {
-        /* flex-direction: column; Isto pode ser mantido se for o comportamento desejado para os cards */
-    }
-    .col-md-3 {
-        /* width: 100%; */ /* Bootstrap já cuida disso com as classes col-md-3 mb-4 */
-    }
-}
+/* A media query para max-width: 768px foi removida por não conter regras ativas. */
 
 @media screen and (max-width: 576px) {
     .dashboard-header {
@@ -161,7 +152,7 @@
         align-items: flex-start;
     }
     
-    .dashboard-header .user-info { /* Especificidade */
+    .dashboard-header .user-info {
         margin-top: 10px;
     }
 }

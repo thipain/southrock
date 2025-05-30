@@ -1,134 +1,40 @@
-body {
-    display: flex;
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    height: 100vh;
-    background-color: #fff4e8; 
-}
-
-
-.sidebar {
-    width: 60px;
-    background-color: #2045ff;
-    transition: width 0.3s;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.sidebar:hover {
-    width: 200px; 
-}
-
-.sidebar a {
-    display: flex; 
-    align-items: center; 
-    padding: 15px; 
-    color: white; 
-    text-decoration: none; 
-    transition: background 0.3s; 
-}
-
-.sidebar-header {
-    color: white;
-    text-align: center;
-    padding: 15px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    font-weight: bold;;
-}
-
-.icon {
-    color: white; 
-    font-size: 20px; 
-    width: 30px; 
-    text-align: center; 
-    margin-right: 10px; 
-}
-
-.text {
-    display: inline;
-    opacity: 0;
-    transition: opacity 0.3s;
-    white-space: nowrap;
-}
-
-.sidebar a:hover, .sidebar a.active {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.sidebar a.active {
-    border-left: 4px solid #ffffff;
-}
-
-.sidebar a .text {
-    display: inline; 
-    opacity: 0; 
-    transition: opacity 0.3s; 
-}
-
-.sidebar:hover a .text {
-    opacity: 1;
-}
-
-.content {
-    flex: 1; 
-    padding: 0; 
-    background-color: #fffff3; 
-    display: flex; 
-    flex-direction: column; 
-}
-
 .header {
     margin-top: 2rem; 
-    padding: 20px; 
-    background-color: #fffff3; 
+    background-color: #F8FAFC; 
 }
 
 .header h1 {
     margin-top: 10px;
-    background-color: #fffff3;
-    font-size: 1.6rem;
-    color: #000000;
-    font-weight: bold;
+    font-size: 2rem;
+    color: #343a40;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.75rem;
 }
 
-
-.barrinha{
-  background-color: #989898;
+.barrinha {
+    border: none;
+    height: 3px;
+    background-color: #007bff;
+    width: 100px;
+    margin: 0 auto 1.5rem auto;
+    opacity: 0.8;
 }
-
 
 .main-content {
-    padding: 20px; 
-    flex: 1; 
-    overflow-y: auto; 
-    background-color: #fffff3; 
-}
-
-.button {
-    background-color: #aeff00; 
-    color: white; 
-    border-radius: 5px; 
-    padding: 8px 16px; 
-    border: none; 
-    transition: background-color 0.3s; 
-    cursor: pointer; 
-}
-
-.button:hover {
-    background-color: #0056b3; 
+    flex: 1;
+    overflow-y: auto;
+    background-color: #fffff3;
 }
 
 .search-container {
-    background-color: white; 
-    border-radius: 10px; 
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+    background-color: #F8FAFC;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     padding: 25px; 
     margin-bottom: 25px; 
     width: 100%;
-    background-color: #F8FAFC; 
     display: flex;
     flex-direction: column; 
     gap: 20px; 
@@ -165,16 +71,12 @@ body {
     pointer-events: none; 
 }
 
-
 #clearSearch {
     position: absolute; 
     right: 10px; 
     top: 50%; 
     transform: translateY(-50%); 
-    
-    
 }
-
 
 .filters-area { 
     display: flex;
@@ -182,12 +84,10 @@ body {
     gap: 15px; 
 }
 
-
 .filters-container {
     display: flex; 
     gap: 12px; 
     flex-wrap: wrap; 
-    
 }
 
 .filter-tag, .filter-tag2 {
@@ -204,14 +104,12 @@ body {
     font-weight: 500; 
 }
 
-
 .filter-tag:hover, .filter-tag2:hover {
     background-color: #d1d9e0; 
     border-color: #b8c2cc;
     transform: translateY(-2px); 
     box-shadow: 0 3px 7px rgba(0, 0, 0, 0.1); 
 }
-
 
 .filter-tag.active, .filter-tag2.active {
     background-color: #007bff; 
@@ -226,12 +124,10 @@ body {
     color: white !important; 
 }
 
-
 .filter-tag i, .filter-tag2 i {
     margin-right: 8px; 
     color: #007bff; 
 }
-
 
 .pedidos-list-container {
     background-color: #fffff3; 
@@ -260,7 +156,6 @@ body {
     padding: 12px 15px; 
     vertical-align: middle;
 }
-
 
 .pedido-row {
     cursor: pointer; 
@@ -320,7 +215,6 @@ body {
     margin-right: 5px;
 }
 
-
 @media (min-width: 769px) { 
     .filters-area {
         flex-direction: row; 
@@ -332,7 +226,6 @@ body {
         flex-basis: auto; 
     }
 }
-
 
 @media (max-width: 768px) { 
     .pedidos-table th:nth-child(3), 
@@ -349,12 +242,11 @@ body {
     .filters-container { 
         justify-content: flex-start;
     }
-
 }
 
 @media (max-width: 576px) { 
     .header h1 {
-        font-size: 1.4rem; 
+        font-size: 1.8rem; 
     }
     .pedidos-table th:nth-child(4), 
     .pedidos-table td:nth-child(4) { 

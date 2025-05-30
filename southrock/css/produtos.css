@@ -1,11 +1,5 @@
-body {
-    background-color: #f4f6f9;
-}
 .table-hover tbody tr:hover {
     background-color: rgba(0,0,0,0.075);
-}
-.card-custom {
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
 .table-responsive{
@@ -14,6 +8,5 @@ body {
 
 .button-novo {
     color: #fff;
-    background-color: #072efc;
     border-color: #072efc;
 }

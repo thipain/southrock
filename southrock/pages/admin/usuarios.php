@@ -1,43 +1,69 @@
 <?php
 session_start();
 if (!isset($_SESSION['username'])) {
-    header("Location: index.php");
+    header("Location: ../../index.php");
     exit();
 }
 
 include '../../includes/db.php';
 
+$path_to_css_folder_from_page = '../../css/';
+$logo_image_path_from_page = '../../images/zamp.png';
+$logout_script_path_from_page = '../../logout/logout.php';
+
+$link_dashboard = 'dashboard.php';
+$link_pedidos_admin = 'pedidos.php';
+$link_produtos_admin = 'produtos.php';
+$link_usuarios_admin = 'usuarios.php';
+$link_cadastro_usuario_admin = 'cadastro_usuario.php';
+
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
 
- 
-    if ($_SESSION['tipo_usuario'] == 1) {
-      
-        $sql = "SELECT tipo_usuario FROM usuarios WHERE id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        $result = $stmt->get_result();
+    if (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 1) {
+        $sql_check_admin = "SELECT tipo_usuario FROM usuarios WHERE id = ?";
+        $stmt_check_admin = $conn->prepare($sql_check_admin);
+        $stmt_check_admin->bind_param("i", $id);
+        $stmt_check_admin->execute();
+        $result_check_admin = $stmt_check_admin->get_result();
 
-        if ($result->num_rows == 1) {
-            $user = $result->fetch_assoc();
-            if ($user['tipo_usuario'] == 1) {
-              
-                echo "<script>alert('Não é possível excluir o usuário admin.'); window.location.href='usuarios.php';</script>";
-                exit();
+        if ($result_check_admin->num_rows == 1) {
+            $user_to_delete = $result_check_admin->fetch_assoc();
+            if ($user_to_delete['tipo_usuario'] == 1) {
+                // Para evitar quebrar o HTML antes do header, podemos redirecionar com uma mensagem via query string
+                // ou apenas definir uma mensagem e não executar a exclusão.
+                // Por simplicidade aqui, apenas não executa e pode adicionar uma mensagem na tela se desejado.
+                // echo "<script>alert('Não é possível excluir o usuário admin.'); window.location.href='usuarios.php';</script>";
+                // exit();
+                // No entanto, o código original já tem um botão desabilitado para admin, então essa verificação server-side é uma dupla garantia.
+            } else {
+                 $sql_delete = "DELETE FROM usuarios WHERE id = ?";
+                 $stmt_delete = $conn->prepare($sql_delete);
+                 $stmt_delete->bind_param("i", $id);
+                 $stmt_delete->execute();
+                 $stmt_delete->close();
             }
         }
+        $stmt_check_admin->close();
+    } elseif (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] != 1) {
+        // Usuário não admin tentando excluir, não deve ter chegado aqui se a UI estiver correta.
+        // Apenas não permite a exclusão se o ID não for o próprio ou se não tiver permissão.
+        // A lógica de exclusão já desabilita o botão para o admin mestre na interface.
+        // Se for um usuário comum tentando excluir outro, a lógica de permissão mais ampla decidiria.
+        // Aqui, o código original permite excluir se não for o admin mestre (tipo_usuario == 1)
+        $sql_delete = "DELETE FROM usuarios WHERE id = ? AND tipo_usuario != 1"; // Garante que não exclui admin mestre
+        $stmt_delete = $conn->prepare($sql_delete);
+        $stmt_delete->bind_param("i", $id);
+        $stmt_delete->execute();
+        $stmt_delete->close();
     }
-
-  
-    $sql = "DELETE FROM usuarios WHERE id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
+    // Redireciona para limpar o GET da URL
+    header("Location: usuarios.php");
+    exit();
 }
 
-$sql = "SELECT * FROM usuarios";
-$result = $conn->query($sql);
+$sql_select_users = "SELECT * FROM usuarios";
+$result_users = $conn->query($sql_select_users);
 ?>
 
 <!DOCTYPE html>
@@ -47,198 +73,26 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Usuários - Dashboard</title>
-  
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <?php
+        if (file_exists(__DIR__ . '/../../includes/header_com_menu.php')) {
+            include __DIR__ . '/../../includes/header_com_menu.php';
+        } else {
+            echo "";
+        }
+    ?>
+    <link rel="stylesheet" href="../../css/dashboard.css">
     <link rel="stylesheet" href="../../css/usuarios.css">
-    <style>
-      
-        body {
-            display: flex;
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            height: 100vh;
-            background-color:#fffff3;
-        }
-
-        
-
-        .sidebar {
-            width: 60px;
-            background-color: #2045ff;
-            transition: width 0.3s ease;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-            z-index: 100;
-        }
-
-        .sidebar-header {
-            color: white;
-            text-align: center;
-            padding: 15px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            font-weight: bold;
-        }
-
-        .sidebar:hover {
-            width: 200px;
-        }
-
-        .sidebar a {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            color: white;
-            text-decoration: none;
-            transition: background 0.3s;
-        }
-
-        .sidebar a:hover {
-            border-left: 4px solid #ffffff;
-        }
-
-        .sidebar a:hover,
-        .sidebar a.active {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .icon {
-            color: white;
-            font-size: 20px;
-            width: 30px;
-            text-align: center;
-            margin-right: 10px;
-        }
-
-        .text {
-            display: inline;
-            opacity: 0;
-            transition: opacity 0.3s;
-            white-space: nowrap;
-        }
-
-        .sidebar:hover .text {
-            opacity: 1;
-        }
-
-        .sidebar a.active {
-            border-left: 4px solid #ffffff;
-        }
-
-        .content {
-            flex: 1;
-            padding: 0;
-            background-color: #E2EDFA;
-            display: flex;
-            flex-direction: column;
-            margin-left: 60px;
-            transition: margin-left 0.3s;
-            width: 100%;
-        }
-
-        .header {
-            margin: 0;
-            background-color: #fffff3;
-            text-align: left;
-            font-size: 1.6rem;
-            color: #000000;
-            font-weight: bold;
-        }
-
-        .header h1 {
-            margin: 0;
-            font-size: 1.5rem;
-            margin-top: 50px;
-            margin-left: 25px;
-        }
-
-        .main-content {
-            padding: 20px;
-            flex: 1;
-            overflow-y: auto;
-            background-color:#fffff3;
-        }
-
-        .btn-primary {
-            background-color: #0077B6;
-            border-color: #0077B6;
-        }
-
-        .btn-primary:hover {
-            background-color: #023E8A;
-            border-color: #023E8A;
-        }
-
-        .btn-success {
-            background-color: #0096C7;
-            border-color: #0096C7;
-        }
-
-        .btn-success:hover {
-            background-color: #0077B6;
-            border-color: #0077B6;
-        }
-
-        .card-custom {
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .table-hover tbody tr:hover {
-            background-color: #f8f9fa;
-        }
-
-        .search-container {
-            background-color: #F8FAFC;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .search-input {
-            border: 1px solid #ced4da;
-            border-radius: 5px;
-            padding: 10px 15px;
-            width: 100%;
-            transition: border-color 0.3s;
-        }
-
-        .search-input:focus {
-            border-color: #0077B6;
-            outline: none;
-            box-shadow: 0 0 0 0.2rem rgba(0, 119, 182, 0.25);
-        }
-    </style>
 </head>
 
-<body>
- 
-    <div class="sidebar">
-        <div>
-            <div class="sidebar-header">
-                <i class="fas fa-bars icon"></i><span class="text">Menu</span>
-            </div>
-            <a href="dashboard.php"><i class="fas fa-home icon"></i><span class="text">Início</span></a>
-            <a href="pedidos.php"><i class="fas fa-shopping-cart icon"></i><span class="text">Pedidos</span></a>
-            <a href="produtos.php"><i class="fas fa-box icon"></i><span class="text">Produtos</span></a>
-            <a href="usuarios.php" class="active"><i class="fas fa-users icon"></i><span
-                    class="text">Usuários</span></a>
-        </div>
-
-        <a href="../../logout/logout.php"><i class="fas fa-sign-out-alt icon"></i><span class="text">Sair</span></a>
-
-    </div>
-    </div>
-
+<body class="hcm-body-fixed-header">
    
-    <div class="content">
+    <div class="hcm-main-content">
         <div class="header">
             <h1><i class="bi bi-people-fill me-2"></i>Gerenciamento de Usuários</h1>
             <hr>
@@ -252,26 +106,23 @@ $result = $conn->query($sql);
                 </a>
             </div>
 
-           
             <div class="search-container mb-4">
                 <div class="row">
                     <div class="col-md-8 mb-3 mb-md-0">
                         <div class="search-wrapper">
-                            <input type="text" id="searchUsuario" class="search-input"
+                            <input type="text" id="searchUsuario" class="search-input form-control"
                                 placeholder="Buscar por nome, CNPJ ou responsável...">
-                            <i class="bi bi-search search-icon"></i>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <select class="form-select search-input" id="filterUsuario">
                             <option value="">Todos os usuários</option>
                             <option value="admin">Administradores</option>
-                            <option value="cliente">Clientes</option>
+                            <option value="cliente">Filiais</option>
                         </select>
                     </div>
                 </div>
             </div>
-
             
             <div class="card card-custom border-0">
                 <div class="card-body p-0">
@@ -291,8 +142,9 @@ $result = $conn->query($sql);
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php while ($row = $result->fetch_assoc()): ?>
-                                    <tr>
+                                <?php if ($result_users->num_rows > 0): ?>
+                                    <?php while ($row = $result_users->fetch_assoc()): ?>
+                                    <tr data-tipo="<?php echo ($row['tipo_usuario'] == 1 || $row['tipo_usuario'] == 2) ? 'admin' : 'cliente'; ?>">
                                         <td><?php echo htmlspecialchars($row['username']); ?></td>
                                         <td><?php echo htmlspecialchars($row['cnpj']); ?></td>
                                         <td><?php echo htmlspecialchars($row['responsavel']); ?></td>
@@ -308,7 +160,6 @@ $result = $conn->query($sql);
                                                     <i class="bi bi-pencil"></i>
                                                 </a>
                                                 <?php if ($row['tipo_usuario'] == 1): ?>
-                                                   
                                                     <button class="btn btn-sm btn-outline-danger" disabled>
                                                         <i class="bi bi-trash"></i>
                                                     </button>
@@ -321,7 +172,10 @@ $result = $conn->query($sql);
                                             </div>
                                         </td>
                                     </tr>
-                                <?php endwhile; ?>
+                                    <?php endwhile; ?>
+                                <?php else: ?>
+                                    <tr><td colspan="9" class="text-center">Nenhum usuário encontrado.</td></tr>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
@@ -330,12 +184,9 @@ $result = $conn->query($sql);
         </div>
     </div>
 
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-   
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
- 
         function confirmDelete(id) {
             Swal.fire({
                 title: 'Confirmar exclusão?',
@@ -353,59 +204,59 @@ $result = $conn->query($sql);
             });
         }
 
-      
         document.getElementById('searchUsuario').addEventListener('keyup', function () {
             var input, filter, table, tr, td, i, txtValue;
             input = document.getElementById('searchUsuario');
             filter = input.value.toUpperCase();
-            table = document.querySelector('.table');
+            table = document.querySelector('.table tbody');
             tr = table.getElementsByTagName('tr');
 
-            for (i = 1; i < tr.length; i++) {
-                let found = false;
+            for (i = 0; i < tr.length; i++) {
+                let rowVisible = false;
                 for (let j = 0; j < 3; j++) { 
                     td = tr[i].getElementsByTagName('td')[j];
                     if (td) {
                         txtValue = td.textContent || td.innerText;
                         if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                            found = true;
+                            rowVisible = true;
                             break;
                         }
                     }
                 }
-                if (found) {
-                    tr[i].style.display = '';
-                } else {
-                    tr[i].style.display = 'none';
+                if(tr[i].getElementsByTagName('td').length === 1 && tr[i].getElementsByTagName('td')[0].colSpan === 9) { // Não oculta a linha "Nenhum usuário encontrado"
+                    rowVisible = true;
                 }
+                tr[i].style.display = rowVisible ? '' : 'none';
             }
         });
-
     
         document.getElementById('filterUsuario').addEventListener('change', function () {
-            var filter = this.value;
-            var table = document.querySelector('.table');
+            var filterValue = this.value;
+            var table = document.querySelector('.table tbody');
             var tr = table.getElementsByTagName('tr');
 
-            for (var i = 1; i < tr.length; i++) {
-                var td = tr[i];
-                if (filter === '') {
+            for (var i = 0; i < tr.length; i++) {
+                 if(tr[i].getElementsByTagName('td').length === 1 && tr[i].getElementsByTagName('td')[0].colSpan === 9) { // Não filtra a linha "Nenhum usuário encontrado"
                     tr[i].style.display = '';
+                    continue;
+                }
+                var rowTipo = tr[i].getAttribute('data-tipo');
+                if (filterValue === "" || rowTipo === filterValue) {
+                    tr[i].style.display = "";
                 } else {
-                    var tipoUsuario = tr[i].getAttribute('data-tipo') || '';
-                    if (tipoUsuario === filter) {
-                        tr[i].style.display = '';
-                    } else {
-                        tr[i].style.display = 'none';
-                    }
+                    tr[i].style.display = "none";
                 }
             }
         });
     </script>
 </body>
-
 </html>
 
 <?php
-$conn->close();
+if (isset($result_users)) {
+    // $result_users->close(); // Não precisa se for resultado de query() e não prepare()
+}
+if (isset($conn)) {
+    $conn->close();
+}
 ?>

@@ -1,46 +1,26 @@
-        body {
-            text-align: center;
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
+.table-hover tbody tr:hover {
+    background-color: rgba(0,0,0,0.075);
+}
 
-        .form-container {
-            max-width: 400px;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-        }
-         
-        .form-container input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
+.table-responsive{
+    border: 1px solid rgb(220, 220, 220);
+}
 
-        .button {
-            padding: 10px 15px;
-            background-color: #3410ff;
-            color: white;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-        }
+.button-novo {
+    color: #fff;
+    background-color: #072efc;
+    border-color: #072efc;
+}
 
-        .button:hover {
-            background-color: #e47c27;
-        }
+.painel-titulo {
+    margin-bottom: 0.5rem; 
+}
 
-        .mensagem {
-            color: green;
-            margin-bottom: 20px;
-        }
-
-        .erro {
-            color: red;
-            margin-bottom: 20px;
-        }
+.barrinha {
+    border: none;
+    height: 3px;
+    background-color: #007bff; 
+    width: 100px; 
+    margin: 0 0 1.5rem 0; 
+    opacity: 0.8;
+}
