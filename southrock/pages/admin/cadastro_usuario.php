@@ -7,6 +7,7 @@ if (!isset($_SESSION['username'])) {
 
 include '../../includes/db.php'; 
 
+// Definições de caminhos e links para o header_com_menu.php
 $path_to_css_folder_from_page = '../../css/';
 $logo_image_path_from_page = '../../images/zamp.png';
 $logout_script_path_from_page = '../../logout/logout.php';
@@ -15,30 +16,30 @@ $link_dashboard = 'dashboard.php';
 $link_pedidos_admin = 'pedidos.php';
 $link_produtos_admin = 'produtos.php';
 $link_usuarios_admin = 'usuarios.php';
-$link_cadastro_usuario_admin = 'cadastro_usuario.php'; // Página ativa
+$link_cadastro_usuario_admin = 'cadastro_usuario.php';
 
 $success_message = "";
 $error_message = "";
 
-$tipos_usuario_query = "SELECT id, descricao FROM tipo_usuario ORDER BY descricao ASC"; // Adicionado ORDER BY
+$tipos_usuario_query = "SELECT id, descricao FROM tipo_usuario ORDER BY descricao ASC";
 $tipos_result = $conn->query($tipos_usuario_query);
-$tipos_usuario_options = []; // Renomeado para evitar confusão
+$tipos_usuario_options = [];
 if ($tipos_result && $tipos_result->num_rows > 0) {
     while ($row = $tipos_result->fetch_assoc()) {
-        $tipos_usuario_options[] = $row; // Armazena como array de arrays associativos
+        $tipos_usuario_options[] = $row;
     }
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = trim($_POST['username']); // Adicionado trim
-    $password_plain = $_POST['password']; // Senha em texto plano para validação, hash depois
+    $username = trim($_POST['username']);
+    $password_plain = $_POST['password'];
     $cnpj = trim($_POST['cnpj']);
     $responsavel = trim($_POST['responsavel']);
     $endereco = trim($_POST['endereco']);
     $cep = trim($_POST['cep']);
     $bairro = trim($_POST['bairro']);
     $cidade = trim($_POST['cidade']);
-    $uf = trim($_POST['uf']);
+    $uf = trim($_POST['uf']); // Esta é a única coluna de estado/UF que precisamos
     $tipo_usuario_id = $_POST['tipo_usuario'];
     $nome_completo_usuario = trim($_POST['nome']); 
     $nome_filial_post = isset($_POST['nome_filial']) ? trim($_POST['nome_filial']) : null;
@@ -66,11 +67,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $nome_filial_db = !empty($nome_filial_post) ? $nome_filial_post : $nome_completo_usuario; 
             }
 
+            // SQL MODIFICADO: Removida a coluna 'estado' e seu placeholder
             $sql = "INSERT INTO usuarios (username, password, tipo_usuario, cnpj, responsavel, endereco, cep, bairro, cidade, uf, nome, eh_filial, nome_filial) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sql);
 
+            // BIND_PARAM MODIFICADO: Removido um 's' e a última variável referente a 'estado'
             $stmt->bind_param(
-                "ssissssssssis",
+                "ssissssssssis", // 13 parâmetros agora
                 $username,
                 $password_hashed,
                 $tipo_usuario_id,
@@ -80,7 +83,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $cep,
                 $bairro,
                 $cidade,
-                $uf,
+                $uf, // Este é o UF que será gravado
                 $nome_completo_usuario,
                 $eh_filial,
                 $nome_filial_db
@@ -88,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             if ($stmt->execute()) {
                 $success_message = "Usuário '".htmlspecialchars($username)."' cadastrado com sucesso!";
-                $_POST = array(); // Limpa o POST para limpar o formulário
+                $_POST = array(); 
             } else {
                 $error_message = "Erro ao cadastrar usuário: " . $stmt->error;
             }
@@ -97,7 +100,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $check_stmt->close();
     }
 }
-$conn->close();
+// A conexão é fechada no final do script original, se presente
+// Se $conn->close() estiver aqui, mantenha. Se estiver no final do HTML, também.
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -107,8 +111,7 @@ $conn->close();
     <title>Cadastro de Usuário - Painel Administrativo</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
@@ -120,8 +123,7 @@ $conn->close();
         }
     ?>
     <link rel="stylesheet" href="../../css/dashboard.css">
-    <link rel="stylesheet" href="../../css/produtos.css">
-    <link rel="stylesheet" href="../../css/cadastro_usuario.css">
+    <link rel="stylesheet" href="../../css/produtos.css"> <link rel="stylesheet" href="../../css/cadastro_usuario.css">
 
 </head>
 <body class="hcm-body-fixed-header">
@@ -141,7 +143,7 @@ $conn->close();
                 <div class="col-md-8 mx-auto">
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         <?php echo htmlspecialchars($success_message); ?>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </div>
             </div>
@@ -152,7 +154,7 @@ $conn->close();
                 <div class="col-md-8 mx-auto">
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         <?php echo htmlspecialchars($error_message); ?>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </div>
             </div>
@@ -250,9 +252,7 @@ $conn->close();
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         (function () {
             'use strict';
@@ -277,7 +277,7 @@ $conn->close();
                 $("#endereco").val("");
                 $("#bairro").val("");
                 $("#cidade").val("");
-                $("#uf").val("");
+                $("#uf").val(""); // Mantém UF pois é digitado/selecionado manualmente
             }
 
             $('#cep').blur(function() {
@@ -286,13 +286,13 @@ $conn->close();
                     $("#endereco").val("...");
                     $("#bairro").val("...");
                     $("#cidade").val("...");
-                    $("#uf").val("...");
+                    // $("#uf").val("..."); // UF não será preenchida automaticamente para evitar confusão com a digitação manual
                     $.getJSON("https://viacep.com.br/ws/"+ cep +"/json/?callback=?", function(data) {
                         if (!("erro" in data)) {
                             $("#endereco").val(data.logradouro);
                             $("#bairro").val(data.bairro);
                             $("#cidade").val(data.localidade);
-                            $("#uf").val(data.uf);
+                            $("#uf").val(data.uf); // ViaCEP preenche UF
                         } else {
                             limpa_formulário_cep();
                             Swal.fire('CEP Inválido', 'CEP não encontrado.', 'warning');
@@ -301,8 +301,11 @@ $conn->close();
                         limpa_formulário_cep();
                         Swal.fire('Erro de Conexão', 'Não foi possível buscar o CEP. Verifique sua conexão ou tente mais tarde.', 'error');
                     });
-                } else {
+                } else if (cep.length > 0) { // Se o CEP não tiver 8 dígitos mas tiver algum valor
                     limpa_formulário_cep();
+                     Swal.fire('CEP Incompleto', 'Por favor, digite um CEP válido com 8 dígitos.', 'info');
+                } else { // Se o campo CEP estiver vazio
+                     limpa_formulário_cep();
                 }
             });
 
@@ -317,20 +320,25 @@ $conn->close();
                 }
             }).trigger('change'); 
 
-            var successMessage = <?php echo json_encode($success_message); ?>;
-            var errorMessage = <?php echo json_encode($error_message); ?>;
-
-            if (successMessage) {
+            // Script para fechar alertas automaticamente
+            var successAlert = document.querySelector('.alert-success.alert-dismissible');
+            if (successAlert && typeof bootstrap !== 'undefined' && bootstrap.Alert) {
                 setTimeout(function() {
-                    $('.alert-success').alert('close');
+                    bootstrap.Alert.getOrCreateInstance(successAlert).close();
                 }, 5000);
             }
-            if (errorMessage) {
+            var errorAlert = document.querySelector('.alert-danger.alert-dismissible');
+            if (errorAlert && typeof bootstrap !== 'undefined' && bootstrap.Alert) {
                  setTimeout(function() {
-                    $('.alert-danger').alert('close');
+                    bootstrap.Alert.getOrCreateInstance(errorAlert).close();
                 }, 5000);
             }
         });
     </script>
 </body>
 </html>
+<?php
+if(isset($conn)) { // Garante que a conexão só é fechada se foi aberta.
+    $conn->close();
+}
+?>
