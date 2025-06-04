@@ -157,15 +157,6 @@ INSERT INTO pedidos (data, tipo_pedido, status, filial_usuario_id, filial_destin
 INSERT INTO pedidos (data, tipo_pedido, status, filial_usuario_id, filial_destino_id, usuario_id, pedido_original_id, observacoes) VALUES
     ('2024-05-04 09:30:00', 'devolucao', 'novo', 4, 1, 4, 3, 'Devolução de itens do pedido #3 por excesso de estoque.');
 
--- Itens dos pedidos de exemplo
-INSERT INTO pedido_itens (pedido_id, sku, quantidade, observacao) VALUES
-    (1, 600023065, 5, 'Entrega prioritária para star01'),
-    (1, 600028602, 2, NULL),
-    (2, 34233001, 10, 'Itens para doação à star02'),
-    (3, 600023065, 20, 'Material para star03'),
-    (3, 34233001, 5, NULL),
-    (4, 600023065, 3, 'Devolvendo 3 unidades do PRODUTO ALPHA');
-
 -- Triggers
 DELIMITER //
 CREATE TRIGGER tgr_pedido_processo BEFORE UPDATE ON pedidos

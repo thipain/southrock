@@ -92,6 +92,10 @@ $nome_sistema_atual = "SouthRock - Histórico de Pedidos";
         .filters-container .filter-tag i {
             margin-right: 5px;
         }
+
+        .barrinha {
+            width: auto;
+        }
         .alert-dismissible .close { 
             position: absolute; 
             top: 0; 
