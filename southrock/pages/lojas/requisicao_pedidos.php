@@ -58,7 +58,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['tipo_usuario'] != 2) {
     </div>
 
     <div class="footer">
-        <a href="../index.php" class="button btn">Logout</a>
+        <a href="../index.php" class="button btn">Sair</a>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

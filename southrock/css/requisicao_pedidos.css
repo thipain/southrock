@@ -76,9 +76,9 @@ body {
     margin-bottom: 25px; 
 }
 
-#fazer-pedido .icon { color: #007bff; }        
-#historico-pedidos .icon { color: #6f42c1; }  
-#suporte .icon { color: #28a745; }            
+#fazer-pedido .icon { color: #0028f8; }        
+#historico-pedidos .icon { color: #fd7f25; }  
+#suporte .icon { color: #ff373f; }            
 
 .card-title {
     font-size: 1.6em; 
@@ -110,7 +110,7 @@ body {
 }
 
 .button.btn:hover, a.button.btn:hover {
-    background-color: #0056b3; 
+    background-color: #fd7f25; 
     color: white;
     transform: scale(1.03); 
 }
@@ -124,11 +124,11 @@ body {
 }
 
 .footer .button.btn {
-    background-color: #6c757d; 
+    background-color: #0028f8; 
     box-shadow: none; 
 }
 
 .footer .button.btn:hover {
-    background-color: #5a6268; 
+    background-color: #fd7f25; 
     transform: scale(1.03);
 }
