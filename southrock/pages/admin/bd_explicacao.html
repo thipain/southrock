@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelos de Banco de Dados - SouthRock</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .model-section {
+            margin-bottom: 50px;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-left: 5px solid #3498db;
+        }
+        
+        h2 {
+            color: #2980b9;
+            border-bottom: 3px solid #ecf0f1;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+        }
+        
+        .model-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        
+        .entity {
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+            border: 2px solid #3498db;
+            border-radius: 12px;
+            padding: 15px;
+            min-width: 200px;
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.15);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .entity:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(52, 152, 219, 0.25);
+        }
+        
+        .entity-name {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 10px;
+            padding: 8px;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            border-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .attributes {
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        .pk {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .fk {
+            color: #f39c12;
+            font-weight: bold;
+        }
+        
+        .relationship {
+            position: absolute;
+            background: #2ecc71;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            z-index: 10;
+        }
+        
+        .conceptual-entities {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .conceptual-entity {
+            background: linear-gradient(145deg, #ffffff, #f1f3f4);
+            border: 3px solid #9b59b6;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(155, 89, 182, 0.15);
+            transition: all 0.3s ease;
+        }
+        
+        .conceptual-entity:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 35px rgba(155, 89, 182, 0.25);
+        }
+        
+        .conceptual-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #8e44ad;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .description {
+            color: #555;
+            font-style: italic;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .key-attributes {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        
+        .key-attributes strong {
+            color: #2c3e50;
+        }
+        
+        .relationships-section {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        
+        .relationships-section h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+        
+        .relationship-item {
+            background: white;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #f39c12;
+        }
+        
+        .business-rules {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        
+        .business-rules h3 {
+            color: #0c5460;
+            margin-bottom: 15px;
+        }
+        
+        .rule-item {
+            background: white;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border-left: 4px solid #17a2b8;
+        }
+        
+        @media (max-width: 768px) {
+            .model-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .entity {
+                width: 90%;
+                max-width: 300px;
+            }
+            
+            .conceptual-entities {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏢 Sistema SouthRock - Modelos de Banco de Dados</h1>
+        
+        <!-- Modelo Conceitual -->
+        <div class="model-section">
+            <h2>📋 Modelo Conceitual</h2>
+            <p style="text-align: center; color: #666; font-size: 1.1em; margin-bottom: 30px;">
+                Visão de alto nível das entidades e seus relacionamentos principais
+            </p>
+            
+            <div class="conceptual-entities">
+                <div class="conceptual-entity">
+                    <div class="conceptual-name">👥 Usuário</div>
+                    <div class="description">
+                        Representa tanto a matriz quanto as filiais do sistema, incluindo dados de identificação e localização.
+                    </div>
+                    <div class="key-attributes">
+                        <strong>Principais atributos:</strong> Username, CNPJ, Nome, Endereço, Tipo
+                    </div>
+                </div>
+                
+                <div class="conceptual-entity">
+                    <div class="conceptual-name">📦 Produto</div>
+                    <div class="description">
+                        Catálogo de produtos disponíveis no sistema, organizados por grupos e com unidades de medida específicas.
+                    </div>
+                    <div class="key-attributes">
+                        <strong>Principais atributos:</strong> SKU, Nome, Grupo, Unidade de Medida
+                    </div>
+                </div>
+                
+                <div class="conceptual-entity">
+                    <div class="conceptual-name">📋 Pedido</div>
+                    <div class="description">
+                        Solicitações entre matriz e filiais, incluindo requisições, trocas, doações e devoluções.
+                    </div>
+                    <div class="key-attributes">
+                        <strong>Principais atributos:</strong> Tipo, Status, Data, Observações
+                    </div>
+                </div>
+                
+                <div class="conceptual-entity">
+                    <div class="conceptual-name">📝 Item do Pedido</div>
+                    <div class="description">
+                        Detalhamento dos produtos solicitados em cada pedido, com quantidades e observações específicas.
+                    </div>
+                    <div class="key-attributes">
+                        <strong>Principais atributos:</strong> Quantidade, Observação, Tipo (para trocas)
+                    </div>
+                </div>
+                
+                <div class="conceptual-entity">
+                    <div class="conceptual-name">🏷️ Tipo de Usuário</div>
+                    <div class="description">
+                        Classificação dos usuários do sistema (Matriz ou Loja) para controle de permissões.
+                    </div>
+                    <div class="key-attributes">
+                        <strong>Principais atributos:</strong> ID, Descrição
+                    </div>
+                </div>
+            </div>
+            
+            <div class="relationships-section">
+                <h3>🔗 Relacionamentos Principais</h3>
+                <div class="relationship-item">
+                    <strong>Usuário → Tipo de Usuário:</strong> Um usuário possui um tipo (1:N)
+                </div>
+                <div class="relationship-item">
+                    <strong>Usuário → Pedido:</strong> Usuários fazem pedidos (1:N) e processam pedidos (1:N)
+                </div>
+                <div class="relationship-item">
+                    <strong>Pedido → Item do Pedido:</strong> Um pedido contém vários itens (1:N)
+                </div>
+                <div class="relationship-item">
+                    <strong>Produto → Item do Pedido:</strong> Um produto pode estar em vários itens (1:N)
+                </div>
+                <div class="relationship-item">
+                    <strong>Pedido → Pedido:</strong> Pedidos podem referenciar outros pedidos (autoreferência)
+                </div>
+            </div>
+            
+            <div class="business-rules">
+                <h3>📏 Regras de Negócio</h3>
+                <div class="rule-item">
+                    <strong>RN01:</strong> Apenas usuários tipo "matriz" podem processar pedidos
+                </div>
+                <div class="rule-item">
+                    <strong>RN02:</strong> Pedidos de devolução devem referenciar um pedido original
+                </div>
+                <div class="rule-item">
+                    <strong>RN03:</strong> Status de pedidos seguem fluxo específico (novo → processo → finalizado)
+                </div>
+                <div class="rule-item">
+                    <strong>RN04:</strong> Trocas entre filiais requerem aprovação da matriz
+                </div>
+                <div class="rule-item">
+                    <strong>RN05:</strong> Produtos não podem ser excluídos se estiverem em pedidos
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modelo Lógico -->
+        <div class="model-section">
+            <h2>🗄️ Modelo Lógico</h2>
+            <p style="text-align: center; color: #666; font-size: 1.1em; margin-bottom: 30px;">
+                Estrutura detalhada das tabelas com tipos de dados e relacionamentos
+            </p>
+            
+            <div class="model-container">
+                <div class="entity">
+                    <div class="entity-name">tipo_usuario</div>
+                    <div class="attributes">
+                        <div class="pk">🔑 id: INT</div>
+                        <div>descricao: VARCHAR(255)</div>
+                    </div>
+                </div>
+                
+                <div class="entity">
+                    <div class="entity-name">produtos</div>
+                    <div class="attributes">
+                        <div class="pk">🔑 sku: INT</div>
+                        <div>produto: VARCHAR(255)</div>
+                        <div>grupo: VARCHAR(255)</div>
+                        <div>unidade_medida: VARCHAR(10)</div>
+                    </div>
+                </div>
+                
+                <div class="entity">
+                    <div class="entity-name">usuarios</div>
+                    <div class="attributes">
+                        <div class="pk">🔑 id: INT AUTO_INCREMENT</div>
+                        <div>username: VARCHAR(255) UNIQUE</div>
+                        <div>password: VARCHAR(255)</div>
+                        <div class="fk">🗝️ tipo_usuario: INT</div>
+                        <div>cnpj: VARCHAR(20)</div>
+                        <div>responsavel: VARCHAR(255)</div>
+                        <div>endereco: VARCHAR(255)</div>
+                        <div>cep: VARCHAR(10)</div>
+                        <div>bairro: VARCHAR(100)</div>
+                        <div>cidade: VARCHAR(100)</div>
+                        <div>uf: CHAR(2)</div>
+                        <div>nome: VARCHAR(255)</div>
+                        <div>data_cadastro: DATETIME</div>
+                        <div>eh_filial: BOOLEAN</div>
+                        <div>nome_filial: VARCHAR(255)</div>
+                    </div>
+                </div>
+                
+                <div class="entity">
+                    <div class="entity-name">pedidos</div>
+                    <div class="attributes">
+                        <div class="pk">🔑 id: INT AUTO_INCREMENT</div>
+                        <div>data: DATETIME</div>
+                        <div>tipo_pedido: ENUM</div>
+                        <div>status: ENUM</div>
+                        <div class="fk">🗝️ filial_usuario_id: INT</div>
+                        <div class="fk">🗝️ filial_destino_id: INT</div>
+                        <div class="fk">🗝️ usuario_id: INT</div>
+                        <div class="fk">🗝️ pedido_original_id: INT</div>
+                        <div>observacoes: TEXT</div>
+                        <div>data_processamento: DATETIME</div>
+                        <div>data_finalizacao: DATETIME</div>
+                        <div>data_atualizacao: DATETIME</div>
+                    </div>
+                </div>
+                
+                <div class="entity">
+                    <div class="entity-name">pedido_itens</div>
+                    <div class="attributes">
+                        <div class="pk">🔑 id: INT AUTO_INCREMENT</div>
+                        <div class="fk">🗝️ pedido_id: INT</div>
+                        <div class="fk">🗝️ sku: INT</div>
+                        <div>quantidade: DECIMAL(10,2)</div>
+                        <div>observacao: TEXT</div>
+                        <div>data_cadastro: DATETIME</div>
+                        <div>tipo_item_troca: ENUM</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="relationships-section">
+                <h3>🔗 Relacionamentos e Constraints</h3>
+                <div class="relationship-item">
+                    <strong>usuarios.tipo_usuario → tipo_usuario.id</strong> (FK, ON DELETE RESTRICT)
+                </div>
+                <div class="relationship-item">
+                    <strong>pedidos.filial_usuario_id → usuarios.id</strong> (FK, ON DELETE SET NULL)
+                </div>
+                <div class="relationship-item">
+                    <strong>pedidos.filial_destino_id → usuarios.id</strong> (FK, ON DELETE SET NULL)
+                </div>
+                <div class="relationship-item">
+                    <strong>pedidos.usuario_id → usuarios.id</strong> (FK, ON DELETE SET NULL)
+                </div>
+                <div class="relationship-item">
+                    <strong>pedidos.pedido_original_id → pedidos.id</strong> (FK, ON DELETE SET NULL)
+                </div>
+                <div class="relationship-item">
+                    <strong>pedido_itens.pedido_id → pedidos.id</strong> (FK, ON DELETE CASCADE)
+                </div>
+                <div class="relationship-item">
+                    <strong>pedido_itens.sku → produtos.sku</strong> (FK, ON DELETE RESTRICT)
+                </div>
+            </div>
+            
+            <div class="business-rules">
+                <h3>⚙️ Recursos Técnicos</h3>
+                <div class="rule-item">
+                    <strong>Triggers:</strong> Atualização automática de datas de processamento e finalização
+                </div>
+                <div class="rule-item">
+                    <strong>Timezone:</strong> Configurado para Brasília (UTC-3)
+                </div>
+                <div class="rule-item">
+                    <strong>Defaults:</strong> Timestamps automáticos e valores padrão para status
+                </div>
+                <div class="rule-item">
+                    <strong>Enums:</strong> Controle rígido de valores para tipo_pedido e status
+                </div>
+                <div class="rule-item">
+                    <strong>Indexes:</strong> Chaves primárias e estrangeiras otimizadas
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
