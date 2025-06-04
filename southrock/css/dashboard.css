@@ -4,6 +4,7 @@
     box-sizing: border-box;
 }
 
+
 /* Estilos de body e .content foram removidos daqui para não conflitarem com header_com_menu.css */
 /* Se precisar de estilos específicos para o corpo ou conteúdo do dashboard, 
    use seletores mais específicos ou ajuste após testar a integração do menu. */
