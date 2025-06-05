@@ -1,41 +1,41 @@
 body {
-    background-color: #f8f9fa; 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-    color: #212529; 
-    min-height: 100vh; 
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #212529;
+    min-height: 100vh;
     display: flex;
-    flex-direction: column; 
-    line-height: 1.6; 
-    margin: 0; 
+    flex-direction: column;
+    line-height: 1.6;
+    margin: 0;
 }
 
 .header {
-    background-color: #ffffff; 
-    color: #007bff; 
-    padding: 40px 20px; 
+    background-color: #ffffff;
+    color: #007bff;
+    padding: 40px 20px;
     text-align: center;
-    border-bottom: 1px solid #dee2e6; 
-    margin-bottom: 40px; 
+    border-bottom: 1px solid #dee2e6;
+    margin-bottom: 40px;
 }
 
 .header h1 {
-    font-weight: 300; 
-    font-size: 2.5em; 
+    font-weight: 300;
+    font-size: 2.5em;
     margin-bottom: 8px;
 }
 
 .header p {
-    font-size: 1.1em; 
-    color: #495057; 
+    font-size: 1.1em;
+    color: #495057;
     margin-bottom: 0;
 }
 
 .cards-container {
-    flex: 1; 
+    flex: 1;
     display: flex;
-    align-items: center; 
-    justify-content: center; 
-    padding: 20px 10px; 
+    align-items: center;
+    justify-content: center;
+    padding: 20px 10px;
 }
 
 .cards-container .container {
@@ -47,88 +47,98 @@ body {
 }
 
 .card {
-    background-color: #ffffff; 
-    border: 1px solid #e0e0e0; 
-    border-radius: 12px; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); 
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
     transition: transform 0.25s ease-in-out, box-shadow 0.25s ease-in-out;
-    margin: 15px; 
-    display: flex; 
-    flex-direction: column; 
-    height: 100%; 
+    margin: 15px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .card:hover {
-    transform: translateY(-6px); 
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); 
+    transform: translateY(-6px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .card-body {
-    padding: 30px; 
-    text-align: center; 
+    padding: 30px;
+    text-align: center;
     display: flex;
     flex-direction: column;
-    flex-grow: 1; 
+    flex-grow: 1;
 }
 
 .icon {
-    font-size: 48px; 
-    margin-bottom: 25px; 
+    font-size: 48px;
+    margin-bottom: 25px;
 }
 
-#fazer-pedido .icon { color: #0028f8; }        
-#historico-pedidos .icon { color: #fd7f25; }  
-#suporte .icon { color: #ff373f; }            
+#fazer-pedido .icon {
+    color: #0028f8;
+}
+
+#historico-pedidos .icon {
+    color: #fd7f25;
+}
+
+#suporte .icon {
+    color: #ff373f;
+}
 
 .card-title {
-    font-size: 1.6em; 
-    font-weight: 600; 
+    font-size: 1.6em;
+    font-weight: 600;
     margin-bottom: 12px;
-    color: #343a40; 
+    color: #343a40;
 }
 
 .card-text {
-    color: #55595c; 
+    color: #55595c;
     font-size: 0.95em;
-    margin-bottom: 30px; 
-    flex-grow: 1; 
+    margin-bottom: 30px;
+    flex-grow: 1;
 }
 
-.button.btn, a.button.btn {
-    background-color: #007bff; 
+.button.btn,
+a.button.btn {
+    background-color: #007bff;
     color: white;
-    border: none; 
-    border-radius: 8px; 
-    padding: 12px 28px; 
+    border: none;
+    border-radius: 8px;
+    padding: 12px 28px;
     font-size: 1em;
-    font-weight: 500; 
-    text-decoration: none; 
+    font-weight: 500;
+    text-decoration: none;
     transition: background-color 0.2s ease-in-out, transform 0.1s ease;
-    display: inline-block; 
-    margin-top: auto; 
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    display: inline-block;
+    margin-top: auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.button.btn:hover, a.button.btn:hover {
-    background-color: #fd7f25; 
+.button.btn:hover,
+a.button.btn:hover {
+    background-color: #fd7f25;
     color: white;
-    transform: scale(1.03); 
+    transform: scale(1.03);
 }
 
 .footer {
-    margin-top: auto; 
+    margin-top: auto;
     text-align: center;
     padding: 25px 20px;
-    background-color: #e9ecef; 
-    border-top: 1px solid #ced4da; 
+    background-color: #e9ecef;
+    border-top: 1px solid #ced4da;
 }
 
 .footer .button.btn {
-    background-color: #0028f8; 
-    box-shadow: none; 
+    background-color: #0028f8;
+    box-shadow: none;
 }
 
 .footer .button.btn:hover {
-    background-color: #fd7f25; 
+    background-color: #fd7f25;
     transform: scale(1.03);
 }

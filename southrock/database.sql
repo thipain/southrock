@@ -147,15 +147,6 @@ INSERT INTO usuarios (username, password, tipo_usuario, cnpj, responsavel, ender
     ('star02', '$2y$10$V8qU8E8v5cCH.d2kSmzVUOEZqgBMEeX6PIdrYYPUCgLs0gQ.QTNlO', 2, '07.984.267/0005-33', 'Eduardo Oliveira', 'Av. Roque Petroni Jr., 1.089 - LOJA 234-B/S NIVEL SUPERIOR SHOP.CENTER MORUMBI', '04707-970', 'Vl. Gertrudes', 'São Paulo', 'SP', 'Eduardo Oliveira', TRUE, 'Filial Starbucks Morumbi'),
     ('star03', '$2y$10$V8qU8E8v5cCH.d2kSmzVUOEZqgBMEeX6PIdrYYPUCgLs0gQ.QTNlO', 2, '07.984.267/0006-14', 'Juliana Martins', 'Av. Higienópolis, 618 - SHOPPING CENTER PATIO HIGIENOPOLIS, ARCO 324', '01238-000', 'Higienópolis', 'São Paulo', 'SP', 'Juliana Martins', TRUE, 'Filial Starbucks Higienopolis');
 
--- Pedidos de exemplo
-INSERT INTO pedidos (data, tipo_pedido, status, filial_usuario_id, filial_destino_id, usuario_id, observacoes) VALUES
-    ('2024-05-01 10:00:00', 'requisicao', 'finalizado', 2, NULL, 1, 'Pedido urgente para reposição de estoque da filial star01');
-INSERT INTO pedidos (data, tipo_pedido, status, filial_usuario_id, filial_destino_id, usuario_id, observacoes) VALUES
-    ('2024-05-02 11:00:00', 'doacao', 'finalizado', 1, 3, 1, 'Doação de itens promocionais para Filial star02');
-INSERT INTO pedidos (data, tipo_pedido, status, filial_usuario_id, filial_destino_id, usuario_id, observacoes) VALUES
-    ('2024-05-03 14:00:00', 'requisicao', 'finalizado', 1, 4, 1, 'Envio de material para loja star03');
-INSERT INTO pedidos (data, tipo_pedido, status, filial_usuario_id, filial_destino_id, usuario_id, pedido_original_id, observacoes) VALUES
-    ('2024-05-04 09:30:00', 'devolucao', 'novo', 4, 1, 4, 3, 'Devolução de itens do pedido #3 por excesso de estoque.');
 
 -- Triggers
 DELIMITER //

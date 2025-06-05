@@ -3,17 +3,15 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 session_start();
 
-require_once '../../includes/db.php'; // Conexão com o banco
+require_once '../../includes/db.php';
 
-// Verificar se o usuário está logado e é uma filial
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['tipo_usuario']) || $_SESSION['tipo_usuario'] != 2) {
-    header('Location: ../../index.php'); // Redireciona para o login se não for filial
+    header('Location: ../../index.php');
     exit();
 }
 
-$loggedInUserId = $_SESSION['user_id']; // ID do usuário da filial logada
+$loggedInUserId = $_SESSION['user_id'];
 
-// Buscar lista de outras filiais para seleção (excluindo a própria filial logada)
 $stmt_filiais = $conn->prepare("SELECT id, nome_filial, cnpj, cidade, uf FROM usuarios WHERE eh_filial = TRUE AND id != ? ORDER BY nome_filial ASC");
 $stmt_filiais->bind_param("i", $loggedInUserId);
 $stmt_filiais->execute();
@@ -24,7 +22,6 @@ while ($row = $result_filiais->fetch_assoc()) {
 }
 $stmt_filiais->close();
 
-// Lógica de busca AJAX de produtos (será chamada pelo JavaScript)
 if (isset($_GET['ajax_search_produtos']) && $_GET['ajax_search_produtos'] == 1) {
     $searchTerm = isset($_GET['term']) ? trim($_GET['term']) : '';
     $response = ['success' => false, 'products' => []];
@@ -47,8 +44,6 @@ if (isset($_GET['ajax_search_produtos']) && $_GET['ajax_search_produtos'] == 1) 
     exit();
 }
 
-
-// Lógica para processar o POST do formulário de troca
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['propor_troca'])) {
     $produtos_enviar_skus = $_POST['produtos_enviar_sku'] ?? [];
     $produtos_enviar_quantidades = $_POST['produtos_enviar_quantidade'] ?? [];
@@ -71,11 +66,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['propor_troca'])) {
         try {
             $conn->begin_transaction();
 
-            // MODIFICADO: Status inicial para propostas de troca
             $status_inicial_troca = 'novo_troca_pendente_aceite_parceiro';
 
             $sql_pedido = "INSERT INTO pedidos (tipo_pedido, status, filial_usuario_id, filial_destino_id, usuario_id, observacoes) 
-                           VALUES ('troca', ?, ?, ?, ?, ?)"; // Status agora é um placeholder
+                           VALUES ('troca', ?, ?, ?, ?, ?)";
             $stmt_pedido = $conn->prepare($sql_pedido);
             if (!$stmt_pedido) throw new Exception("Erro ao preparar pedido: " . $conn->error);
             
@@ -92,7 +86,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['propor_troca'])) {
             $stmt_item = $conn->prepare($sql_item);
             if (!$stmt_item) throw new Exception("Erro ao preparar item do pedido: " . $conn->error);
 
-            // Inserir itens a ENVIAR
             for ($i = 0; $i < count($produtos_enviar_skus); $i++) {
                 $sku = filter_var($produtos_enviar_skus[$i], FILTER_VALIDATE_INT);
                 $qty = filter_var($produtos_enviar_quantidades[$i], FILTER_VALIDATE_FLOAT);
@@ -107,7 +100,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['propor_troca'])) {
                 }
             }
 
-            // Inserir itens a RECEBER
             for ($i = 0; $i < count($produtos_receber_skus); $i++) {
                 $sku = filter_var($produtos_receber_skus[$i], FILTER_VALIDATE_INT);
                 $qty = filter_var($produtos_receber_quantidades[$i], FILTER_VALIDATE_FLOAT);
@@ -147,147 +139,7 @@ $nome_sistema_atual = "SouthRock - Troca de Produtos";
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <style>
-        body { 
-            background-color: #f4f6f9; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            padding-bottom: 70px;
-        }
-        .top-bar-loja { 
-            background-color: #343a40; 
-            color: white; 
-            padding: 0.75rem 1.25rem; 
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem; 
-        }
-        .top-bar-loja h1 { 
-            font-size: 1.5rem; 
-            margin-bottom: 0;
-            font-weight: 500;
-        }
-        .top-bar-loja .btn-outline-light {
-            border-width: 2px;
-        }
-        .product-section { 
-            background-color: #fff; 
-            padding: 20px; 
-            border-radius: 8px; 
-            margin-bottom: 25px; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.08); 
-        }
-        .product-section h3 { 
-            margin-bottom: 18px; 
-            color: #0069d9; 
-            border-bottom: 2px solid #dee2e6; 
-            padding-bottom: 12px; 
-            font-size: 1.4rem;
-            font-weight: 500;
-        }
-        .product-section h3 .fas, .product-section h3 .bi {
-            margin-right: 8px;
-        }
-        .form-control-sm {
-            font-size: 0.875rem;
-            padding: 0.25rem 0.5rem;
-            height: calc(1.5em + 0.5rem + 2px);
-        }
-        .search-results-container { 
-            max-height: 180px; 
-            overflow-y: auto; 
-            border: 1px solid #ced4da; 
-            border-top: none; 
-            border-radius: 0 0 0.25rem 0.25rem; 
-            position: absolute; 
-            background-color: white; 
-            z-index: 1050; 
-            width: 100%; 
-            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
-            display: none; 
-        }
-        .search-result-item { 
-            padding: 0.5rem 0.75rem; 
-            cursor: pointer; 
-            border-bottom: 1px solid #f1f1f1; 
-            font-size: 0.9rem;
-        }
-        .search-result-item:last-child { border-bottom: none; }
-        .search-result-item:hover { background-color: #e9ecef; }
-        
-        .selected-products-cart .empty-cart-text {
-            color: #6c757d;
-            font-style: italic;
-            padding: 15px 5px;
-            text-align: center;
-            background-color: #f8f9fa;
-            border-radius: 4px;
-            border: 1px dashed #ced4da;
-        }
-
-        .cart-item-row { 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-            margin-bottom: 12px; 
-            padding: 12px; 
-            background-color: #f8f9fa; 
-            border: 1px solid #dee2e6;
-            border-radius: 5px; 
-        }
-        .cart-item-row .item-name {
-            flex-grow: 1;
-            font-weight: 500;
-        }
-        .cart-item-row input[type="number"] { 
-            width: 80px; 
-            text-align: center;
-        }
-        .cart-item-row input[type="text"] { 
-            flex-basis: 200px; 
-            flex-grow: 1;
-        }
-        .btn-remove-item { 
-            color: #dc3545; 
-            background: none;
-            border: none;
-            font-size: 1.2em; 
-            line-height: 1;
-            padding: 0.25rem 0.5rem;
-        }
-        .btn-remove-item:hover { color: #a71d2a; }
-
-        .submit-section { 
-            margin-top: 30px; 
-            padding-top: 25px; 
-            border-top: 1px solid #ced4da; 
-        }
-        .btn-primary.btn-lg {
-            padding: .6rem 1.5rem;
-            font-size: 1.1rem;
-            font-weight: 500;
-        }
-        .form-group label {
-            font-weight: 500;
-            margin-bottom: 0.3rem;
-        }
-        .input-group .form-control { 
-            position: relative;
-            flex: 1 1 auto;
-            width: 1%;
-            min-width: 0;
-        }
-        .position-relative { 
-            position: relative;
-        }
-        .alert-dismissible .close { /* Para Bootstrap 4 */
-            position: absolute;
-            top: 0;
-            right: 0;
-            padding: 0.75rem 1.25rem;
-            color: inherit;
-        }
-    </style>
+    <link rel="stylesheet" href="../../css/trocar_produtos.css">
 </head>
 <body>
 
@@ -502,7 +354,7 @@ $nome_sistema_atual = "SouthRock - Troca de Produtos";
                 const cartItemElements = Array.from(itemRow.parentElement.querySelectorAll('.cart-item-row'));
                 const itemIndex = cartItemElements.indexOf(itemRow);
                 
-                const cartType = itemRow.parentElement.id.split('_')[1]; // cart_enviar -> enviar
+                const cartType = itemRow.parentElement.id.split('_')[1];
 
                 if (carts[cartType] && carts[cartType][itemIndex]) {
                      if (target.name.includes('_quantidade[]')) {
@@ -558,13 +410,10 @@ $nome_sistema_atual = "SouthRock - Troca de Produtos";
         
         var alertList = document.querySelectorAll('.alert-dismissible');
         alertList.forEach(function (alert) {
-            // Para Bootstrap 4, o data-dismiss="alert" no botão já deve funcionar com o JS do Bootstrap.
-            // Para Bootstrap 5, o JS do BS5 manipula data-bs-dismiss="alert".
-            // Este timeout é um extra.
             setTimeout(function() {
-                if (alert && typeof $ !== 'undefined' && $.fn.alert) { // Verifica se jQuery e plugin alert existem (BS4)
+                if (alert && typeof $ !== 'undefined' && $.fn.alert) {
                     $(alert).alert('close');
-                } else if (alert && typeof bootstrap !== 'undefined' && bootstrap.Alert && bootstrap.Alert.getInstance(alert)) { // BS5
+                } else if (alert && typeof bootstrap !== 'undefined' && bootstrap.Alert && bootstrap.Alert.getInstance(alert)) {
                      bootstrap.Alert.getInstance(alert).close();
                 }
             }, 7000);
