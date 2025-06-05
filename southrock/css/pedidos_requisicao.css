@@ -15,7 +15,7 @@ body {
     right: 20px;
     width: 60px;
     height: 60px;
-    background-color: #3498db;
+    background-color: #0028f8;
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -27,7 +27,7 @@ body {
 }
 
 .cart-button:hover {
-    background-color: #2980b9;
+    background-color: #fd7f25;
     transform: scale(1.05);
 }
 

@@ -13,9 +13,9 @@
 
 .barrinha {
     border: none;
-    height: 3px;
-    background-color: #007bff;
-    width: 100px;
+    height: 1px;
+    background-color: #000000;
+    width: 1300px;
     margin: 0 auto 1.5rem auto;
     opacity: 0.8;
 }
