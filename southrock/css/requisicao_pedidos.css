@@ -11,7 +11,7 @@ body {
 
 .header {
     background-color: #ffffff;
-    color: #007bff;
+    color: #0028f8;
     padding: 40px 20px;
     text-align: center;
     border-bottom: 1px solid #dee2e6;
@@ -104,7 +104,7 @@ body {
 
 .button.btn,
 a.button.btn {
-    background-color: #007bff;
+    background-color: #0028f8;
     color: white;
     border: none;
     border-radius: 8px;

@@ -27,7 +27,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['tipo_usuario'] != 2) {
         <div class="cards-section">
             <div class="container text-center">
                 <div class="row justify-content-center">
-                    <div class="col-md-auto mb-4">
+                    <div id="fazer-pedido" class="col-md-auto mb-4">
                         <div class="option-card">
                             <div class="card-body d-flex flex-column">
                                 <i class="fas fa-shopping-cart icon"></i>
@@ -39,7 +39,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['tipo_usuario'] != 2) {
                     </div>
 
                     <div class="col-md-auto mb-4">
-                        <div class="option-card">
+                        <div id="doar-produto" class="option-card">
                             <div class="card-body d-flex flex-column">
                                 <i class="fas fa-gift icon"></i>
                                 <h5 class="card-title">Doar Produtos</h5>
@@ -50,7 +50,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['tipo_usuario'] != 2) {
                     </div>
 
                     <div class="col-md-auto mb-4">
-                        <div class="option-card">
+                        <div id="trocar-produtos" class="option-card">
                             <div class="card-body d-flex flex-column">
                                 <i class="fas fa-exchange-alt icon"></i>
                                 <h5 class="card-title">Trocar Produtos</h5>

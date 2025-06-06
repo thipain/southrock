@@ -144,3 +144,15 @@ body {
     position: relative;
     z-index: 10;
 }
+
+#fazer-pedido .icon{
+    color: #0028f8;
+}
+
+#doar-produto .icon{
+    color: #fd7f25;
+}
+
+#trocar-produtos .icon{
+    color: #ff373f;
+}
