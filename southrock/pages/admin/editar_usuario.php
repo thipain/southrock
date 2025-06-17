@@ -144,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($user_id_to_edit)) {
                     <div class="painel-titulo">
                         <i class="bi bi-pencil-square me-2"></i>Editar Usuário
                     </div>
-                     <hr class="barrinha" style="width:150px;">
+                     <hr class="barrinha"></hr>
                 </div>
             </div>
             
