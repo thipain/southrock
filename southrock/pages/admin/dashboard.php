@@ -1,14 +1,13 @@
 <?php
 session_start();
 if (!isset($_SESSION['username'])) {
-    // Assumindo que dashboard.php está em admin/pages/, e index.php está dois níveis acima
-    header("Location: ../../index.php"); 
+   
     exit();
 }
 
-// Conexão com o banco de dados
+
 $servername = "localhost"; 
-$username_db = "root"; // Renomeado para evitar conflito com $_SESSION['username']
+$username_db = "root"; 
 $password_db = ""; 
 $dbname = "southrock"; 
 
@@ -18,7 +17,7 @@ if ($conn->connect_error) {
     die("Falha na conexão: " . $conn->connect_error);
 }
 
-// Consultas SQL
+
 $sql_pedidos = "SELECT COUNT(*) as total_pedidos FROM pedidos WHERE status = 'novo'";
 $result_pedidos = $conn->query($sql_pedidos);
 $total_pedidos = 0;
@@ -43,8 +42,8 @@ if ($result_usuarios && $result_usuarios->num_rows > 0) {
     $total_usuarios = $row["total_usuarios"];
 }
 
-$versao_sistema = "1.4.5"; 
-$data_atualizacao = "27/05/2025"; 
+$versao_sistema = "1.7.1"; 
+$data_atualizacao = "25/06/2025"; 
 
 $conn->close();
 
