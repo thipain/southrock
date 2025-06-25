@@ -19,7 +19,7 @@ $link_produtos_admin = 'produtos.php';
 $link_usuarios_admin = 'usuarios.php';
 $link_cadastro_usuario_admin = 'cadastro_usuario.php';
 
-$nome_sistema_atual = "SouthRock Admin - Pedidos";
+$nome_sistema_atual = "ZAMP Admin - Pedidos";
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -173,22 +173,19 @@ $nome_sistema_atual = "SouthRock Admin - Pedidos";
 
                                     $nome_origem_list = htmlspecialchars($pedido['nome_origem'] ?: 'N/A');
 
-                                    // Lógica de exibição para nome_destino_list atualizada para maior robustez
+                              
                                     $nome_destino_list = 'N/A'; // Padrão
                                     if (isset($pedido['nome_destino']) && $pedido['nome_destino'] !== null) {
                                         $nome_destino_list = htmlspecialchars($pedido['nome_destino']);
                                     } elseif ((isset($pedido['filial_destino_id']) && $pedido['filial_destino_id'] === null) &&
                                         in_array($pedido['tipo_pedido'], ['requisicao', 'devolucao'])
                                     ) {
-                                        // Se filial_destino_id está presente no array $pedido e é NULL
+                                
                                         $nome_destino_list = "Matriz";
                                     } elseif (
                                         !isset($pedido['filial_destino_id']) &&
                                         in_array($pedido['tipo_pedido'], ['requisicao', 'devolucao'])
                                     ) {
-                                        // Se filial_destino_id NÃO está presente no array $pedido (porque a coluna não foi selecionada ou o JOIN falhou sem LEFT)
-                                        // E é uma requisição/devolução, assumimos Matriz.
-                                        // ESTE CASO É MENOS PROVÁVEL AGORA QUE SELECIONAMOS p.filial_destino_id
                                         $nome_destino_list = "Matriz";
                                     }
 

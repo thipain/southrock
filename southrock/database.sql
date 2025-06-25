@@ -1,11 +1,10 @@
--- Excluir o banco de dados se ele já existir para um recomeço limpo
+
 DROP DATABASE IF EXISTS southrock;
 
 CREATE DATABASE southrock;
 
 USE southrock;
 
--- Configurar o timezone para Brasília (UTC-3)
 SET time_zone = '-03:00';
 
 CREATE TABLE produtos (
@@ -31,7 +30,7 @@ CREATE TABLE usuarios (
     cep VARCHAR(10),
     bairro VARCHAR(100),
     cidade VARCHAR(100),
-    uf CHAR(2), -- Unidade Federativa (Estado)
+    uf CHAR(2), 
     nome VARCHAR(255),
     data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP,
     eh_filial BOOLEAN DEFAULT FALSE,
@@ -55,7 +54,7 @@ CREATE TABLE pedidos (
     ) NOT NULL DEFAULT 'novo',
     filial_usuario_id INT,
     filial_destino_id INT NULL,
-    usuario_id INT, -- Usuário do sistema que efetivamente registrou/processou o pedido
+    usuario_id INT, 
     pedido_original_id INT NULL DEFAULT NULL,
     observacoes TEXT,
     data_processamento DATETIME NULL,
@@ -74,14 +73,14 @@ CREATE TABLE pedido_itens (
     quantidade DECIMAL(10,2) NOT NULL,
     observacao TEXT,
     data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP,
-    tipo_item_troca ENUM('enviado', 'recebido') NULL DEFAULT NULL COMMENT 'Define se o item em um pedido de troca está sendo enviado ou recebido pela filial de origem',
+    tipo_item_troca ENUM('enviado', 'recebido') NULL DEFAULT NULL COMMENT 'Define se o item é enviado ou recebido em um pedido de troca',
     FOREIGN KEY (pedido_id) REFERENCES pedidos(id) ON DELETE CASCADE,
     FOREIGN KEY (sku) REFERENCES produtos(sku) ON DELETE RESTRICT
 );
 
--- Inserção de dados nas tabelas
 
--- Produtos
+
+
 INSERT INTO produtos (sku, produto, grupo, unidade_medida) VALUES
 (600030001, 'PRODUTO GAMA 01', 'COMPONENTES ELETRÔNICOS', 'PC'),
 (600030002, 'PRODUTO GAMA 02', 'COMPONENTES ELETRÔNICOS', 'UN'),
@@ -135,12 +134,12 @@ INSERT INTO produtos (sku, produto, grupo, unidade_medida) VALUES
 (600030050, 'PRODUTO PHI DESIGN', 'OBJETOS DE ARTE', 'UN');
 
 
--- Tipos de usuário
+
 INSERT INTO tipo_usuario (id, descricao) VALUES
     (1, 'matriz'),
     (2, 'loja');
 
--- Usuários (coluna 'estado' removida)
+
 INSERT INTO usuarios (username, password, tipo_usuario, cnpj, responsavel, endereco, cep, bairro, cidade, uf, nome, eh_filial, nome_filial) VALUES
     ('admin', '$2y$10$pGyZc7GXVc58d3nL15zRIOmVPyY03L2uOvXo57tFMgr25qQRjL.Ti', 1, '12.345.678/0001-90', 'João Silva', 'Rua das Flores, 123', '04929220', 'Alto do Rivieira', 'São Paulo', 'SP', 'Matriz SouthRock', FALSE, NULL),
     ('star01', '$2y$10$V8qU8E8v5cCH.d2kSmzVUOEZqgBMEeX6PIdrYYPUCgLs0gQ.QTNlO', 2, '07.984.267/0001-00', 'Igor Costa', 'Av Paulista, 900 - ANDAR 10 PARTE', '01310-940', 'Bela Vista', 'São Paulo', 'SP', 'Igor Costa', TRUE, 'Filial Starbucks Center'),
@@ -148,7 +147,7 @@ INSERT INTO usuarios (username, password, tipo_usuario, cnpj, responsavel, ender
     ('star03', '$2y$10$V8qU8E8v5cCH.d2kSmzVUOEZqgBMEeX6PIdrYYPUCgLs0gQ.QTNlO', 2, '07.984.267/0006-14', 'Juliana Martins', 'Av. Higienópolis, 618 - SHOPPING CENTER PATIO HIGIENOPOLIS, ARCO 324', '01238-000', 'Higienópolis', 'São Paulo', 'SP', 'Juliana Martins', TRUE, 'Filial Starbucks Higienopolis');
 
 
--- Triggers
+
 DELIMITER //
 CREATE TRIGGER tgr_pedido_processo BEFORE UPDATE ON pedidos
 FOR EACH ROW
